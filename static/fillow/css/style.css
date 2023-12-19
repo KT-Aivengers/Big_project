@@ -60,6 +60,7 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700");
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700");
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,600,700");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@200;300;400;500;600;700&display=swap");
 @import url("./../icons/font-awesome/css/all.min.css");
 @import url("./../icons/material-design-iconic-font/css/materialdesignicons.min.css");
 @import url("./../icons/themify-icons/css/themify-icons.css");
@@ -21730,7 +21731,7 @@ label {
 }
 
 [data-typography=poppins] {
-  font-family: "poppins", sans-serif;
+  font-family: "Noto Sans KR";
 }
 
 [data-typography=opensans] {
