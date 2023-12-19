@@ -4,11 +4,11 @@ folder_name = "fillow"
 dz_array = {
         "public":{
             "favicon":f"{folder_name}/images/favicon.png",
-            "description":"Elevate your administrative efficiency and enhance productivity with the Fillow SaaS Admin Dashboard Template. Designed to streamline your tasks, this powerful tool provides a user-friendly interface, robust features, and customizable options, making it the ideal choice for managing your data and operations with ease.",
-            "og_title":"Fillow : Django Saas Admin Dashboard Template | Dexignlabs",
-            "og_description":"Elevate your administrative efficiency and enhance productivity with the Fillow SaaS Admin Dashboard Template. Designed to streamline your tasks, this powerful tool provides a user-friendly interface, robust features, and customizable options, making it the ideal choice for managing your data and operations with ease.",
+            "description":"AI가 자동으로 메일함을 정리하여 업무 효율성이 향상됩니다.",
+            "og_title":"협재씨 | 18조",
+            "og_description":"AI가 자동으로 메일함을 정리하여 업무 효율성이 향상됩니다.",
             "og_image":"https://fillow.dexignlab.com/django/social-image.png",
-            "title":"Management And Administration Website Templates | Fillow : Django Saas Admin Dashboard Template - Empowering Your Administration Work | Dexignlabs",
+            "title":"협재씨 | 당신의 메일함을 정리해드립니다, | 18조",
         },
         "global":{
             "css":[
