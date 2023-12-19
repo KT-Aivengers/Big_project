@@ -5,3 +5,4 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['user_id', 'user_pw', 'user_email', 'user_dep']
+        # asd
