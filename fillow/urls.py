@@ -1,5 +1,8 @@
 from django.urls import path
 from fillow import fillow_views
+from django.contrib.auth import views as auth_views
+
+
 app_name='fillow'
 urlpatterns = [
     path('',fillow_views.index,name="index"),
@@ -79,7 +82,7 @@ urlpatterns = [
     path('table-datatable-basic/',fillow_views.table_datatable_basic,name="table-datatable-basic"),
 
 
-    path('page-login/',fillow_views.page_login,name="page-login"),
+    path('page-login/',fillow_views.page_login,name="page-login"),    
     path('page-register/',fillow_views.page_register,name="page-register"),
     path('page-forgot-password/',fillow_views.page_forgot_password,name="page-forgot-password"),
     path('page-lock-screen/',fillow_views.page_lock_screen,name="page-lock-screen"),

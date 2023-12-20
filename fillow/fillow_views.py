@@ -467,12 +467,13 @@ def table_datatable_basic(request):
 
 
 from django.shortcuts import redirect
-from .forms import UserForm
+from .forms import UserForm, LoginForm
 from .models import User
+from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password
 
 
 def page_register(request):
-    
     if request.method == "POST":
         form = UserForm(request.POST)
         if form.is_valid():
@@ -484,7 +485,34 @@ def page_register(request):
     return render(request,'fillow/pages/page-register.html', {'form':form})
 
 def page_login(request):
-    return render(request,'fillow/pages/page-login.html')
+    # print("enter")
+    if request.method == "POST":
+        # print("post")
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            # print("valid")
+            username = request.POST['username']
+            password = request.POST['password']
+            # print(username, password)
+            context={}
+            try:
+                user = User.objects.get(user_id=username)
+            except:
+                return redirect("fillow:page-login")
+            if user.user_pw == password:
+                request.session['user'] = user.user_name
+                context['userInSession'] = request.session['user']
+                
+                return render(request, "fillow/index.html", context)
+            else:
+                return redirect("fillow:page-login")
+    else:
+        form = LoginForm()
+        
+    return render(request,'fillow/pages/page-login.html', {'form': form})
+    
+    
+    
 
 def page_forgot_password(request):
     return render(request,'fillow/pages/page-forgot-password.html')
