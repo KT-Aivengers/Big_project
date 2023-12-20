@@ -266,8 +266,13 @@
 							{% else %}
 								<a href='{% url "fillow:page-login" %}'>로그인</a>
 							{% endif %} {% endcomment %}
-							{% if userInSession %}
+							{% comment %} {% if userInSession %}
 								<div>{{userInSession}}님 안녕하세요.</div>
+							{% else %}
+								<a href='{% url "fillow:page-login" %}'>로그인</a>
+							{% endif %} {% endcomment %}
+							{% if request.user.is_authenticated %}
+								<div>{{request.user.username}}님 안녕하세요.</div>
 							{% else %}
 								<a href='{% url "fillow:page-login" %}'>로그인</a>
 							{% endif %}
