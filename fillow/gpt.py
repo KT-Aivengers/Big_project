@@ -3,7 +3,12 @@ from langchain.prompts.few_shot import FewShotChatMessagePromptTemplate
 from langchain.callbacks import StreamingStdOutCallbackHandler
 from langchain.prompts import ChatMessagePromptTemplate, ChatPromptTemplate
 from langchain.schema import BaseOutputParser
+import openai,os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+api_key=os.getenv("OPENAI_KEY",None)
 class EmailOutputParser(BaseOutputParser):
     def parse(self, text):
         lines = text.strip().split('\n')
@@ -28,7 +33,7 @@ texts = []
 current_text = ""
 recording = False
 
-with open('texts.txt', 'r') as file:
+with open('texts.txt', 'r', encoding='utf-8') as file:
     for line in file:
         if '"""' in line:
             if recording:
@@ -44,7 +49,7 @@ answers = []
 current_text = ""
 recording = False
 
-with open('answers.txt', 'r') as file:
+with open('answers.txt', 'r', encoding='utf-8') as file:
     for line in file:
         if '"""' in line:
             if recording:
@@ -107,7 +112,7 @@ question = []
 current_text = ""
 recording = False
 
-with open('question_text.txt', 'r') as file:
+with open('question_text.txt', 'r', encoding='utf-8') as file:
     for line in file:
         if '"""' in line:
             if recording:
@@ -117,5 +122,6 @@ with open('question_text.txt', 'r') as file:
             recording = not recording
         elif recording:
             current_text += line
-a=chain.invoke({"email": question,"language":"Korean"})
-print(a)
+def process_file(text):
+    a=chain.invoke({"email": question,"language":"Korean"})
+    print(a)

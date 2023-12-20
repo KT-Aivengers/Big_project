@@ -34,11 +34,17 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fillow',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # provider 	구글, 페이스북, 카톡, 깃헙
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -50,8 +56,46 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend', # 이 코드 추가!
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend', # 이 코드 추가!
+
+    # 'allauth'와 상관없이 Django admin에서 사용자 이름으로 로그인해야 함
+    #'django.contrib.auth.backends.ModelBackend',
+
+    # 'allauth' 이메일 로그인과 같은 특정 인증 방법
+    # 'allauth.account.auth_backends.AuthenticationBackend',
+]
+SITE_ID = 1
+SOCIALACCOUNT_PROVIDERS = {
+    'google' : {
+        'APP' : {
+            'client_id' : '',
+            'secret' : '',
+            'key' : '',
+        },
+        'SCOPE' : [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS' : {
+            'access_type' : 'online',
+        }
+    }
+}
+
+SOCIALACCOUNT_LOGIN_ON_GET=True # sign in via 안가도 됨
+
+ACCOUNT_EMAIL_REQUIRED = True # 계정 이메일이 필요한가?
+# ACCOUNT_EMAIL_VERIFICATION = 'none' # 이메일 검증 과정이 필요한가?
+LOGIN_REDIRECT_URL = '/'
+# SOCIALACCOUNT_UNIQUE_EMAIL = True
 ROOT_URLCONF = 'dashboard.urls'
 
 TEMPLATES = [
@@ -134,3 +178,7 @@ else:
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

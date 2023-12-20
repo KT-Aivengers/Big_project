@@ -1,4 +1,9 @@
 from django.shortcuts import render
+from .models import Document
+from .forms import DocumentForm
+from .gpt import process_file
+
+
 
 
 def index(request):
@@ -513,7 +518,17 @@ def page_error_500(request):
 def page_error_503(request):
     return render(request,'503.html')
     
-
+def upload_file(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            document=form.save()
+            text="asd"
+            process_file(text)
+            return redirect("fillow:index")
+    else:
+        form = DocumentForm()
+    return render(request, 'fillow/pages/upload.html', {'form': form})
 
 
 
