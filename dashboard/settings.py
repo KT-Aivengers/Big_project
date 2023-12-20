@@ -90,7 +90,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-
+SOCIALACCOUNT_LOGIN_ON_GET=True # sign in via 안가도 됨
 
 ACCOUNT_EMAIL_REQUIRED = True # 계정 이메일이 필요한가?
 # ACCOUNT_EMAIL_VERIFICATION = 'none' # 이메일 검증 과정이 필요한가?
