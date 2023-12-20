@@ -73,10 +73,9 @@
 								  </div>
 
 								  {% comment %} 구글 로그인  {% endcomment %}
-								  <form action="{% provider_login_url 'google' %}" method = 'post'>
-									{% csrf_token %}
-									<button>Google Login</button>
-								  </form>
+								  <a role="button" class="btn btn-outline-dark btn-block btn-sm" href="{% provider_login_url 'google' %}">
+									<i class="fa-brands fa-google"></i> Login with Google
+								  </a>
 								  {% comment %}  {% endcomment %}
 							  </form>
 							  <div class="new-account mt-3">

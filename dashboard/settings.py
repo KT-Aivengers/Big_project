@@ -76,8 +76,8 @@ SITE_ID = 1
 SOCIALACCOUNT_PROVIDERS = {
     'google' : {
         'APP' : {
-            'client_id' : '',
-            'secret' : '',
+            'client_id' : '1074223713682-iqqhcu1qlurfngma6qhuceoaicgs6tgj.apps.googleusercontent.com',
+            'secret' : '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',
             'key' : '',
         },
         'SCOPE' : [
@@ -92,7 +92,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 
-# ACCOUNT_EMAIL_REQUIRED = True # 계정 이메일이 필요한가?
+ACCOUNT_EMAIL_REQUIRED = True # 계정 이메일이 필요한가?
 # ACCOUNT_EMAIL_VERIFICATION = 'none' # 이메일 검증 과정이 필요한가?
 LOGIN_REDIRECT_URL = '/'
 # SOCIALACCOUNT_UNIQUE_EMAIL = True
