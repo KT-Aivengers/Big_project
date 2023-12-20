@@ -143,9 +143,30 @@ def email_inbox(request):
 
 def email_read(request):
     context={
-        "page_title":"Read"
+        "page_title":"내용 보기"
     }
     return render(request,'fillow/apps/email/email-read.html',context)
+
+
+def email_sent(request):
+    context={
+        "page_title":"보낸 이메일"
+    }
+    return render(request,'fillow/apps/email/email-sent.html',context)
+
+
+def faq(request):
+    context={
+        "page_title":"FAQ"
+    }
+    return render(request,'fillow/apps/cs/faq.html',context)
+
+
+def qna(request):
+    context={
+        "page_title":"Q&A"
+    }
+    return render(request,'fillow/apps/cs/qna.html',context)
 
 
 def app_calender(request):

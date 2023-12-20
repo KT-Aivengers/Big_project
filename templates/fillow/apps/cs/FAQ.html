@@ -1,0 +1,244 @@
+{% extends 'fillow/elements/layouts/admin.html' %}
+{% load static %}
+        
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+<!--**********************************
+    Content body start
+***********************************-->
+<div class="content-body default-height">
+    <!-- row -->
+    <div class="container-fluid">
+        <div class="row page-titles">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">고객 센터</li>
+				<li class="breadcrumb-item active">FAQ</li>
+			</ol>
+		</div>
+        <div class="card mb-4 d-block">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h4 class="card-title">자주 묻는 질문</h4>
+                    <!-- <p class="m-0 subtitle">서브타이틀</p> -->
+                </div>
+                <div>
+                    <a href="{% url 'fillow:qna' %}" class="btn btn-primary btn-rounded">문제를 해결하지 못했나요?</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="nav flex-column nav-pills mb-3">
+                            <a href="#function" data-bs-toggle="pill" class="nav-link active show">기능</a>
+                            <a href="#account" data-bs-toggle="pill" class="nav-link">계정</a>
+                            <a href="#security" data-bs-toggle="pill" class="nav-link">보안</a>
+                            <a href="#etc" data-bs-toggle="pill" class="nav-link">기타</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="tab-content">
+                            <!-- 기능 탭 -->
+                            <div id="function" class="tab-pane fade active show">
+                                <div class="accordion accordion-rounded-stylish accordion-bordered" id="accordion-six">
+                                    <!-- 1 단위 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-function-1">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-function-1" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">이메일을 바로 보낼 수 있나요? 1</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-function-1" class="accordion-collapse collapse" aria-labelledby="head-function-1" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>네, 바로 보낼 수 있습니다. 1</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 1 단위 끝 -->
+                                    
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-function-2">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-function-2" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">이메일을 바로 보낼 수 있나요? 2</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-function-2" class="accordion-collapse collapse" aria-labelledby="head-function-2" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>네, 바로 보낼 수 있습니다. 2</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-function-3">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-function-3" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">이메일을 바로 보낼 수 있나요? 3</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-function-3" class="accordion-collapse collapse" aria-labelledby="head-function-3" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>네, 바로 보낼 수 있습니다. 3</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 기능 탭 끝 -->
+                            <!-- 게정 탭 -->
+                            <div id="account" class="tab-pane fade">
+                                <div class="accordion accordion-with-icon" id="accordion-six">
+                                    <!-- 1 단위 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-account-1">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-account-1" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">계정 삭제하는 법 1</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-account-1" class="accordion-collapse collapse" aria-labelledby="head-account-1" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>삭제로 이동하기 1</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 1 단위 끝 -->
+                                    
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-account-2">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-account-2" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">계정 삭제하는 법 2</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-account-2" class="accordion-collapse collapse" aria-labelledby="head-account-2" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>삭제로 이동하기 2</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-account-3">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-account-3" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">계정 삭제하는 법 3</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-account-3" class="accordion-collapse collapse" aria-labelledby="head-account-3" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>삭제로 이동하기 3</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 계정 탭 끝 -->
+                            <!-- 보안 탭 -->
+                            <div id="security" class="tab-pane fade">
+                                <div class="accordion accordion-with-icon" id="accordion-six">
+                                    <!-- 1 단위 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-security-1">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-security-1" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">안전한가요? 1</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-security-1" class="accordion-collapse collapse" aria-labelledby="head-security-1" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>네, 안전합니다. 1</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 1 단위 끝 -->
+                                    
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-security-2">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-security-2" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">안전한가요? 2</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-security-2" class="accordion-collapse collapse" aria-labelledby="head-security-2" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>네, 안전합니다. 2</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-security-3">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-security-3" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">안전한가요? 3</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-security-3" class="accordion-collapse collapse" aria-labelledby="head-security-3" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>네, 안전합니다. 3</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 보안 탭 끝 -->
+                            <!-- 기타 탭 -->
+                            <div id="etc" class="tab-pane fade">
+                                <div class="accordion accordion-with-icon" id="accordion-six">
+                                    <!-- 1 단위 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-etc-1">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-etc-1" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">기타 1</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-etc-1" class="accordion-collapse collapse" aria-labelledby="head-etc-1" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>기타 기타 1</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 1 단위 끝 -->
+                                    
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-etc-2">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-etc-2" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">기타 2</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-etc-2" class="accordion-collapse collapse" aria-labelledby="head-etc-2" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>기타 기타 2</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header accordion-header-primary" id="head-etc-3">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-etc-3" aria-expanded="false">
+                                                <span class="accordion-header-icon"></span>
+                                                <span class="accordion-header-text">기타 3</span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-etc-3" class="accordion-collapse collapse" aria-labelledby="head-etc-3" data-bs-parent="#accordion-six">
+                                            <div class="accordion-body">
+                                                <p>기타 기타 3</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 기타 탭 끝 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- *********************************
+    Content body end
+***********************************-->
+{% endblock %}
