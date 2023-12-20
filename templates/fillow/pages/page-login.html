@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
+{% load socialaccount %}
+{% providers_media_js %}
 <head>
 	{% load static custom_tags %}
 	<meta charset="utf-8">
@@ -70,6 +71,13 @@
 								  <div class="text-center">
 									  <button type="submit" class="btn btn-primary btn-block">Sign In</button>
 								  </div>
+
+								  {% comment %} 구글 로그인  {% endcomment %}
+								  <form action="{% provider_login_url 'google' %}" method = 'post'>
+									{% csrf_token %}
+									<button>Google Login</button>
+								  </form>
+								  {% comment %}  {% endcomment %}
 							  </form>
 							  <div class="new-account mt-3">
 								  <p>Don't have an account? <a class="text-primary" href="{% url 'fillow:page-register' %}">Sign up</a></p>
