@@ -2,7 +2,44 @@
 <div class="dlabnav">
     <div class="dlabnav-scroll">
         <ul class="metismenu" id="menu">
-            <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
+
+            <!-- 이메일 -->
+            <li>
+                <a class="has-arrow " href="javascript:void()" aria-expanded="false">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span class="nav-text">이메일</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'fillow:email-inbox' %}">받은 이메일</a></li>
+                    <li><a href="#">보낸 이메일(구현 X)</a></li>
+                    <li><a href="{% url 'fillow:email-compose' %}">이메일 전송</a></li>	
+                </ul>
+            </li>
+
+            <!-- 일정 관리 -->
+            <li>
+                <a class="has-arrow " href="javascript:void()" aria-expanded="false">
+                    <i class="fa-regular fa-calendar-days"></i>
+                    <span class="nav-text">일정 관리</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'fillow:calendar-page' %}">일정 보기</a></li>
+                    <li><a href="{% url 'fillow:app-calendar' %}">일정 수정하기</a></li>
+                </ul>
+            </li>
+
+            <!-- 고객 센터 -->
+            <li>
+                <a class="has-arrow " href="javascript:void()" aria-expanded="false">
+                    <i class="fa-solid fa-headset"></i>
+                    <span class="nav-text">고객 센터</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="#">FAQ(구현 X)</a></li>
+                    <li><a href="#">Q&A(구현 X)</a></li>
+                </ul>
+            </li>
+            <!-- <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                     <i class="fas fa-home"></i>
                     <span class="nav-text">Dashboard</span>
                 </a>
@@ -48,7 +85,7 @@
                             <li><a href="{% url 'fillow:email-read' %}">Read</a></li>
                         </ul>
                     </li>
-                    <li><a href="{% url 'fillow:app-calender' %}">Calendar</a></li>
+                    <li><a href="{% url 'fillow:app-calendar' %}">Calendar</a></li>
                     <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Shop</a>
                         <ul aria-expanded="false">
                             <li><a href="{% url 'fillow:ecom-product-grid' %}">Product Grid</a></li>
@@ -158,7 +195,7 @@
                     <li><a href="{% url 'fillow:page-lock-screen' %}">Lock Screen</a></li>
                     <li><a href="{% url 'fillow:page-empty' %}">Empty Page</a></li>
                 </ul>
-            </li>
+            </li> -->
         </ul>
         <div class="side-bar-profile">
             <div class="d-flex align-items-center justify-content-between mb-3">

@@ -1007,47 +1007,54 @@
 	
 	
 	}
-	var emailchart = function(){
-		 var options = {
-          series: [27, 11, 22,15,25],
-          chart: {
-          type: 'donut',
-		  height:230
-        },
-		dataLabels:{
-			enabled: false
-		},
-		stroke: {
-          width: 0,
-        },
-		colors:['var(--primary)', '#26E023', '#61CFF1','#FFDA7C','#FF86B1'],
-		legend: {
-              position: 'bottom',
-			  show:false
-            },
-        responsive: [{
-          breakpoint: 1800,
-          options: {
-           chart: {
-			  height:200
-			},
-          }
-        },
-		{
-          breakpoint: 1800,
-          options: {
-           chart: {
-			  height:200
-			},
-          }
-        }
-		]
-        };
 
-        var chart = new ApexCharts(document.querySelector("#emailchart"), options);
-        chart.render();
+	// 이메일 분류 현황 함수 (사용법은 ApexCharts 검색)
+	// var emailchart = function(){
+	// 	var options = {
+    //       	series: [10, 11, 22, 15, 25],
+    //       	chart: {
+    //       	type: 'pie',
+	// 	  	height:230,
+	// 		chart: {
+	// 			fontFamily: 'Noto Sans KR, sans-serif',
+	// 			fontSize: '14px',
+	// 		},
+    //     },
+	// 	labels: ['1번 분류', '2번 분류', '3번 분류', '4번 분류', '기타', ],
+	// 	dataLabels:{
+	// 		enabled: false
+	// 	},
+	// 	stroke: {
+    //       width: 0,
+    //     },
+	// 	colors:['var(--primary)', '#26E023', '#61CFF1','#FFDA7C','#FF86B1'],
+	// 	legend: {
+    //           position: 'bottom',
+	// 		  show: true
+    //         },
+    //     responsive: [{
+    //       breakpoint: 1800,
+    //       options: {
+    //        chart: {
+	// 		  height:200
+	// 		},
+    //       }
+    //     },
+	// 	{
+    //       breakpoint: 1800,
+    //       options: {
+    //        chart: {
+	// 		  height:200
+	// 		},
+    //       }
+    //     }
+	// 	]
+    //     };
+
+    //     var chart = new ApexCharts(document.querySelector("#emailchart"), options);
+    //     chart.render();
     
-	}
+	// }
  
 	/* Function ============ */
 		return {
@@ -1056,15 +1063,15 @@
 			
 			
 			load:function(){
-			donutChart1();	
-			chartBar();
+			// donutChart1();	
+			// chartBar();
 			//chartBar1();
 			//chartBar2();
-			revenueMap();
-			columnChart();
-			NewCustomers();
-			NewCustomers1();
-			redial();
+			// revenueMap();
+			// columnChart();
+			// NewCustomers();
+			// NewCustomers1();
+			// redial();
 			emailchart();
 				
 			},

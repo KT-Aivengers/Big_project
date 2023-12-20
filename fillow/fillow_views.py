@@ -3,14 +3,14 @@ from django.shortcuts import render
 
 def index(request):
     context={
-        "page_title":"Dashboard"
+        "page_title":"메인"
     }
     return render(request,'fillow/index.html',context)
 
 
 def index_2(request):
     context={
-        "page_title":"Dashboard"
+        "page_title":"메인"
     }
     return render(request,'fillow/index-2.html',context)
 
@@ -38,7 +38,7 @@ def kanban(request):
 
 def calendar_page(request):
     context={
-        "page_title":"Calendar Page"
+        "page_title":"일정 보기"
     }
     return render(request,'fillow/calendar-page.html',context)
 
@@ -129,14 +129,14 @@ def post_details(request):
 
 def email_compose(request):
     context={
-        "page_title":"Compose"
+        "page_title":"이메일 전송"
     }
     return render(request,'fillow/apps/email/email-compose.html',context)
 
 
 def email_inbox(request):
     context={
-        "page_title":"Inbox"
+        "page_title":"받은 이메일"
     }
     return render(request,'fillow/apps/email/email-inbox.html',context)
 
@@ -150,9 +150,9 @@ def email_read(request):
 
 def app_calender(request):
     context={
-        "page_title":"Calendar"
+        "page_title":"일정 수정하기"
     }
-    return render(request,'fillow/apps/app-calender.html',context)
+    return render(request,'fillow/apps/app-calendar.html',context)
 
 
 def ecom_product_grid(request):
