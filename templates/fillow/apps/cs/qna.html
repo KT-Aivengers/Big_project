@@ -11,7 +11,161 @@
 <div class="content-body default-height">
     <!-- row -->
     <div class="container-fluid">
-        <h1>Q&A</h1>
+        <div class="row page-titles">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">고객 센터</li>
+				<li class="breadcrumb-item active">Q&A</li>
+			</ol>
+		</div>
+
+        <div class="card mb-4 d-block">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h4 class="card-title">묻고 답하기</h4>
+                    <!-- <p class="m-0 subtitle">서브타이틀</p> -->
+                </div>
+                <div>
+                    <a href="{% url 'fillow:qna' %}" class="btn btn-primary btn-rounded">문의하기</a>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <!-- 문의 글 리스트 -->
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>등록 번호</th>
+                                <th>제목</th>
+                                <th>상태</th>
+                                <th>최종 수정 날짜</th>
+                                <th>수정/삭제</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 1 단위 -->
+                            <tr>
+                                <td>1</td>
+                                <td>테스트 1</td>
+                                <td>답변 완료</td>
+                                <td>2023/12/20</td>
+                                <td class="text-nowrap">
+                                    <a href="javascript:void(0);" class="btn btn-warning btn-sm content-icon">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm content-icon">
+                                            <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <!-- 1 단위 끝 -->
+                            <tr>
+                                <td>2</td>
+                                <td>테스트 2</td>
+                                <td>답변 대기</td>
+                                <td>2023/12/19</td>
+                                <td class="text-nowrap">
+                                    <a href="javascript:void(0);" class="btn btn-warning btn-sm content-icon">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm content-icon">
+                                            <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>테스트 3</td>
+                                <td>답변 대기</td>
+                                <td>2023/12/19</td>
+                                <td class="text-nowrap">
+                                    <a href="javascript:void(0);" class="btn btn-warning btn-sm content-icon">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm content-icon">
+                                            <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>테스트 4</td>
+                                <td>답변 완료</td>
+                                <td>2023/12/19</td>
+                                <td class="text-nowrap">
+                                    <a href="javascript:void(0);" class="btn btn-warning btn-sm content-icon">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm content-icon">
+                                            <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>테스트 5</td>
+                                <td>답변 완료</td>
+                                <td>2023/12/19</td>
+                                <td class="text-nowrap">
+                                    <a href="javascript:void(0);" class="btn btn-warning btn-sm content-icon">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm content-icon">
+                                            <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                        <p class="mb-2 me-3">5페이지 중 1번째</p>
+                        <nav aria-label="Page navigation example mb-2">
+                            <ul class="pagination mb-2 mb-sm-0">
+                            <li class="page-item"><a class="page-link" href="javascript:void(0);"><i class="fa-solid fa-angle-left"></i></a></li>
+                            <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
+                            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                            <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
+                            <li class="page-item"><a class="page-link " href="javascript:void(0);"><i class="fa-solid fa-angle-right"></i></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <!-- 문의 글 리스트 -->
+
+                <!-- 검색 -->
+                <div class="row">
+                    <div class="col-xl-3 col-sm-6">
+                        <label class="form-label">제목</label>
+                        <input type="text" class="form-control mb-xl-0 mb-3" id="qna-title" placeholder="제목">
+                    </div>
+                    <div class="col-xl-3  col-sm-6 mb-3 mb-xl-0">
+                        <label class="form-label">내용</label>
+                        <input type="text" class="form-control mb-xl-0 mb-3" id="qna-content" placeholder="내용"> 
+                    </div>
+                    <div class="col-xl-3 col-sm-6">
+                        <label class="form-label">날짜</label>
+                        <div class="row">
+                            <div class="col-lg-5 d-flex align-items-center justify-content-end">
+                                <input name="datepicker1" class="datepicker-default form-control picker__input" id="datepicker-1" readonly aria-haspopup="true" aria-expanded="true" aria-readonly="false" aria-owns="datepicker-1_root" placeholder="이후부터">
+                            </div>
+                            <div class="col-lg-1 d-flex align-items-center justify-content-center">
+                                <span class="fw-bold">~</span>
+                            </div>
+                            <div class="col-lg-5 d-flex align-items-center justify-content-start">
+                                <input name="datepicker2" class="datepicker-default form-control picker__input" id="datepicker-2" readonly aria-haspopup="true" aria-expanded="true" aria-readonly="false" aria-owns="datepicker-2_root" placeholder="이전까지">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-6 align-self-end">
+                        <div>
+                            <button class="btn btn-primary me-2" title="검색" type="button"><i class="fa-solid fa-magnifying-glass"></i></i>검색</button>
+                            <button class="btn btn-danger light" title="초기화" type="button">초기화</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 검색 끝 -->
+            </div>
+        </div>
     </div>
 </div>
 <!--**********************************

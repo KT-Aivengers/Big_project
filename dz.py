@@ -132,6 +132,19 @@ dz_array = {
                         "email_read": [
                             f"{folder_name}/vendor/jqueryui/css/jquery-ui.min.css",
                         ],
+                        "email_sent": [
+                        ],
+                        "faq": [
+                        ],
+                        "qna": [
+                            f"{folder_name}/vendor/bootstrap-daterangepicker/daterangepicker.css",
+                            f"{folder_name}/vendor/clockpicker/css/bootstrap-clockpicker.min.css",
+                            f"{folder_name}/vendor/jquery-asColorPicker/css/asColorPicker.min.css",
+                            f"{folder_name}/vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css",
+                            f"{folder_name}/vendor/bootstrap-datepicker-master/css/bootstrap-datepicker.min.css",
+                            f"{folder_name}/vendor/pickadate/themes/default.css",
+                            f"{folder_name}/vendor/pickadate/themes/default.date.css",
+                        ],
                         "form_editor": [
                         ],
                         "form_element": [
@@ -376,6 +389,27 @@ dz_array = {
                         ],
                         "email_read": [
                             f"{folder_name}/vendor/jqueryui/js/jquery-ui.min.js",
+                        ],
+                        "email_sent": [
+                        ],
+                        "faq": [
+                        ],
+                        "qna": [
+                            f"{folder_name}/vendor/moment/moment.min.js",
+                            f"{folder_name}/vendor/bootstrap-daterangepicker/daterangepicker.js",
+                            f"{folder_name}/vendor/clockpicker/js/bootstrap-clockpicker.min.js",
+                            f"{folder_name}/vendor/jquery-asColor/jquery-asColor.min.js",
+                            f"{folder_name}/vendor/jquery-asGradient/jquery-asGradient.min.js",
+                            f"{folder_name}/vendor/jquery-asColorPicker/js/jquery-asColorPicker.min.js",
+                            f"{folder_name}/vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js",
+                            f"{folder_name}/vendor/pickadate/picker.js",
+                            f"{folder_name}/vendor/pickadate/picker.time.js",
+                            f"{folder_name}/vendor/pickadate/picker.date.js",
+                            f"{folder_name}/js/plugins-init/bs-daterange-picker-init.js",
+                            f"{folder_name}/js/plugins-init/clock-picker-init.js",
+                            f"{folder_name}/js/plugins-init/jquery-asColorPicker.init.js",
+                            f"{folder_name}/js/plugins-init/material-date-picker-init.js",
+                            f"{folder_name}/js/plugins-init/pickadate-init.js",
                         ],
                         "form_editor": [
                             f"{folder_name}/vendor/ckeditor/ckeditor.js",
