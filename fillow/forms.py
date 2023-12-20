@@ -1,6 +1,26 @@
 from django import forms
-from django.contrib.auth.hashers import check_password
-from .models import User
+from .models import User, Document
+
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        label="아이디",
+        widget = forms.TextInput(
+            attrs={
+                "class": 'form-control',
+                "placeholder": "아이디를 입력하세요"  
+            }
+        ),
+    )
+    password = forms.CharField(
+        label="비밀번호",
+        widget = forms.PasswordInput(
+            attrs={
+                "class": 'form-control',
+                "placeholder": "비밀번호를 입력하세요",
+            }
+        ),
+    )
+    
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -59,3 +79,8 @@ class UserForm(forms.ModelForm):
                 }
             ),
         }
+
+class DocumentForm(forms.ModelForm):
+    class Meta:
+        model = Document
+        fields = ('uploaded_file',)

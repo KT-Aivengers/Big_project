@@ -23,3 +23,6 @@ class User(models.Model):
     
     def __str__(self):
         return self.user_id
+
+class Document(models.Model):
+    uploaded_file = models.FileField(upload_to='documents/')

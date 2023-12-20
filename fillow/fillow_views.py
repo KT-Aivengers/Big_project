@@ -1,5 +1,6 @@
 from django.shortcuts import render
-
+from .models import Document
+from .forms import DocumentForm
 
 def index(request):
     context={
@@ -541,7 +542,15 @@ def page_error_500(request):
 def page_error_503(request):
     return render(request,'503.html')
     
-
+def upload_file(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("fillow:index")
+    else:
+        form = DocumentForm()
+    return render(request, 'fillow/pages/upload.html', {'form': form})
 
 
 

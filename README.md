@@ -4,4 +4,5 @@ Truble shooting
    - programs files 에 있다 보니 prompt 창을 관리자 권한으로 열어줘야함!
    - root 계정 삭제 안하고 초기화 후 변경하려고 했는데, 뭐가 문제인지는 모르겠는데 안돼...
 
+2. main 처음 사용시, pip install mysqlclient 필수
 2. 폰트 적용 안되서 poppins를 Noto Sans KR로 변경

@@ -93,4 +93,5 @@ urlpatterns = [
     path('page-error-500/',fillow_views.page_error_500,name="page-error-500"),
     path('page-error-503/',fillow_views.page_error_503,name="page-error-503"),
 
+    path('upload/', fillow_views.upload_file, name='upload_file'),
 ]
