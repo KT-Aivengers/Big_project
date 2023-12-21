@@ -2,6 +2,10 @@ from typing import Any
 from django.shortcuts import render
 from .models import Document
 from .forms import DocumentForm
+from .gpt import process_file
+
+
+
 
 def index(request):
     context={
@@ -606,7 +610,9 @@ def upload_file(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            document=form.save()
+            text="asd"
+            process_file(text)
             return redirect("fillow:index")
     else:
         form = DocumentForm()
