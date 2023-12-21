@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Document
+from .models import User, Document, Email
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -63,3 +63,8 @@ class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
         fields = ('uploaded_file',)
+        
+class EmailForm(forms.ModelForm):
+    class Meta:
+        model = Email
+        fields = ['email_file_name','email_subject','email_date','email_from','email_to','email_cc','email_text_content']
