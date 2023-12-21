@@ -2,7 +2,7 @@ from typing import Any
 from django.shortcuts import render
 from .models import Document
 from .forms import DocumentForm
-from .gpt import process_file
+# from .gpt import process_file
 
 
 
@@ -556,35 +556,6 @@ class Login(views.LoginView):
             form = LoginForm()
             
         return render(request,'fillow/pages/page-login.html', {'form': form})
-
-# def page_login(request):
-#     # print("enter")
-#     if request.method == "POST":
-#         # print("post")
-#         form = LoginForm(request.POST)
-#         if form.is_valid():
-#             # print("valid")
-#             username = request.POST['username']
-#             password = request.POST['password']
-#             # print(username, password)
-#             context={}
-#             try:
-#                 user = User.objects.get(user_id=username)
-#             except:
-#                 return redirect("fillow:page-login")
-#             if user.user_pw == password:
-#                 request.session['user'] = user.user_name
-#                 context['userInSession'] = request.session['user']
-                
-#                 return render(request, "fillow/index.html", context)
-#             else:
-#                 return redirect("fillow:page-login")
-#     else:
-#         form = LoginForm()
-        
-#     return render(request,'fillow/pages/page-login.html', {'form': form})
-    
-    
 
 def page_forgot_password(request):
     return render(request,'fillow/pages/page-forgot-password.html')
