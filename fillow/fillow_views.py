@@ -1,6 +1,12 @@
 from django.shortcuts import render
 
 
+def home(request):
+    context={
+        "page_title":"home"
+    }
+    return render(request,'fillow/home.html',context)
+
 def index(request):
     context={
         "page_title":"메인"

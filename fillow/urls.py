@@ -3,6 +3,7 @@ from fillow import fillow_views
 app_name='fillow'
 urlpatterns = [
     path('',fillow_views.index,name="index"),
+    path('home/',fillow_views.home,name="home"),
     path('index/',fillow_views.index,name="index"),
     path('index-2/',fillow_views.index_2,name="index-2"),
     path('project-page/',fillow_views.project_page,name="project-page"),

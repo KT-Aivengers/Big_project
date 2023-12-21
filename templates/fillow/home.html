@@ -1,0 +1,125 @@
+
+{% load static %}
+        
+{% block additional_css %}
+{% endblock %}
+		
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HyeopjaeSea Landing Page</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 50px;
+  }
+
+  .menu-bar {
+    list-style: none;
+    display: flex;
+  }
+
+  .menu-bar li {
+    padding: 0 10px;
+    cursor: pointer;
+  }
+
+  .menu-bar li:hover {
+    text-decoration: underline;
+  }
+
+  .landing-wording {
+    text-align: center;
+    margin: 20px;
+  }
+
+  .landing-wording h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+
+  .landing-wording p {
+    font-size: 1em;
+    line-height: 1.5em;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  button {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  @media (max-width: 768px) {
+    .header, .menu-bar, .landing-wording, .buttons {
+      padding: 5px;
+      flex-direction: column;
+    }
+
+    .menu-bar li {
+      margin-bottom: 5px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="logo.png" alt="HyeopjaeSea Logo" />
+  <ul class="menu-bar">
+    <li>Home</li>
+    <li>About</li>
+    <li>Contact</li>
+  </ul>
+</div>
+
+<div class="landing-wording">
+  <h1>휴가 갔다오면 쌓여 있는 이메일..! 생각만해도 머리아프다 😭</h1>
+  <p>쌓여있는 이메일을 AI기술을 통해 분류해주는 협재씨서비스를 사용해보세요! 사용자 데이터기반으로 답장이 필요하거나 중요도 높은 이메일을 분류해주어 여러분이 정말로 중요한 일에만 집중할 수 있도록 도와드리겠습니다!<br><br>자 그럼, 매일 쏟아지는 이메일 홍수 속에서 중요한 이메일만 남은 에메랄드 빛 협재씨로 가볼까요</p>
+</div>
+
+<div class="buttons">
+  <button type="button">Join</button>
+  <button type="button">Login</button>
+</div>
+
+</body>
+</html>
+
+
+{% endblock %}
+
