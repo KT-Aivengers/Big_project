@@ -27,7 +27,7 @@
                 <div>
                     <a href="{% url 'fillow:qna' %}" class="btn btn-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#postModal">문의하기</a>
                 </div>
-                <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="postModal">
+                <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="postModal" data-bs-backdrop="static" data-bs-keyboard="false">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -40,18 +40,18 @@
                                     <form>
                                         <div class="mb-3">
                                             <label class="form-label">제목</label>
-                                            <input type="text" class="form-control input-default">
+                                            <input type="text" class="form-control input-default" id="title">
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">내용</label>
-                                            <textarea class="form-control" rows="8" id="comment"></textarea>
+                                            <textarea class="form-control" rows="8" id="detail"></textarea>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">닫기</button>
-                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">게시</button>
+                                <button type="button" class="btn btn-danger light" id="closeModal">닫기</button>
+                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="post">게시</button>
                             </div>
                         </div>
                     </div>
@@ -188,7 +188,7 @@
                     </div>
                     <div class="col-xl-3 col-sm-6 align-self-end">
                         <div>
-                            <button class="btn btn-primary me-2" title="검색" type="button"><i class="fa-solid fa-magnifying-glass"></i></i>검색</button>
+                            <button class="btn btn-primary me-2" title="검색" type="button"><i class="fa-solid fa-magnifying-glass"></i></i> 검색</button>
                             <button class="btn btn-danger light" title="초기화" type="button">초기화</button>
                         </div>
                     </div>
@@ -201,4 +201,9 @@
 <!--**********************************
     Content body end
 ***********************************-->
+<style>
+    [data-theme-version=dark] .swal2-title {
+        color: #FFFFFF;
+    }
+</style>
 {% endblock %}
