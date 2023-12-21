@@ -8,16 +8,30 @@
     }
 
     .background {
-        background: url("{% static 'fillow/images/background.png'%}") no-repeat bottom;
+        background-image: url("{% static 'fillow/images/background.png'%}");
         background-size: cover;
-        height: 80vh;
+        background-position: center top;
+        height: 78vh;
         color: black;
         text-align: center;
+        animation: moveBackground 30s ease-in-out infinite;
     }
 
     .background img {
         display: block;
         margin: 0 auto; 
+    }
+
+    @keyframes moveBackground {
+        0% {
+            background-position: center bottom;
+        }
+        50% {
+            background-position: center top;
+        }
+        100% {
+            background-position: center bottom;
+        }
     }
 </style>
 {% endblock %}
@@ -30,7 +44,7 @@
     <!-- row -->
     <div class="container-fluid">
         <div class="background card">
-            <img src="{% static 'fillow/images/logo.svg' %}" alt="HyeopjaeSea" width="200" height="200">
+            <img src="{% static 'fillow/images/logotextgreen.svg' %}" alt="HyeopjaeSea" width="200" height="200">
             <ul class="menu-bar">
                 <li>Home</li>
                 <li>About</li>
