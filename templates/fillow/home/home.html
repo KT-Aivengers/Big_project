@@ -32,7 +32,7 @@
         100% {
             background-position: center bottom;
         }
-    }
+    }   
 </style>
 {% endblock %}
 
@@ -44,19 +44,27 @@
     <!-- row -->
     <div class="container-fluid">
         <div class="background card">
-            <img src="{% static 'fillow/images/logotextgreen.svg' %}" alt="HyeopjaeSea" width="200" height="200">
-            <ul class="menu-bar">
-                <li>Home</li>
-                <li>About</li>
-                <li>Contact</li>
-            </ul>
-            <div class="landing-wording">
-                <h1>휴가 갔다오면 쌓여 있는 이메일..! 생각만해도 머리아프다 😭</h1>
-                <span>쌓여있는 이메일을 AI기술을 통해 분류해주는 협재씨서비스를 사용해보세요! 사용자 데이터기반으로 답장이 필요하거나 중요도 높은 이메일을 분류해주어 여러분이 정말로 중요한 일에만 집중할 수 있도록 도와드리겠습니다!<br><br>자 그럼, 매일 쏟아지는 이메일 홍수 속에서 중요한 이메일만 남은 에메랄드 빛 협재씨로 가볼까요</span>
+            <div>
+                <img src="{% static 'fillow/images/logofull.svg' %}" alt="HyeopjaeSea" width="200" height="200">
+                <div>
+                    <button type="button" class="btn btn-rounded btn-primary"><span
+                        class="btn-icon-start text-primary"><i class="fa-solid fa-house"></i>
+                    </span>Home</button>
+                    <button type="button" class="btn btn-rounded btn-info"><span
+                        class="btn-icon-start text-info"><i class="fa-solid fa-circle-info"></i>
+                    </span>About</button>
+                    <button type="button" class="btn btn-rounded btn-danger"><span
+                        class="btn-icon-start text-danger"><i class="fa-solid fa-envelope"></i>
+                    </span>Contact</button>
+                </div>                
             </div>
-            <div class="buttons">
-                <button type="button">Join</button>
-                <button type="button">Login</button>
+            <div>
+                <div class="landing-wording">
+                    <h1>휴가 갔다오면 쌓여 있는 이메일..! 생각만해도 머리아프다 😭</h1>
+                    <h4>쌓여있는 이메일을 AI기술을 통해 분류해주는 협재씨서비스를 사용해보세요! 사용자 데이터기반으로 답장이 필요하거나 중요도 높은 이메일을 분류해주어 여러분이 정말로 중요한 일에만 집중할 수 있도록 도와드리겠습니다!<br><br>자 그럼, 매일 쏟아지는 이메일 홍수 속에서 중요한 이메일만 남은 에메랄드 빛 협재씨로 가볼까요?</h4>
+                </div>
+                <button type="button" class="btn btn-primary">로그인</button>
+                <button type="button" class="btn btn-warning">회원가입</button>
             </div>
         </div>
     </div>
