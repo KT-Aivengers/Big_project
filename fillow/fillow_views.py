@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render
 from .models import Document
 from .forms import DocumentForm
@@ -469,49 +470,87 @@ def table_datatable_basic(request):
 
 from django.shortcuts import redirect
 from .forms import UserForm, LoginForm
-from .models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
-
+from django.contrib.auth import views
 
 def page_register(request):
     if request.method == "POST":
         form = UserForm(request.POST)
+        print(form)
         if form.is_valid():
-            user = User.objects.create(**form.cleaned_data)
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_pw = form.cleaned_data.get('password1')
+            user = authenticate(username = username, password = raw_pw)
+            login(request, user)
             return redirect("fillow:index")
     else:
         form = UserForm()
     
     return render(request,'fillow/pages/page-register.html', {'form':form})
 
-def page_login(request):
-    # print("enter")
-    if request.method == "POST":
-        # print("post")
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            # print("valid")
-            username = request.POST['username']
-            password = request.POST['password']
-            # print(username, password)
-            context={}
-            try:
-                user = User.objects.get(user_id=username)
-            except:
-                return redirect("fillow:page-login")
-            if user.user_pw == password:
-                request.session['user'] = user.user_name
-                context['userInSession'] = request.session['user']
-                
-                return render(request, "fillow/index.html", context)
+from .forms import LoginForm
+
+
+class Login(views.LoginView):
+    template_name = "fillow/pages/page-login.html"
+    def page_login(request):
+        if request.method == "POST":
+            print("post")
+            form = LoginForm(request)
+            if form.is_valid():
+                print("valid")
+                username = request.POST['username']
+                password = request.POST['password']
+                # print(username, password)
+                context={}
+                try:
+                    user = User.objects.get(user_id=username)
+                except:
+                    return redirect("fillow:page-login")
+                if user.user_pw == password:
+                    request.session['user'] = user.user_name
+                    context['userInSession'] = request.session['user']
+                    
+                    return render(request, "fillow/index.html", context)
+                else:
+                    return redirect("fillow:page-login")
             else:
-                return redirect("fillow:page-login")
-    else:
-        form = LoginForm()
+                print("why?")
+                print(form.errors)
+        else:
+            form = LoginForm()
+            
+        return render(request,'fillow/pages/page-login.html', {'form': form})
+
+# def page_login(request):
+#     # print("enter")
+#     if request.method == "POST":
+#         # print("post")
+#         form = LoginForm(request.POST)
+#         if form.is_valid():
+#             # print("valid")
+#             username = request.POST['username']
+#             password = request.POST['password']
+#             # print(username, password)
+#             context={}
+#             try:
+#                 user = User.objects.get(user_id=username)
+#             except:
+#                 return redirect("fillow:page-login")
+#             if user.user_pw == password:
+#                 request.session['user'] = user.user_name
+#                 context['userInSession'] = request.session['user']
+                
+#                 return render(request, "fillow/index.html", context)
+#             else:
+#                 return redirect("fillow:page-login")
+#     else:
+#         form = LoginForm()
         
-    return render(request,'fillow/pages/page-login.html', {'form': form})
-    
+#     return render(request,'fillow/pages/page-login.html', {'form': form})
     
     
 

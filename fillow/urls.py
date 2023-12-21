@@ -1,7 +1,7 @@
 from django.urls import path
 from fillow import fillow_views
 from django.contrib.auth import views as auth_views
-
+from .forms import LoginForm
 
 app_name='fillow'
 urlpatterns = [
@@ -81,8 +81,14 @@ urlpatterns = [
     path('table-bootstrap-basic/',fillow_views.table_bootstrap_basic,name="table-bootstrap-basic"),
     path('table-datatable-basic/',fillow_views.table_datatable_basic,name="table-datatable-basic"),
 
+    
+        
 
-    path('page-login/',fillow_views.page_login,name="page-login"),    
+
+    path('page-login/', auth_views.LoginView.as_view(template_name="fillow/pages/page-login"), name="page-login"),
+    # path('page-login/', auth_views.LoginView.as_view(template_name="fillow/pages/page-login.html"), name="page-login"),
+    path('page-logout/', auth_views.LogoutView.as_view(template_name="fillow/index.html"), name='page-logout'),
+    # path('page-login/',fillow_views.page_login,name="page-login"),
     path('page-register/',fillow_views.page_register,name="page-register"),
     path('page-forgot-password/',fillow_views.page_forgot_password,name="page-forgot-password"),
     path('page-lock-screen/',fillow_views.page_lock_screen,name="page-lock-screen"),
