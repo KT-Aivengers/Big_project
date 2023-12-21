@@ -7,6 +7,13 @@ from .gpt import process_file
 
 
 
+def home(request):
+    context={
+        "page_title":"홈"
+    }
+    return render(request,'fillow/home/home.html',context)
+
+
 def index(request):
     context={
         "page_title":"메인"
