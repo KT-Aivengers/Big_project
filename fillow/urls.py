@@ -2,6 +2,8 @@ from django.urls import path
 from fillow import fillow_views
 app_name='fillow'
 urlpatterns = [
+    path('home',fillow_views.home,name='home'),
+    
     path('',fillow_views.index,name="index"),
     path('index/',fillow_views.index,name="index"),
     path('index-2/',fillow_views.index_2,name="index-2"),

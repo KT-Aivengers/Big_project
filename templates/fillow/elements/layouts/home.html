@@ -28,7 +28,6 @@
         {% endfor %}
         {% block additional_css %}
         {% endblock %}
-        
     </head>
 <body>
 
@@ -64,8 +63,6 @@
             Chat box start
         ***********************************-->
 
-        {% include 'fillow/elements/chatbox.html' %}
-
 		<!--**********************************
             Chat box End
         ***********************************-->
@@ -74,22 +71,13 @@
             Header start
         ***********************************-->
 
-        {% include 'fillow/elements/header.html' %}
+        {% include 'fillow/elements/home-header.html' %}
 
         <!--**********************************
             Header end 
         ***********************************-->
-
-        <!--**********************************
-            Sidebar start
-        ***********************************-->
-
-        {% include 'fillow/elements/sidebar.html' %}
-        <!--**********************************
-            Sidebar end
-        ***********************************-->
 		
-
+ 
         {% block message %}
         {% endblock %}
 
