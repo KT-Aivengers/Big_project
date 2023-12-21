@@ -1,9 +1,13 @@
 from django.urls import path
 from fillow import fillow_views
+from django.contrib.auth import views as auth_views
+from .forms import LoginForm
 
 app_name='fillow'
 urlpatterns = [
-    path('',fillow_views.index,name="index"),
+    path('home/',fillow_views.home,name='home'),
+    
+    path('',fillow_views.home,name="home"),
     path('index/',fillow_views.index,name="index"),
     path('index-2/',fillow_views.index_2,name="index-2"),
     path('project-page/',fillow_views.project_page,name="project-page"),
@@ -18,7 +22,10 @@ urlpatterns = [
     path('email-compose/',fillow_views.email_compose,name="email-compose"),
     path('email-inbox/',fillow_views.email_inbox,name="email-inbox"),
     path('email-read/',fillow_views.email_read,name="email-read"),
-    path('app-calender/',fillow_views.app_calender,name="app-calender"),
+    path('email-sent/',fillow_views.email_sent,name="email-sent"),
+    path('faq/',fillow_views.faq,name="faq"),
+    path('qna/',fillow_views.qna,name="qna"),
+    path('app-calendar/',fillow_views.app_calender,name="app-calendar"),
     path('ecom-product-grid/',fillow_views.ecom_product_grid,name="ecom-product-grid"),
     path('ecom-product-list/',fillow_views.ecom_product_list,name="ecom-product-list"),
     path('ecom-product-detail/',fillow_views.ecom_product_detail,name="ecom-product-detail"),
@@ -80,7 +87,10 @@ urlpatterns = [
     path('table-datatable-basic/',fillow_views.table_datatable_basic,name="table-datatable-basic"),
 
 
-    path('page-login/',fillow_views.page_login,name="page-login"),
+    path('page-login/', auth_views.LoginView.as_view(template_name="fillow/pages/page-login.html", form_class = LoginForm), name="page-login"),
+    # path('page-login/', auth_views.LoginView.as_view(template_name="fillow/pages/page-login.html"), name="page-login"),
+    path('page-logout/', auth_views.LogoutView.as_view(template_name="fillow/index.html"), name='page-logout'),
+    # path('page-login/',fillow_views.page_login,name="page-login"),
     path('page-register/',fillow_views.page_register,name="page-register"),
     path('page-forgot-password/',fillow_views.page_forgot_password,name="page-forgot-password"),
     path('page-lock-screen/',fillow_views.page_lock_screen,name="page-lock-screen"),

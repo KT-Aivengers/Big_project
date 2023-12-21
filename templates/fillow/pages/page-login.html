@@ -44,19 +44,21 @@
 								  <a href="{% url 'fillow:index' %}"><img class="logo-auth" src="{% static 'fillow/images/logo-full.png' %}" alt=""></a>
 							  </div>
 							  <h4 class="text-center mb-4">Sign in your account</h4>
-							  <form action="{% url 'fillow:index' %}">
-								  <div class="form-group mb-4">
-									  <label class="form-label" for="username">Username</label>
-									  <input type="text" class="form-control" placeholder="Enter username" id="username">
+							  <form action="{% url 'fillow:page-login' %}" method="POST">
+								{% csrf_token %}
+								{{ form.as_p }}
+								  {% comment %} <div class="form-group mb-4">
+									  <label class="form-label" for="username">아이디</label>
+									  <input type="text" class="form-control" placeholder="Enter ID" id="username">
 								  </div>
 								  <div class="mb-sm-4 mb-3 position-relative">
-									  <label class="form-label" for="dlab-password">Password</label>
-									  <input type="password" id="dlab-password" class="form-control" value="123456">
+									  <label class="form-label" for="dlab-password">비밀번호</label>
+									  <input type="password" id="dlab-password" class="form-control" value="0000">
 									  <span class="show-pass eye">
 										  <i class="fa fa-eye-slash"></i>
 										  <i class="fa fa-eye"></i>
 									  </span>
-								  </div>
+								  </div> {% endcomment %}
 								  <div class="form-row d-flex flex-wrap justify-content-between mb-2">
 									  <div class="form-group mb-sm-4 mb-1">
 										  <div class="form-check custom-checkbox ms-1">

@@ -1,21 +1,29 @@
+from typing import Any
 from django.shortcuts import render
 from .models import Document
 from .forms import DocumentForm
-from .gpt import process_file
+# from .gpt import process_file
 
 
+
+
+def home(request):
+    context={
+        "page_title":"홈"
+    }
+    return render(request,'fillow/home/home.html',context)
 
 
 def index(request):
     context={
-        "page_title":"Dashboard"
+        "page_title":"메인"
     }
     return render(request,'fillow/index.html',context)
 
 
 def index_2(request):
     context={
-        "page_title":"Dashboard"
+        "page_title":"메인"
     }
     return render(request,'fillow/index-2.html',context)
 
@@ -43,7 +51,7 @@ def kanban(request):
 
 def calendar_page(request):
     context={
-        "page_title":"Calendar Page"
+        "page_title":"일정 보기"
     }
     return render(request,'fillow/calendar-page.html',context)
 
@@ -134,30 +142,51 @@ def post_details(request):
 
 def email_compose(request):
     context={
-        "page_title":"Compose"
+        "page_title":"이메일 전송"
     }
     return render(request,'fillow/apps/email/email-compose.html',context)
 
 
 def email_inbox(request):
     context={
-        "page_title":"Inbox"
+        "page_title":"받은 이메일"
     }
     return render(request,'fillow/apps/email/email-inbox.html',context)
 
 
 def email_read(request):
     context={
-        "page_title":"Read"
+        "page_title":"내용 보기"
     }
     return render(request,'fillow/apps/email/email-read.html',context)
 
 
+def email_sent(request):
+    context={
+        "page_title":"보낸 이메일"
+    }
+    return render(request,'fillow/apps/email/email-sent.html',context)
+
+
+def faq(request):
+    context={
+        "page_title":"FAQ"
+    }
+    return render(request,'fillow/apps/cs/faq.html',context)
+
+
+def qna(request):
+    context={
+        "page_title":"Q&A"
+    }
+    return render(request,'fillow/apps/cs/qna.html',context)
+
+
 def app_calender(request):
     context={
-        "page_title":"Calendar"
+        "page_title":"일정 수정하기"
     }
-    return render(request,'fillow/apps/app-calender.html',context)
+    return render(request,'fillow/apps/app-calendar.html',context)
 
 
 def ecom_product_grid(request):
@@ -472,24 +501,61 @@ def table_datatable_basic(request):
 
 
 from django.shortcuts import redirect
-from .forms import UserForm
-from .models import User
-
+from .forms import UserForm, LoginForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import views
 
 def page_register(request):
-    
     if request.method == "POST":
         form = UserForm(request.POST)
+        print(form)
         if form.is_valid():
-            user = User.objects.create(**form.cleaned_data)
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_pw = form.cleaned_data.get('password1')
+            user = authenticate(username = username, password = raw_pw)
+            login(request, user)
             return redirect("fillow:index")
     else:
         form = UserForm()
     
     return render(request,'fillow/pages/page-register.html', {'form':form})
 
-def page_login(request):
-    return render(request,'fillow/pages/page-login.html')
+from .forms import LoginForm
+
+
+class Login(views.LoginView):
+    template_name = "fillow/pages/page-login.html"
+    def page_login(request):
+        if request.method == "POST":
+            print("post")
+            form = LoginForm(request)
+            if form.is_valid():
+                print("valid")
+                username = request.POST['username']
+                password = request.POST['password']
+                # print(username, password)
+                context={}
+                try:
+                    user = User.objects.get(user_id=username)
+                except:
+                    return redirect("fillow:page-login")
+                if user.user_pw == password:
+                    request.session['user'] = user.user_name
+                    context['userInSession'] = request.session['user']
+                    
+                    return render(request, "fillow/index.html", context)
+                else:
+                    return redirect("fillow:page-login")
+            else:
+                print("why?")
+                print(form.errors)
+        else:
+            form = LoginForm()
+            
+        return render(request,'fillow/pages/page-login.html', {'form': form})
 
 def page_forgot_password(request):
     return render(request,'fillow/pages/page-forgot-password.html')
