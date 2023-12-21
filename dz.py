@@ -32,6 +32,8 @@ dz_array = {
             "fillow":{#AppName
                 "fillow_views":{
                     "css":{
+                        "home" : [f"{folder_name}/vendor/home/home-basic.css",
+                        ],
                         "index": [
                             f"{folder_name}/vendor/owl-carousel/owl.carousel.css",
                             f"{folder_name}/vendor/nouislider/nouislider.min.css",

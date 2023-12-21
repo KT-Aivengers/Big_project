@@ -8,6 +8,19 @@ def home(request):
     return render(request,'fillow/home/home.html',context)
 
 
+def home(request):
+    context={
+        "page_title":"홈"
+    }
+    return render(request,'fillow/home/home.html',context)
+
+
+def home(request):
+    context={
+        "page_title":"home"
+    }
+    return render(request,'fillow/home.html',context)
+
 def index(request):
     context={
         "page_title":"메인"
