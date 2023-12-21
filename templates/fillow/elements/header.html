@@ -273,14 +273,9 @@
 							{% endif %} {% endcomment %}
 
 							{% if request.user.is_authenticated %}
-								<div>{{request.user.username}}님 안녕하세요.</div>
+								<div>{{request.user.first_name}}님 안녕하세요!</div>
 							{% else %}
-								{% if userInSession %}
-									<div>{{userInSession}}님 안녕하세요.</div>
-								{% else %}
-									<a href='{% url "fillow:page-login" %}'>로그인</a>
-								{% endif %}
-								
+								<a href='{% url "fillow:page-login" %}'>로그인</a>
 							{% endif %}
 						</a>
 						<div class="dropdown-menu dropdown-menu-end">
