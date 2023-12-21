@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UsernameField
 from django import forms
 from django.contrib.auth.models import User
-from .models import Document, AdditionalInform
+from .models import Document, Email, AdditionalInform, User
 from django.core.validators import RegexValidator
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.text import capfirst
@@ -69,3 +69,8 @@ class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
         fields = ('uploaded_file',)
+        
+class EmailForm(forms.ModelForm):
+    class Meta:
+        model = Email
+        fields = ['email_file_name','email_subject','email_date','email_from','email_to','email_cc','email_text_content']

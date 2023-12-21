@@ -1,6 +1,6 @@
 from typing import Any
 from django.shortcuts import render
-from .models import Document
+from .models import Document, Email
 from .forms import DocumentForm
 
 def index(request):
@@ -580,12 +580,54 @@ def page_error_500(request):
 
 def page_error_503(request):
     return render(request,'503.html')
-    
+
+
+from fillow import emlExtracter
+import os
+import sys
+
+from django.core.files.base import ContentFile
+import io
+from fillow.msgToEml import load
+
 def upload_file(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
+        
         if form.is_valid():
             form.save()
+            
+            msg_name = request.FILES['uploaded_file'].name
+            form.cleaned_data['uploaded_file'].seek(0)
+            msg_contents = form.cleaned_data['uploaded_file'].read()
+            
+            uploaded_file = request.FILES['uploaded_file'] 
+            recent_document = Document.objects.latest('id')
+            file_path = recent_document.uploaded_file.path
+            
+            # eml_name = os.path.basename(file_path).split('.msg')[0] + '.eml'
+            eml_name = file_path.split('.msg')[0] + '.eml'
+            print(eml_name)
+            
+            with open(eml_name , "wb") as f:
+                contents = load(uploaded_file)
+                f.write(contents.as_bytes())        
+                    
+            headers = ['file_name','Subject','Date','From','To','Cc','text_content']
+            result = emlExtracter.prcessing_dir(headers, eml_name)
+            
+            email_instance = Email(
+            email_file_name=result.get('file_name', ''),
+            email_subject=result.get('Subject', ''),
+            email_date=result.get('Date', ''),
+            email_from=result.get('From', ''),
+            email_to=result.get('To', ''),
+            email_cc=result.get('Cc', ''),
+            email_text_content=result.get('text_content', '')
+            )
+
+            email_instance.save()
+            
             return redirect("fillow:index")
     else:
         form = DocumentForm()
