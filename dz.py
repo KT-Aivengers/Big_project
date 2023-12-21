@@ -4,11 +4,11 @@ folder_name = "fillow"
 dz_array = {
         "public":{
             "favicon":f"{folder_name}/images/favicon.png",
-            "description":"Elevate your administrative efficiency and enhance productivity with the Fillow SaaS Admin Dashboard Template. Designed to streamline your tasks, this powerful tool provides a user-friendly interface, robust features, and customizable options, making it the ideal choice for managing your data and operations with ease.",
-            "og_title":"Fillow : Django Saas Admin Dashboard Template | Dexignlabs",
-            "og_description":"Elevate your administrative efficiency and enhance productivity with the Fillow SaaS Admin Dashboard Template. Designed to streamline your tasks, this powerful tool provides a user-friendly interface, robust features, and customizable options, making it the ideal choice for managing your data and operations with ease.",
+            "description":"AI가 자동으로 메일함을 정리하여 업무 효율성이 향상됩니다.",
+            "og_title":"협재씨 | 18조",
+            "og_description":"AI가 자동으로 메일함을 정리하여 업무 효율성이 향상됩니다.",
             "og_image":"https://fillow.dexignlab.com/django/social-image.png",
-            "title":"Management And Administration Website Templates | Fillow : Django Saas Admin Dashboard Template - Empowering Your Administration Work | Dexignlabs",
+            "title":"협재씨 | 당신의 메일함을 정리해드립니다, | 18조",
         },
         "global":{
             "css":[
@@ -131,6 +131,20 @@ dz_array = {
                         ],
                         "email_read": [
                             f"{folder_name}/vendor/jqueryui/css/jquery-ui.min.css",
+                        ],
+                        "email_sent": [
+                        ],
+                        "faq": [
+                        ],
+                        "qna": [
+                            f"{folder_name}/vendor/bootstrap-daterangepicker/daterangepicker.css",
+                            f"{folder_name}/vendor/clockpicker/css/bootstrap-clockpicker.min.css",
+                            f"{folder_name}/vendor/jquery-asColorPicker/css/asColorPicker.min.css",
+                            f"{folder_name}/vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css",
+                            f"{folder_name}/vendor/bootstrap-datepicker-master/css/bootstrap-datepicker.min.css",
+                            f"{folder_name}/vendor/pickadate/themes/default.css",
+                            f"{folder_name}/vendor/pickadate/themes/default.date.css",
+                            f"{folder_name}/vendor/sweetalert2/sweetalert2.min.css",
                         ],
                         "form_editor": [
                         ],
@@ -376,6 +390,20 @@ dz_array = {
                         ],
                         "email_read": [
                             f"{folder_name}/vendor/jqueryui/js/jquery-ui.min.js",
+                        ],
+                        "email_sent": [
+                        ],
+                        "faq": [
+                        ],
+                        "qna": [
+                            f"{folder_name}/vendor/moment/moment.min.js",
+                            f"{folder_name}/vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js",
+                            f"{folder_name}/vendor/pickadate/picker.js",
+                            f"{folder_name}/vendor/pickadate/picker.time.js",
+                            f"{folder_name}/vendor/pickadate/picker.date.js",
+                            f"{folder_name}/js/plugins-init/pickadate-init.kr.js",
+                            f"{folder_name}/vendor/sweetalert2/sweetalert2.min.js",
+                            f"{folder_name}/js/plugins-init/qna-init.js",
                         ],
                         "form_editor": [
                             f"{folder_name}/vendor/ckeditor/ckeditor.js",
