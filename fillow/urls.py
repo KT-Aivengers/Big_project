@@ -84,11 +84,8 @@ urlpatterns = [
     path('table-bootstrap-basic/',fillow_views.table_bootstrap_basic,name="table-bootstrap-basic"),
     path('table-datatable-basic/',fillow_views.table_datatable_basic,name="table-datatable-basic"),
 
-    
-        
 
-
-    path('page-login/', auth_views.LoginView.as_view(template_name="fillow/pages/page-login"), name="page-login"),
+    path('page-login/', auth_views.LoginView.as_view(template_name="fillow/pages/page-login.html", form_class = LoginForm), name="page-login"),
     # path('page-login/', auth_views.LoginView.as_view(template_name="fillow/pages/page-login.html"), name="page-login"),
     path('page-logout/', auth_views.LogoutView.as_view(template_name="fillow/index.html"), name='page-logout'),
     # path('page-login/',fillow_views.page_login,name="page-login"),
