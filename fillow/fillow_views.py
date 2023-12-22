@@ -2,7 +2,7 @@ from typing import Any
 from django.shortcuts import render
 from .models import Document
 from .forms import DocumentForm
-# from .gpt import process_file
+from .gpt import process_file
 
 
 
