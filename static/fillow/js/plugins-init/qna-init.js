@@ -40,6 +40,6 @@ closeModalBtn.addEventListener('click', function() {
 
 // 게시
 postBtn.addEventListener('click', function() {
-    document.getElementById('title').value = '';
-    document.getElementById('detail').value = '';
+    // document.getElementById('title').value = '';
+    // document.getElementById('detail').value = '';
 });

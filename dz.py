@@ -148,6 +148,9 @@ dz_array = {
                             f"{folder_name}/vendor/pickadate/themes/default.date.css",
                             f"{folder_name}/vendor/sweetalert2/sweetalert2.min.css",
                         ],
+                        "schedule": [
+                            f"{folder_name}/vendor/fullcalendar/css/main.min.css",
+                        ],
                         "form_editor": [
                         ],
                         "form_element": [
@@ -406,6 +409,10 @@ dz_array = {
                             f"{folder_name}/js/plugins-init/pickadate-init.kr.js",
                             f"{folder_name}/vendor/sweetalert2/sweetalert2.min.js",
                             f"{folder_name}/js/plugins-init/qna-init.js",
+                        ],
+                        "schedule": [
+                            f"{folder_name}/vendor/moment/moment.min.js",
+                            f"{folder_name}/vendor/fullcalendar/js/main.min.js",
                         ],
                         "form_editor": [
                             f"{folder_name}/vendor/ckeditor/ckeditor.js",

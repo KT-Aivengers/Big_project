@@ -17,15 +17,10 @@
             </li>
 
             <!-- 일정 관리 -->
-            <li>
-                <a class="has-arrow " href="javascript:void()" aria-expanded="false">
-                    <i class="fa-regular fa-calendar-days"></i>
-                    <span class="nav-text">일정 관리</span>
+            <li><a href="{% url 'fillow:schedule' %}" aria-expanded="false">
+                <i class="fas fa-user"></i>
+                <span class="nav-text">일정 관리</span>
                 </a>
-                <ul aria-expanded="false">
-                    <li><a href="{% url 'fillow:calendar-page' %}">일정 보기</a></li>
-                    <li><a href="{% url 'fillow:app-calendar' %}">일정 수정하기</a></li>
-                </ul>
             </li>
 
             <!-- 고객 센터 -->
