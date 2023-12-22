@@ -3,7 +3,8 @@ from django.shortcuts import render
 from .models import Document, Email
 from .forms import DocumentForm
 from .gpt import process_file
-
+from .translation import translate
+from .spam_detection import detect_spam
 
 
 
@@ -620,7 +621,9 @@ def upload_file(request):
             result = emlExtracter.prcessing_dir(headers, eml_name)
             
             process_file(result['text_content'])
-            
+            text=translate(result['text_content'])
+            print("translate text",text)
+            detect_spam(text)
             email_instance = Email(
             email_file_name=result.get('file_name', ''),
             email_subject=result.get('Subject', ''),
