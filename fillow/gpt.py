@@ -106,20 +106,20 @@ final_prompt = ChatPromptTemplate.from_messages(
 chain = final_prompt | chat | EmailOutputParser()
 
 
-question = []
-current_text = ""
-recording = False
+# question = []
+# current_text = ""
+# recording = False
 
-with open('question_text.txt', 'r', encoding='utf-8') as file:
-    for line in file:
-        if '"""' in line:
-            if recording:
-                # 문자열 종료
-                question.append(current_text)
-                current_text = ""
-            recording = not recording
-        elif recording:
-            current_text += line
+# with open('question_text.txt', 'r', encoding='utf-8') as file:
+#     for line in file:
+#         if '"""' in line:
+#             if recording:
+#                 # 문자열 종료
+#                 question.append(current_text)
+#                 current_text = ""
+#             recording = not recording
+#         elif recording:
+#             current_text += line
 def process_file(text):
-    a=chain.invoke({"email": question,"language":"Korean","category":category})
+    a=chain.invoke({"email": text,"language":"Korean","category":category})
     print(a)
