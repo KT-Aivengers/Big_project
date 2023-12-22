@@ -1,6 +1,5 @@
 {% extends 'fillow/elements/layouts/admin.html' %}
 {% load static %}
-        
 {% block additional_css %}
 {% endblock %}
 
@@ -32,26 +31,26 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">문의하기</h5>
-                                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal">
-                                </button> -->
+                                <!--<button type="button" class="btn-close" data-bs-dismiss="modal"></button>-->
                             </div>
                             <div class="modal-body">
                                 <div class="basic-form">
-                                    <form>
+                                    <form action = "" method = "POST">
+                                        {% csrf_token %}
                                         <div class="mb-3">
                                             <label class="form-label">제목</label>
-                                            <input type="text" class="form-control input-default" id="title">
+                                            <input type="text" class="form-control input-default" name="title1" id="title1">
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">내용</label>
-                                            <textarea class="form-control" rows="8" id="detail"></textarea>
+                                            <textarea class="form-control" rows="8" id="question" name="question"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-danger light" id="closeModal" name="btn_action" value="close">닫기</button>
+                                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" name="btn_action" id="post" value="posting">게시</button>
                                         </div>
                                     </form>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger light" id="closeModal">닫기</button>
-                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="post">게시</button>
                             </div>
                         </div>
                     </div>

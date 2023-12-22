@@ -174,11 +174,27 @@ def faq(request):
     }
     return render(request,'fillow/apps/cs/faq.html',context)
 
+from .models import Qna
+from datetime import datetime
 
 def qna(request):
     context={
         "page_title":"Q&A"
     }
+    if request.method == "POST":
+        action = request.POST.get('btn_action')
+        if action == "close":
+            return redirect("fillow:qna")
+        
+        user_id = request.user.id
+        title = request.POST.get("title1")
+        question = request.POST.get("question")
+        edit_date = datetime.now()
+        
+        Qna.objects.create(question = question, title = title, user_id = user_id, edit_date = edit_date, status = "답변 대기중")
+        
+        return render(request,'fillow/apps/cs/qna.html',context)
+
     return render(request,'fillow/apps/cs/qna.html',context)
 
 
@@ -522,40 +538,6 @@ def page_register(request):
         form = UserForm()
     
     return render(request,'fillow/pages/page-register.html', {'form':form})
-
-from .forms import LoginForm
-
-
-class Login(views.LoginView):
-    template_name = "fillow/pages/page-login.html"
-    def page_login(request):
-        if request.method == "POST":
-            print("post")
-            form = LoginForm(request)
-            if form.is_valid():
-                print("valid")
-                username = request.POST['username']
-                password = request.POST['password']
-                # print(username, password)
-                context={}
-                try:
-                    user = User.objects.get(user_id=username)
-                except:
-                    return redirect("fillow:page-login")
-                if user.user_pw == password:
-                    request.session['user'] = user.user_name
-                    context['userInSession'] = request.session['user']
-                    
-                    return render(request, "fillow/index.html", context)
-                else:
-                    return redirect("fillow:page-login")
-            else:
-                print("why?")
-                print(form.errors)
-        else:
-            form = LoginForm()
-            
-        return render(request,'fillow/pages/page-login.html', {'form': form})
 
 def page_forgot_password(request):
     return render(request,'fillow/pages/page-forgot-password.html')

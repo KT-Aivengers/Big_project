@@ -1,13 +1,11 @@
 from django.contrib.auth.forms import UsernameField
 from django import forms
-from django.contrib.auth.models import User
-from .models import Document, Email, AdditionalInform, User
+from .models import Document, Email, AdditionalInform, Qna
 from django.core.validators import RegexValidator
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.text import capfirst
 from django.contrib.auth import authenticate, get_user_model, password_validation
 
-UserModel = get_user_model()
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
@@ -74,3 +72,9 @@ class EmailForm(forms.ModelForm):
     class Meta:
         model = Email
         fields = ['email_file_name','email_subject','email_date','email_from','email_to','email_cc','email_text_content']
+        
+        
+class QnaForm(forms.ModelForm):
+    class Meta:
+        model = Qna
+        fields = ['title', 'question']

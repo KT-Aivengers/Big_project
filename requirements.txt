@@ -13,14 +13,8 @@ tzdata==2023.3
 whitenoise==6.6.0
 mysqlclient
 langchain
-
-
 django-allauth
 compoundfiles
 compressed-rtf
-email
-quopri
 html2text
-glob
-collections
 win32-setctime==1.1.0
