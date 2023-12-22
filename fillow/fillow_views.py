@@ -1,18 +1,60 @@
 from django.shortcuts import render
 
 
+# 분류된 이메일 현황 받기
+def get_most_4_tags():
+    # 이 부분은 DB에서 불러오기
+    total = 60
+    labels = ["요청", "결재승인", "작업완료", "안내"]
+    count = [25, 10, 9, 6]
+    
+    # 그래프 색상
+    color = [
+        "#886CC0",
+        "#26E023",
+        "#61CFF1",
+        "#FFDA7C",
+        "#FF86B1",
+    ]
+    
+    sum_ = sum(count)
+    
+    if sum_ < total:
+        labels.append("기타")
+        count.append(total - sum_)
+    
+    zip_ = zip(labels, count, color)
+    
+    result = {
+        "email_count": {
+            "total" : total,
+            "data": {
+                "labels": labels,
+                "count": count,
+                "zip": list(zip_),
+            }
+        }
+    }
+    return result
+
+
 def home(request):
     context={
-        "page_title":"홈"
+        "page_title":"홈",
     }
     return render(request,'fillow/home/home.html',context)
 
 
 def index(request):
     context={
-        "page_title":"메인"
+        "page_title":"메인",
     }
-    return render(request,'fillow/index.html',context)
+    
+    most4 = get_most_4_tags()
+    
+    context.update(most4)
+    
+    return render(request,'fillow/index.html', context)  
 
 
 def index_2(request):
