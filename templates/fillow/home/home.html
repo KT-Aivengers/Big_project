@@ -17,6 +17,14 @@
         animation: moveBackground 30s ease-in-out infinite;
     }
 
+    [data-theme-version=dark] .background {
+        background-image: url("{% static 'fillow/images/background_dark.png'%}");
+    }
+
+    [data-theme-version=dark] .background img {
+        content: url("{% static 'fillow/images/logofull_dark.svg' %}")
+    }
+
     .background img {
         display: block;
         margin: 0 auto; 
@@ -45,7 +53,7 @@
     <div class="container-fluid">
         <div class="background card">
             <div>
-                <img src="{% static 'fillow/images/logofull.svg' %}" alt="HyeopjaeSea" width="200" height="200">
+                <img id="logo" src="{% static 'fillow/images/logofull.svg' %}" alt="HyeopjaeSea" width="200" height="200">
                 <div>
                     <button type="button" class="btn btn-rounded btn-primary"><span
                         class="btn-icon-start text-primary"><i class="fa-solid fa-house"></i>

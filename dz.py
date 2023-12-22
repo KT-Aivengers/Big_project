@@ -3,7 +3,7 @@ folder_name = "fillow"
 
 dz_array = {
         "public":{
-            "favicon":f"{folder_name}/images/favicon.png",
+            "favicon":f"{folder_name}/images/favicon.ico",
             "description":"AI가 자동으로 메일함을 정리하여 업무 효율성이 향상됩니다.",
             "og_title":"협재씨 | 18조",
             "og_description":"AI가 자동으로 메일함을 정리하여 업무 효율성이 향상됩니다.",

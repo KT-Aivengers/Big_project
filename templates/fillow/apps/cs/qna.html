@@ -2,6 +2,11 @@
 {% load static %}
         
 {% block additional_css %}
+<style>
+    [data-theme-version=dark] .swal2-title {
+        color: #FFFFFF;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -201,9 +206,4 @@
 <!--**********************************
     Content body end
 ***********************************-->
-<style>
-    [data-theme-version=dark] .swal2-title {
-        color: #FFFFFF;
-    }
-</style>
 {% endblock %}
