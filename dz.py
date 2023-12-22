@@ -127,7 +127,7 @@ dz_array = {
                         "ecom_product_order": [
                         ],
                         "email_compose": [
-                            f"{folder_name}/vendor/dropzone/dist/dropzone.css",
+                            f"{folder_name}/vendor/ckeditor/ckeditor.js",
                         ],
                         "email_inbox": [
                         ],

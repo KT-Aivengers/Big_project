@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 
 # 분류된 이메일 현황 받기
-def get_most_4_tags():
+def get_most_4_category():
     # 이 부분은 DB에서 불러오기
     total = 60
     labels = ["요청", "결재승인", "작업완료", "안내"]
@@ -10,7 +10,7 @@ def get_most_4_tags():
     
     # 그래프 색상
     color = [
-        "#886CC0",
+        "var(--primary)",
         "#26E023",
         "#61CFF1",
         "#FFDA7C",
@@ -50,7 +50,7 @@ def index(request):
         "page_title":"메인",
     }
     
-    most4 = get_most_4_tags()
+    most4 = get_most_4_category()
     
     context.update(most4)
     
