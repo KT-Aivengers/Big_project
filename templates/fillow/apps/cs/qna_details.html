@@ -1,0 +1,33 @@
+{% extends 'fillow/elements/layouts/admin.html' %}
+{% load static %}
+{% block additional_css %}
+{% endblock additional_css %}
+
+{% block content %}
+<div class="content-body default-height">
+	<div class="container-fluid">
+		<div class="row page-titles">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="javascript:void(0)">고객 센터</a></li>
+				<li class="breadcrumb-item active"><a href="javascript:void(0)">Q&A</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">{{qna.title}}</a></li>
+			</ol>
+		</div>
+        <div class="card mb-4 d-block">
+            <div>
+                <div>
+                    <h3 class="card-title">{{qna.title}}</h3>
+                </div>
+                <hr>
+                <div class="card-body">
+                    <h3>내용 : {{qna.question}}</h3>
+                </div>
+                <div class="card-body">
+                    <h3>답변 : {{qna.answer}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

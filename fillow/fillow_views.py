@@ -1,5 +1,5 @@
 from typing import Any
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Document, Email
 from .forms import DocumentForm
 # from .gpt import process_file
@@ -177,15 +177,18 @@ def faq(request):
 from .models import Qna
 from datetime import datetime
 
+
 def qna(request):
+    Qnas = Qna.objects.all().order_by('-edit_date')  # 내림차순 정렬
     context={
-        "page_title":"Q&A"
+        "page_title":"Q&A",
+        'Qnas':Qnas
     }
+
     if request.method == "POST":
         action = request.POST.get('btn_action')
         if action == "close":
             return redirect("fillow:qna")
-        
         user_id = request.user.id
         title = request.POST.get("title1")
         question = request.POST.get("question")
@@ -193,9 +196,20 @@ def qna(request):
         
         Qna.objects.create(question = question, title = title, user_id = user_id, edit_date = edit_date, status = "답변 대기중")
         
-        return render(request,'fillow/apps/cs/qna.html',context)
+        return redirect("fillow:qna")
 
     return render(request,'fillow/apps/cs/qna.html',context)
+
+
+def qna_details(request, id):
+    qna = get_object_or_404(Qna, id=id)
+    
+    context={
+        "page_title":"Q&A_details",
+        "qna":qna,
+    }
+    return render(request, 'fillow/apps/cs/qna_details.html',context)
+
 
 
 def app_calender(request):
