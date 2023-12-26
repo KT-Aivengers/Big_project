@@ -2,6 +2,8 @@
 
 from django.conf import settings
 import django.contrib.auth.models
+from django.conf import settings
+import django.contrib.auth.models
 from django.db import migrations, models
 import django.db.models.deletion
 
@@ -12,8 +14,38 @@ class Migration(migrations.Migration):
     dependencies = [
         ("auth", "0012_alter_user_first_name_max_length"),
     ]
+    dependencies = [
+        ("auth", "0012_alter_user_first_name_max_length"),
+    ]
 
     operations = [
+        migrations.CreateModel(
+            name="AdditionalInform",
+            fields=[
+                (
+                    "user_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                ("department", models.CharField(max_length=10)),
+                ("phone", models.CharField(max_length=16)),
+            ],
+            options={
+                "verbose_name": "user",
+                "verbose_name_plural": "users",
+                "abstract": False,
+            },
+            bases=("auth.user",),
+            managers=[
+                ("objects", django.contrib.auth.models.UserManager()),
+            ],
+        ),
         migrations.CreateModel(
             name="AdditionalInform",
             fields=[
@@ -58,6 +90,7 @@ class Migration(migrations.Migration):
         ),
         migrations.CreateModel(
             name="Email",
+            name="Email",
             fields=[
                 (
                     "id",
@@ -68,6 +101,13 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
+                ("email_file_name", models.CharField(max_length=100)),
+                ("email_subject", models.CharField(max_length=100)),
+                ("email_date", models.CharField(max_length=100)),
+                ("email_from", models.CharField(max_length=1000)),
+                ("email_to", models.CharField(max_length=1000)),
+                ("email_cc", models.CharField(max_length=1000)),
+                ("email_text_content", models.CharField(max_length=10000)),
                 ("email_file_name", models.CharField(max_length=100)),
                 ("email_subject", models.CharField(max_length=100)),
                 ("email_date", models.CharField(max_length=100)),
