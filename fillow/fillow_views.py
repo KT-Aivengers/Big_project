@@ -247,6 +247,7 @@ def faq(request):
 
 from .models import Qna
 from datetime import datetime
+from django.shortcuts import get_object_or_404
 
 
 def qna(request):
@@ -281,6 +282,14 @@ def qna_details(request, id):
     }
     return render(request, 'fillow/apps/cs/qna_details.html',context)
 
+def schedule(request):
+    context={
+        "page_title":"일정 관리"
+    }
+    
+    context['schedule_data'] = get_schedule()
+    
+    return render(request,'fillow/apps/schedule/schedule.html',context)
 
 
 
