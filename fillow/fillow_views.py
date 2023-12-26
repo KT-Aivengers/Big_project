@@ -738,11 +738,12 @@ class EmailListView(ListView):
 
 class EmailDetailView(DetailView):
     model = Email
+    #template_name = 'fillow/test.html'
     template_name = 'fillow/apps/email/email-read.html'  # 수정: template_name을 read.html로 변경
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['attachments'] = self.object.email_attachments  # 첨부파일 추가
+        # context['attachments'] = self.object.email_attachments  # 첨부파일 추가
         return context
 
 
