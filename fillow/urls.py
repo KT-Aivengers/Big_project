@@ -15,7 +15,7 @@ urlpatterns = [
     path('kanban/',fillow_views.kanban,name="kanban"),
     path('calendar-page/',fillow_views.calendar_page,name="calendar-page"),
     path('message/',fillow_views.message,name="message"),
-    # path('schedule/',fillow_views.schedule,name="schedule"),
+    path('schedule/',fillow_views.schedule,name="schedule"),
 
     path('app-profile/',fillow_views.app_profile,name="app-profile"),
     path('edit-profile/',fillow_views.edit_profile,name="edit-profile"),
