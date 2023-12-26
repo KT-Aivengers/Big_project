@@ -68,6 +68,14 @@
 @import url("./../icons/flaticon/flaticon.css");
 @import url("./../icons/flaticon_1/flaticon_1.css");
 @import "./../vendor/metismenu/css/metisMenu.min.css";
+
+@font-face {
+  font-family: 'NanumSquareNeo-Variable';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --primary: #886CC0;
   --secondary: #FFA7D7;
@@ -21731,7 +21739,7 @@ label {
 }
 
 [data-typography=poppins] {
-  font-family: "Noto Sans KR";
+  font-family: "NanumSquareNeo-Variable";
 }
 
 [data-typography=opensans] {

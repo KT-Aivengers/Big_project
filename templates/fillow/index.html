@@ -28,7 +28,7 @@
 											<!-- <a href="javascript:void(0);" class="btn btn-rounded">Try Free Now</a> -->
 										</div>
 										<div class="col-xl-5 col-sm-5 ">
-											<img src="{% static 'fillow/images/chart.png' %}" alt="" class="sd-shape">
+											<img src="{% static 'fillow/images/email_sort.png' %}" alt="head" width="100%">
 										</div>
 									</div>
 								</div>
@@ -383,51 +383,17 @@
 										<div class="card-body pb-0">
 											<div id="emailchart"> </div>
 											<div class="email-lagend">
-												<div class="d-flex align-items-center justify-content-between mb-3">
-													<span class="fs-16 text-gray">	
-														<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-															<rect width="20" height="20" rx="6" fill="#886CC0"/>
-														</svg>
-														Primary (27%)
-													</span>
-													<h5 class="mb-0 font-w600">763</h5>
-												</div>
-												<div class="d-flex align-items-center justify-content-between  mb-3">
-													<span class="fs-16 text-gray">	
-														<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-															<rect width="20" height="20" rx="6" fill="#26E023"/>
-														</svg>
-														Promotion (11%)
-													</span>
-													<h5 class="mb-0 font-w600">321</h5>
-												</div>
-												<div class="d-flex align-items-center justify-content-between  mb-3">
-													<span class="fs-16 text-gray">	
-														<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-															<rect width="20" height="20" rx="6" fill="#61CFF1"/>
-														</svg>
-														Forum (22%)
-													</span>
-													<h5 class="mb-0 font-w600">69</h5>
-												</div>
-												<div class="d-flex align-items-center justify-content-between  mb-3">
-													<span class="fs-16 text-gray">	
-														<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-															<rect width="20" height="20" rx="6" fill="#FFDA7C"/>
-														</svg>
-														Socials (15%) 
-													</span>
-													<h5 class="mb-0 font-w600">154</h5>
-												</div>
-												<div class="d-flex align-items-center justify-content-between  mb-0 spam">
-													<span class="fs-16 text-gray">	
-														<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-															<rect width="20" height="20" rx="6" fill="#FF86B1"/>
-														</svg>
-														Spam (25%) 
-													</span>
-													<h5 class="mb-0 font-w600">696</h5>
-												</div>
+												{% for label, count, color in email_count.data.zip %}
+													<div class="d-flex align-items-center justify-content-between mb-3">
+														<span class="fs-16 text-gray">	
+															<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																<rect width="20" height="20" rx="6" fill="{{ color }}"/>
+															</svg>
+															{{ label }}
+														</span>
+														<h5 class="mb-0 font-w600">{{ count }}</h5>
+													</div>
+												{% endfor %}
 											</div>
 										</div>
 										<div class="card-footer border-0 pt-0">
@@ -550,7 +516,7 @@
 								<div class="card-header pb-0 border-0">
 									<div>
 										<h4 class="card-title">아이디어</h4>
-										<p class="mb-0">어떤 기능이 좋을까요?</p>
+										<p class="mb-0"></p>
 									</div>
 									<div>
 										<a href="javascript:void(0);" class="btn btn-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#sendMessageModal" >+ New Messages</a>
@@ -791,8 +757,13 @@
 
 	// 이메일 분류 현황 함수 (사용법은 ApexCharts 검색)
 	var emailchart = function(){
+		var total = {{ email_count.total | safe}};
+		var data = {{ email_count.data | safe }};
+		var labels = data['labels'];
+		var count = data['count'];
+
 		var options = {
-        	series: [10, 11, 22, 15, 25],
+        	series: count,
         	chart: {
         	type: 'pie',
 			height:230,
@@ -801,7 +772,7 @@
 				fontSize: '14px',
 		},
         },
-		labels: ['1번 분류', '2번 분류', '3번 분류', '4번 분류', '기타',],
+		labels: labels,
 			dataLabels:{
 				enabled: false
 		},

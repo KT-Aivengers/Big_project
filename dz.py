@@ -3,7 +3,7 @@ folder_name = "fillow"
 
 dz_array = {
         "public":{
-            "favicon":f"{folder_name}/images/favicon.png",
+            "favicon":f"{folder_name}/images/favicon.ico",
             "description":"AI가 자동으로 메일함을 정리하여 업무 효율성이 향상됩니다.",
             "og_title":"협재씨 | 18조",
             "og_description":"AI가 자동으로 메일함을 정리하여 업무 효율성이 향상됩니다.",
@@ -127,7 +127,7 @@ dz_array = {
                         "ecom_product_order": [
                         ],
                         "email_compose": [
-                            f"{folder_name}/vendor/dropzone/dist/dropzone.css",
+                            f"{folder_name}/vendor/ckeditor/ckeditor.js",
                         ],
                         "email_inbox": [
                         ],
@@ -147,6 +147,9 @@ dz_array = {
                             f"{folder_name}/vendor/pickadate/themes/default.css",
                             f"{folder_name}/vendor/pickadate/themes/default.date.css",
                             f"{folder_name}/vendor/sweetalert2/sweetalert2.min.css",
+                        ],
+                        "schedule": [
+                            f"{folder_name}/vendor/fullcalendar/css/main.min.css",
                         ],
                         "form_editor": [
                         ],
@@ -406,6 +409,10 @@ dz_array = {
                             f"{folder_name}/js/plugins-init/pickadate-init.kr.js",
                             f"{folder_name}/vendor/sweetalert2/sweetalert2.min.js",
                             f"{folder_name}/js/plugins-init/qna-init.js",
+                        ],
+                        "schedule": [
+                            f"{folder_name}/vendor/moment/moment.min.js",
+                            f"{folder_name}/vendor/fullcalendar/js/main.min.js",
                         ],
                         "form_editor": [
                             f"{folder_name}/vendor/ckeditor/ckeditor.js",

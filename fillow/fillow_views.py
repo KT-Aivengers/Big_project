@@ -1,24 +1,95 @@
 from typing import Any
 from django.shortcuts import render
-from .models import Document
-from .forms import DocumentForm
-# from .gpt import process_file
+from django.http import HttpResponse
 
 
+# 분류된 이메일 현황 받기
+def get_most_4_category():
+    # 이 부분은 DB에서 불러오기
+    total = 60
+    labels = ["요청", "결재승인", "작업완료", "안내"]
+    count = [25, 10, 9, 6]
+    
+    # 그래프 색상
+    color = [
+        "var(--primary)",
+        "#26E023",
+        "#61CFF1",
+        "#FFDA7C",
+        "#FF86B1",
+    ]
+    
+    sum_ = sum(count)
+    
+    if sum_ < total:
+        labels.append("기타")
+        count.append(total - sum_)
+    
+    zip_ = zip(labels, count, color)
+    
+    result = {
+        "email_count": {
+            "total" : total,
+            "data": {
+                "labels": labels,
+                "count": count,
+                "zip": list(zip_),
+            }
+        }
+    }
+    return result
+
+
+# 일정 불러오기
+def get_schedule():
+    # DB에서 일정 불러오기
+    schedule_list = [
+        # {
+        #     'title' 제목
+        #     'start' 시작일
+        #     'end' 종료일
+        #     'url' 클릭 시 이동할 url
+        #     'groupID' 같이 움직일 일정 설정(쓸 일 없을 듯?)
+        #     'className' 설정할 클래스
+        # }
+        {
+            'title': '크리스마스',
+            'start': '2023-12-25',
+            'className': 'bg-danger',
+        },
+        {
+            'title': '연락 바람',
+            'start': '2023-12-21',
+            'end': '2023-12-27',
+        },
+        {
+            'title': '이메일 페이지로',
+            'start': '2023-12-10',
+            'end': '2023-12-15',
+            'url': 'http://127.0.0.1:8000/email-inbox/',
+            'className': 'bg-info',
+        },
+    ]
+    return schedule_list
 
 
 def home(request):
     context={
-        "page_title":"홈"
+        "page_title":"홈",
     }
     return render(request,'fillow/home/home.html',context)
 
 
 def index(request):
     context={
-        "page_title":"메인"
+        "page_title":"메인",
     }
-    return render(request,'fillow/index.html',context)
+    
+    most4 = get_most_4_category()
+    
+    context.update(most4)
+    
+    return render(request,'fillow/index.html', context)  
 
 
 def index_2(request):
@@ -179,7 +250,23 @@ def qna(request):
     context={
         "page_title":"Q&A"
     }
+    
+    if request.method == 'POST':
+        print(request)
+        return HttpResponse('문의글을 성공적으로 올렸습니다.', status=200)
+    
     return render(request,'fillow/apps/cs/qna.html',context)
+
+
+def schedule(request):
+    context={
+        "page_title":"일정 관리"
+    }
+    
+    context['schedule_data'] = get_schedule()
+    
+    return render(request,'fillow/apps/schedule/schedule.html',context)
+
 
 
 def app_calender(request):

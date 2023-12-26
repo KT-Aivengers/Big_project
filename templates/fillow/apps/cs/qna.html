@@ -2,6 +2,11 @@
 {% load static %}
         
 {% block additional_css %}
+<style>
+    [data-theme-version=dark] .swal2-title {
+        color: #FFFFFF;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -35,24 +40,25 @@
                                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal">
                                 </button> -->
                             </div>
-                            <div class="modal-body">
-                                <div class="basic-form">
-                                    <form>
+                            <form acton="{% url 'fillow:qna' %}" method="post">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="basic-form">
                                         <div class="mb-3">
                                             <label class="form-label">제목</label>
-                                            <input type="text" class="form-control input-default" id="title">
+                                            <input type="text" class="form-control" name="title" id="title">
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">내용</label>
-                                            <textarea class="form-control" rows="8" id="detail"></textarea>
+                                            <textarea class="form-control" rows="8" name="detail" id="detail"></textarea>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger light" id="closeModal">닫기</button>
-                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="post">게시</button>
-                            </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger light" id="closeModal">닫기</button>
+                                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="post">게시</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -201,9 +207,4 @@
 <!--**********************************
     Content body end
 ***********************************-->
-<style>
-    [data-theme-version=dark] .swal2-title {
-        color: #FFFFFF;
-    }
-</style>
 {% endblock %}
