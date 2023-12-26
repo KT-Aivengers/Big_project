@@ -245,28 +245,17 @@ def faq(request):
     }
     return render(request,'fillow/apps/cs/faq.html',context)
 
+from .models import Qna
+from datetime import datetime
+
 
 def qna(request):
+    Qnas = Qna.objects.all().order_by('-edit_date')  # 내림차순 정렬
     context={
-        "page_title":"Q&A"
+        "page_title":"Q&A",
+        'Qnas':Qnas
     }
-    
-    if request.method == 'POST':
-        print(request)
-        return HttpResponse('문의글을 성공적으로 올렸습니다.', status=200)
-    
     return render(request,'fillow/apps/cs/qna.html',context)
-
-
-def schedule(request):
-    context={
-        "page_title":"일정 관리"
-    }
-    
-    context['schedule_data'] = get_schedule()
-    
-    return render(request,'fillow/apps/schedule/schedule.html',context)
-
 
 
 def app_calender(request):
@@ -610,40 +599,6 @@ def page_register(request):
     
     return render(request,'fillow/pages/page-register.html', {'form':form})
 
-from .forms import LoginForm
-
-
-class Login(views.LoginView):
-    template_name = "fillow/pages/page-login.html"
-    def page_login(request):
-        if request.method == "POST":
-            print("post")
-            form = LoginForm(request)
-            if form.is_valid():
-                print("valid")
-                username = request.POST['username']
-                password = request.POST['password']
-                # print(username, password)
-                context={}
-                try:
-                    user = User.objects.get(user_id=username)
-                except:
-                    return redirect("fillow:page-login")
-                if user.user_pw == password:
-                    request.session['user'] = user.user_name
-                    context['userInSession'] = request.session['user']
-                    
-                    return render(request, "fillow/index.html", context)
-                else:
-                    return redirect("fillow:page-login")
-            else:
-                print("why?")
-                print(form.errors)
-        else:
-            form = LoginForm()
-            
-        return render(request,'fillow/pages/page-login.html', {'form': form})
-
 def page_forgot_password(request):
     return render(request,'fillow/pages/page-forgot-password.html')
 
@@ -670,14 +625,54 @@ def page_error_500(request):
 
 def page_error_503(request):
     return render(request,'503.html')
-    
+
+
+from fillow import emlExtracter
+import os
+import sys
+
+from django.core.files.base import ContentFile
+import io
+from fillow.msgToEml import load
+
 def upload_file(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
+        
         if form.is_valid():
-            document=form.save()
-            text="asd"
-            process_file(text)
+            form.save()
+            
+            msg_name = request.FILES['uploaded_file'].name
+            form.cleaned_data['uploaded_file'].seek(0)
+            msg_contents = form.cleaned_data['uploaded_file'].read()
+            
+            uploaded_file = request.FILES['uploaded_file'] 
+            recent_document = Document.objects.latest('id')
+            file_path = recent_document.uploaded_file.path
+            
+            # eml_name = os.path.basename(file_path).split('.msg')[0] + '.eml'
+            eml_name = file_path.split('.msg')[0] + '.eml'
+            print(eml_name)
+            
+            with open(eml_name , "wb") as f:
+                contents = load(uploaded_file)
+                f.write(contents.as_bytes())        
+                    
+            headers = ['file_name','Subject','Date','From','To','Cc','text_content']
+            result = emlExtracter.prcessing_dir(headers, eml_name)
+            
+            email_instance = Email(
+            email_file_name=result.get('file_name', ''),
+            email_subject=result.get('Subject', ''),
+            email_date=result.get('Date', ''),
+            email_from=result.get('From', ''),
+            email_to=result.get('To', ''),
+            email_cc=result.get('Cc', ''),
+            email_text_content=result.get('text_content', '')
+            )
+
+            email_instance.save()
+            
             return redirect("fillow:index")
     else:
         form = DocumentForm()

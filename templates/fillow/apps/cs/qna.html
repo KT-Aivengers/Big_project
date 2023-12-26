@@ -1,6 +1,5 @@
 {% extends 'fillow/elements/layouts/admin.html' %}
 {% load static %}
-        
 {% block additional_css %}
 <style>
     [data-theme-version=dark] .swal2-title {
@@ -37,8 +36,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">문의하기</h5>
-                                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal">
-                                </button> -->
+                                <!--<button type="button" class="btn-close" data-bs-dismiss="modal"></button>-->
                             </div>
                             <form acton="{% url 'fillow:qna' %}" method="post">
                                 {% csrf_token %}
@@ -75,82 +73,18 @@
                                 <th>제목</th>
                                 <th>상태</th>
                                 <th>최종 수정 날짜</th>
-                                <th>수정/삭제</th>
+                                {% comment %} <th>수정</th> {% endcomment %}
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- 1 단위 -->
-                            <tr>
-                                <td>1</td>
-                                <td>테스트 1</td>
-                                <td>답변 완료</td>
-                                <td>2023/12/20</td>
-                                <td class="text-nowrap">
-                                    <a href="javascript:void(0);" class="btn btn-warning btn-sm content-icon">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm content-icon">
-                                            <i class="fa fa-times"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <!-- 1 단위 끝 -->
-                            <tr>
-                                <td>2</td>
-                                <td>테스트 2</td>
-                                <td>답변 대기</td>
-                                <td>2023/12/19</td>
-                                <td class="text-nowrap">
-                                    <a href="javascript:void(0);" class="btn btn-warning btn-sm content-icon">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm content-icon">
-                                            <i class="fa fa-times"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>테스트 3</td>
-                                <td>답변 대기</td>
-                                <td>2023/12/19</td>
-                                <td class="text-nowrap">
-                                    <a href="javascript:void(0);" class="btn btn-warning btn-sm content-icon">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm content-icon">
-                                            <i class="fa fa-times"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>테스트 4</td>
-                                <td>답변 완료</td>
-                                <td>2023/12/19</td>
-                                <td class="text-nowrap">
-                                    <a href="javascript:void(0);" class="btn btn-warning btn-sm content-icon">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm content-icon">
-                                            <i class="fa fa-times"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>테스트 5</td>
-                                <td>답변 완료</td>
-                                <td>2023/12/19</td>
-                                <td class="text-nowrap">
-                                    <a href="javascript:void(0);" class="btn btn-warning btn-sm content-icon">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm content-icon">
-                                            <i class="fa fa-times"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            {% for qna in Qnas %}
+                                <tr>
+                                    <td>{{qna.id}}</td>
+                                    <td><a href="{% url 'fillow:qna-details' qna.id %}">{{qna.title}}</a></td>
+                                    <td>{{qna.status}}</td>
+                                    <td>{{qna.edit_date}}</td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                     <div class="d-flex align-items-center justify-content-between flex-wrap">
@@ -207,4 +141,9 @@
 <!--**********************************
     Content body end
 ***********************************-->
+<style>
+    [data-theme-version=dark] .swal2-title {
+        color: #FFFFFF;
+    }
+</style>
 {% endblock %}
