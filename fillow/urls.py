@@ -104,4 +104,10 @@ urlpatterns = [
     path('page-error-503/',fillow_views.page_error_503,name="page-error-503"),
 
     path('upload/', fillow_views.upload_file, name='upload_file'),
+    
+    path('email/', fillow_views.EmailListView.as_view(), name='email_list'),
+    path('email/<int:pk>', fillow_views.EmailDetailView.as_view(), name='email_detail'),
+    path('email/create/', fillow_views.EmailCreateView.as_view(), name='email_create'),
+    path('email/<int:pk>/update/', fillow_views.EmailUpdateView.as_view(), name='email_update'),
+    path('email/<int:pk>/delete/', fillow_views.EmailDeleteView.as_view(), name='email_delete'),
 ]

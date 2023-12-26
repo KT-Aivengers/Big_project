@@ -11,6 +11,7 @@ class Document(models.Model):
     uploaded_file = models.FileField(upload_to='documents/')
     
 class Email(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='emails')
     email_file_name = models.CharField(max_length=100)
     email_subject = models.CharField(max_length=100)
     email_date = models.CharField(max_length=100)

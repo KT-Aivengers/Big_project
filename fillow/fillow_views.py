@@ -612,7 +612,7 @@ def table_datatable_basic(request):
 
 
 from django.shortcuts import redirect
-from .forms import UserForm, LoginForm
+from .forms import UserForm, LoginForm, DocumentForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
@@ -665,10 +665,13 @@ def page_error_503(request):
 from fillow import emlExtracter
 import os
 import sys
-
+from .models import Document
 from django.core.files.base import ContentFile
 import io
 from fillow.msgToEml import load
+from .spam_detection import *
+from .gpt import *
+from .translation import *
 
 def upload_file(request):
     if request.method == 'POST':
@@ -701,6 +704,7 @@ def upload_file(request):
             print("translate text",text)
             detect_spam(text)
             email_instance = Email(
+            user=request.user,
             email_file_name=result.get('file_name', ''),
             email_subject=result.get('Subject', ''),
             email_date=result.get('Date', ''),
@@ -717,14 +721,60 @@ def upload_file(request):
         form = DocumentForm()
     return render(request, 'fillow/pages/upload.html', {'form': form})
 
+from django.shortcuts import render
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView, FormView
+from django.urls import reverse_lazy
+from .models import Email
+
+class EmailListView(ListView):
+    model = Email
+    #template_name = 'fillow/test2.html'  # 수정: template_name을 inbox.html로 변경
+    template_name = 'fillow/apps/email/email-inbox.html'  # 수정: template_name을 inbox.html로 변경
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(user=self.request.user).order_by('-email_date')  # 받은 편지함, 발신 날짜 기준 정렬
+        return queryset
+
+class EmailDetailView(DetailView):
+    model = Email
+    template_name = 'fillow/apps/email/email-read.html'  # 수정: template_name을 read.html로 변경
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['attachments'] = self.object.email_attachments  # 첨부파일 추가
+        return context
 
 
+class EmailDeleteView(DeleteView):
+    model = Email
+    success_url = reverse_lazy('email_list')
 
 
+class EmailUpdateView(UpdateView):
+    model = Email
+
+    fields = [
+        'email_subject',
+        'email_from',
+        'email_to',
+        'email_cc',
+        'email_text_content',
+    ]
 
 
+class EmailCreateView(CreateView):
+    model = Email
+    fields = [
+        'email_file_name',
+        'email_subject',
+        'email_from',
+        'email_to',
+        'email_cc',
+        'email_text_content',
+    ]
 
-
-
-
+    def form_valid(self, form):
+        form.instance.email_attachments = self.request.FILES['email_attachments']
+        return super().form_valid(form)
 

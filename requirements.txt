@@ -16,6 +16,7 @@ langchain
 django-allauth
 compoundfiles
 compressed-rtf
-
 html2text
 win32-setctime==1.1.0
+google-api-python-client
+django-mailbox

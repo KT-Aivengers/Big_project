@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # provider 	구글, 페이스북, 카톡, 깃헙
     'allauth.socialaccount.providers.google',
+    'oauth2client', 
+    'django_mailbox',
 ]
 
 MIDDLEWARE = [
@@ -85,13 +87,19 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE' : [
             'profile',
             'email',
+            'https://www.googleapis.com/auth/gmail.readonly',
+            'https://mail.google.com/',
+            'https://www.googleapis.com/auth/gmail.modify',
+            'https://www.googleapis.com/auth/gmail.metadata',
+            
         ],
         'AUTH_PARAMS' : {
             'access_type' : 'online',
         }
     }
 }
-
+GMAIL_API_KEY = "AIzaSyBcF5GSdrNFFtqNMESyP_fg1bd3uI_QCaI"
+GMAIL_API_BASE_URL = 'https://www.googleapis.com/gmail/v1/'
 SOCIALACCOUNT_LOGIN_ON_GET=True # sign in via 안가도 됨
 
 ACCOUNT_EMAIL_REQUIRED = True # 계정 이메일이 필요한가?
@@ -184,3 +192,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
