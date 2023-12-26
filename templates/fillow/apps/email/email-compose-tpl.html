@@ -1,0 +1,61 @@
+{% extends 'fillow/elements/layouts/admin.html' %}
+{% load static %}
+        
+{% block additional_css %}
+<style>
+    #email-compose-editor {
+        height: 100% !important;
+    }
+</style>
+{% endblock %}
+        
+{% block content %}
+<!--**********************************
+    Content body start
+***********************************-->
+<div class="content-body default-height">
+    <div class="container-fluid">
+        
+        <div class="row page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">이메일</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">전송 템플릿</a></li>
+            </ol>
+        </div>
+        
+        <!-- row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div>
+                                    <div class="compose-tpl-content">
+                                        <form action="" method="POST">
+                                            {% csrf_token %}     
+                                            <div class="row">
+                                                <div class="col-lg-10">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">내용</label>
+                                                        <textarea id="texts" name="texts" class=" form-control bg-transparent" rows="15" placeholder=""></textarea>      
+                                                    </div>
+                                                    <button class="btn btn-primary btn-sl-sm me-2" type="submit"><span class="me-2"><i class="fa fa-check"></i></span>저장</button>   
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--**********************************
+    Content body end
+***********************************-->
+{% endblock %}

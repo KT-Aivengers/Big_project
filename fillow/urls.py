@@ -21,6 +21,7 @@ urlpatterns = [
     path('edit-profile/',fillow_views.edit_profile,name="edit-profile"),
     path('post-details/',fillow_views.post_details,name="post-details"),
     path('email-compose/',fillow_views.email_compose,name="email-compose"),
+    path('email-compose-tpl/',fillow_views.email_compose_tpl,name="email-compose-tpl"),
     path('email-inbox/',fillow_views.email_inbox,name="email-inbox"),
     path('email-read/',fillow_views.email_read,name="email-read"),
     path('email-sent/',fillow_views.email_sent,name="email-sent"),

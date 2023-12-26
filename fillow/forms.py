@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UsernameField
 from django import forms
-from .models import Document, Email, AdditionalInform, Qna
+from .models import Document, Email, AdditionalInform, Qna, EmailComposeTpl
 from django.core.validators import RegexValidator
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.text import capfirst
@@ -78,3 +78,17 @@ class QnaForm(forms.ModelForm):
     class Meta:
         model = Qna
         fields = ['title', 'question']
+        
+class EmailComposeTplForm(forms.ModelForm):
+    class Meta:
+        model = EmailComposeTpl
+        fields = ['texts']
+        widgets = {
+            'texts': forms.Textarea(attrs={'placeholder': ''}),
+        }
+    
+    # def __init__(self, *args, **kwargs):
+    #     super(EmailComposeTplForm, self).__init__(*args, **kwargs)
+    #     self.fields['texts'].required = False
+        
+       

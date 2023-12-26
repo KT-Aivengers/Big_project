@@ -217,6 +217,27 @@ def email_compose(request):
     }
     return render(request,'fillow/apps/email/email-compose.html',context)
 
+def email_compose_tpl(request):
+    context={
+        "page_title":"전송 템플릿"
+    }
+    if request.method == "POST":
+        form = EmailComposeTplForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            texts = form.cleaned_data.get('texts', '')
+            print(texts)
+            EmailComposeTpl.objects.create(texts = texts, user = user)
+
+            
+            return redirect("fillow:email-template")
+
+    else:
+        form = EmailComposeTplForm()
+    
+    return render(request,'fillow/apps/email/email-compose-tpl.html',context)
+
+
 
 def email_inbox(request):
     context={
@@ -245,7 +266,7 @@ def faq(request):
     }
     return render(request,'fillow/apps/cs/faq.html',context)
 
-from .models import Qna
+from .models import Qna, EmailComposeTpl
 from datetime import datetime
 from django.shortcuts import get_object_or_404
 
@@ -612,7 +633,7 @@ def table_datatable_basic(request):
 
 
 from django.shortcuts import redirect
-from .forms import UserForm, LoginForm, DocumentForm
+from .forms import UserForm, LoginForm, EmailComposeTplForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password

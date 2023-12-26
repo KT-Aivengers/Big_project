@@ -28,3 +28,9 @@ class Qna(models.Model):
     title = models.CharField(max_length=50, blank=True)
     status = models.CharField(max_length=10, blank=True)
     edit_date = models.DateField()
+    
+
+class EmailComposeTpl(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='email_tpl')
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="email_tpl")
+    texts = models.CharField(max_length=1000)
