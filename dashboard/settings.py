@@ -87,10 +87,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE' : [
             'profile',
             'email',
-            'https://www.googleapis.com/auth/gmail.readonly',
-            'https://mail.google.com/',
-            'https://www.googleapis.com/auth/gmail.modify',
-            'https://www.googleapis.com/auth/gmail.metadata',
+            
             
         ],
         'AUTH_PARAMS' : {
