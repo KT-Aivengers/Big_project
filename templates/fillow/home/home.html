@@ -3,6 +3,10 @@
         
 {% block additional_css %}
 <style>
+    .btn-margin-adjust {
+        margin-right: 2rem;
+    }
+
     .home {
         padding-top: 0.5rem !important;
     }
@@ -111,7 +115,7 @@
                         사용자 데이터기반으로 답장이 필요하거나 중요도 높은 이메일을 분류해주어<br>
                         여러분이 정말로 중요한 일에만 집중할 수 있도록 도와드리겠습니다!<br><br>자 그럼, Mail 쏟아지는 이메일 홍수 속에서 <br> 중요한 이메일만 남은 에메랄드 빛 <strong>HyeopJaeSea</strong>로 가볼까요?</h4>
                 </div>
-                <button type="button"  class="btn btn-primary" onclick="location.href='{% url 'fillow:page-login' %}'" >로그인</button>
+                <button type="button"  class="btn btn-primary btn-margin-adjust" onclick="location.href='{% url 'fillow:page-login' %}'" >로그인</button>
                 <button type="button" class="btn btn-warning" onclick="location.href='{% url 'fillow:page-register' %}'">회원가입</button>
             </div>
             
