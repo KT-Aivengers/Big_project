@@ -60,11 +60,6 @@ class UserForm(UserCreationForm):
     )
     
     class Meta:
-<<<<<<< HEAD
-        model = User
-        fields = ['user_id', 'user_pw', 'user_email', 'user_dep']
-        # asd
-=======
         model = AdditionalInform
         fields = ["username", "last_name", "first_name", "password1", "password2", "email", "department", "phone"]
 
@@ -97,4 +92,3 @@ class EmailComposeTplForm(forms.ModelForm):
     #     self.fields['texts'].required = False
         
        
->>>>>>> BE

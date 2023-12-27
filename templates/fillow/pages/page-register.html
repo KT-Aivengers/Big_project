@@ -30,11 +30,18 @@
 	{% block additional_css %}
 	{% endblock %}
 	
+	<style>
+		.reg-form input[type="text"],
+    	.reg-form input[type="email"],
+    	.reg-form input[type="password"],
+    	.reg-form textarea {
+        margin-bottom: 10px;
+    }
+	</style>
 </head>
 
 <body>
 	<div class="fix-wrapper">
-<<<<<<< HEAD
 		 <div class="container">
 			 <div class="row justify-content-center">
 				 <div class="col-lg-5 col-md-6">
@@ -46,7 +53,7 @@
 							 <h4 class="text-center mb-4">회원가입</h4>
 							 <form action="" method="POST">
 								{% csrf_token %}
-								<table>
+								<table class="reg-form mb-4">
 									{{ form.as_table }}
 								</table>
 
@@ -80,50 +87,6 @@
 			 </div>
 		 </div>
 	 </div>
-=======
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-lg-5 col-md-6">
-					<div class="card mb-0 h-auto">
-						<div class="card-body">
-							<div class="text-center mb-3">
-								<a href="{% url 'fillow:index' %}"><img class="logo-auth" src="{% static 'fillow/images/logo-full.png' %}" alt=""></a>
-							</div>
-							<h4 class="text-center mb-4">Sign up your account</h4>
-							<form action="" method="POST">
-								{% csrf_token %}
-								{{ form }}
-								<br>
-								{% comment %} <div class="form-group mb-4">
-									<label class="form-label" for="username">Username</label>
-									<input type="text" class="form-control" placeholder="Enter username" id="username">
-								</div>
-								<div class="form-group mb-4">
-									<label class="form-label" for="email">Email</label>
-									<input type="email" class="form-control" placeholder="hello@example.com" id="email">
-								</div>
-								<div class="mb-sm-4 mb-3 position-relative">
-									<label class="form-label" for="dlab-password">Password</label>
-									<input type="password" id="dlab-password" class="form-control" value="123456">
-									<span class="show-pass eye">
-										<i class="fa fa-eye-slash"></i>
-										<i class="fa fa-eye"></i>
-									</span>
-								</div> {% endcomment %}
-								<div class="text-center">
-									<button type="submit" class="btn btn-primary btn-block">Sign up</button>
-								</div>
-							</form>
-							<div class="new-account mt-3">
-								<p>Already have an account? <a class="text-primary" href="{% url 'fillow:page-login' %}">Sign in</a></p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
->>>>>>> BE
 
 
 <!--**********************************
