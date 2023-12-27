@@ -31,19 +31,13 @@
 
                         <div class="">
                             <div id="external-events" class="my-3">
-                                <p>일정을 달력위에 드래그 앤 드롭하여 배치</p>
+                                <p>AI가 자동으로 생성한 일정입니다.</p>
+                                <p>드래그 앤 드롭하여 배치하세요.</p>
+                                <p>직접 일정을 추가하기 위해 달력의 날짜를 클릭하세요.</p>
                                 <!-- 1 단위 -->
                                 <div class="external-event btn-primary light" data-class="bg-primary"><i class="fa fa-move"></i><span>배치 테스트</span></div>
                                 <!-- 1 단위 끝 -->
                             </div>
-                            <!-- checkbox -->
-                            <div class="checkbox form-check checkbox-event custom-checkbox pt-3 pb-5">
-                                <input type="checkbox" class="form-check-input" id="drop-remove">
-                                <label class="form-check-label" for="drop-remove">Remove After Drop</label>
-                            </div>
-                            <a href="javascript:void()" data-bs-toggle="modal" data-bs-target="#add-category" class="btn btn-primary btn-event w-100">
-                                <span class="align-middle"><i class="ti-plus"></i></span> 새로 만들기
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -55,61 +49,7 @@
                     </div>
                 </div>
             </div>
-            <!-- BEGIN MODAL -->
-            <div class="modal fade none-border" id="event-modal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title"><strong>Add New Event</strong></h4>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default waves-effect" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success save-event waves-effect waves-light">Create
-                                event</button>
-
-                            <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-bs-toggle="modal">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Modal Add Category -->
-            <div class="modal fade none-border" id="add-category">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title"><strong>Add a category</strong></h4>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label class="control-label form-label">Category Name</label>
-                                        <input class="form-control form-white" placeholder="Enter name" type="text" name="category-name">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="control-label form-label">Choose Category Color</label>
-                                        <select class="nice-select form-control default-select wide" data-placeholder="Choose a color..." name="category-color">
-                                            <option value="success">Success</option>
-                                            <option value="danger">Danger</option>
-                                            <option value="info">Info</option>
-                                            <option value="pink">Pink</option>
-                                            <option value="primary">Primary</option>
-                                            <option value="warning">Warning</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger waves-effect" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success waves-effect waves-light save-category" data-bs-toggle="modal">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-
     </div>
 </div>
 <!--**********************************
@@ -120,6 +60,11 @@
     "use strict"
 
     function fullCalender() {
+        // DB 업데이트
+        var updateDB = function(arg) {
+            console.log(arg)
+        }
+
         var scheduleList = {{ schedule_data | safe }};
 
         /* 드래그 앤 드롭 초기화
@@ -139,42 +84,85 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 height: '100%',
                 locale: 'kr',
-                expandRaws: true,
                 headerToolbar: {
                     left: 'prev',
                     center: 'title',
                     right: 'next',
                 },
-                // selectable: true,
+
+                selectable: true,
                 editable: true,
 
-                // 일정 추가시
-                eventAdd: function(obj) {
+                // 날짜 클릭 시
+                select: function (arg) {
+                    Swal.fire({
+                        html: "<div class='mb-5'>새로운 일정 추가하기</div><input type='text' class='form-control' id='swal-title' />",
+                        icon: "info",
+                        showCancelButton: true,
+                        confirmButtonText: "추가",
+                        cancelButtonText: "뒤로",
+                        confirmButtonColor: '#fc2e53',
+                        cancelButtonColor: '#15c08c',
+                        preConfirm: function () {
+                            var title = document.getElementById('swal-title').value;
+                            if (!title) {
+                                Swal.showValidationMessage('일정 제목을 입력해주세요.');
+                            }
+                            return title;
+                        }
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            calendar.addEvent({
+                                title: result['value'],
+                                start: arg.start,
+                                end: arg.end,
+                                allDay: arg.allDay
+                            })
+                            calendar.unselect()
+                        }
+                    });
+                },
 
+                // 일정 추가시
+                eventAdd: function (arg) {
+                    updateDB(arg);
                 },
 
                 // 일정 변경 시
-                eventChagne: function(obj) {
-
+                eventChange: function (arg) {
+                    updateDB(arg);
                 },
 
                 // 일정 제거 시
-                eventRemove: function(obj) {
-
+                eventRemove: function (arg) {
+                    updateDB(arg);
                 },
+
+                // 일정 드래그 앤 드롭 시
+                // eventDrop: function(obj) {
+                // },
                 
-                // 드래그로 일정 생성
-                select: function(arg) {
-                    var title = prompt('Event Title:');
-                    if (title) {
-                        calendar.addEvent({
-                            title: title,
-                            start: arg.start,
-                            end: arg.end,
-                            allDay: arg.allDay
-                        })
-                    }
-                    calendar.unselect();
+                // 클릭 시
+                eventClick: function (arg) {
+                    Swal.fire({
+                        text: "이 일정을 삭제하시겠습니까?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "삭제",
+                        cancelButtonText: "뒤로",
+                        confirmButtonColor: '#fc2e53',
+                        cancelButtonColor: '#15c08c',
+                    }).then(function (result) {
+                        if (result.value) {
+                            arg.event.remove()
+                        }
+                    });
+                },
+
+                // 외부에서 드래그 앤 드롭
+                eventReceive: function (arg) {
+                    // 목록에서 삭제하기
+                    arg.draggedEl.parentNode.removeChild(arg.draggedEl);
                 },
                 
                 // 이벤트 목록
