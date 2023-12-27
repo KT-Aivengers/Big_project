@@ -248,29 +248,94 @@ def faq(request):
 from .models import Qna
 from datetime import datetime
 from django.shortcuts import get_object_or_404
-
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.urls import reverse
 
 def qna(request):
-    Qnas = Qna.objects.all().order_by('-edit_date')  # 내림차순 정렬
-    context={
-        "page_title":"Q&A",
-        'Qnas':Qnas
-    }
+    user_id = request.user.id
+    user_staff = request.user.is_staff
+    
+    if user_staff:
+        Qnas = Qna.objects.all().order_by("-edit_date")
+    else:
+        Qnas = Qna.objects.filter(user_id=user_id).order_by('-edit_date') 
 
     if request.method == "POST":
         action = request.POST.get('btn_action')
         if action == "close":
             return redirect("fillow:qna")
-        user_id = request.user.id
+        
         title = request.POST.get("title1")
         question = request.POST.get("question")
         edit_date = datetime.now()
         
-        Qna.objects.create(question = question, title = title, user_id = user_id, edit_date = edit_date, status = "답변 대기중")
+        # field 비워져있을 때
+        if not question or not title:
+            return redirect("fillow:qna")
+        
+        Qna.objects.create(question = question, title = title, user_id = user_id, edit_date = edit_date)
         
         return redirect("fillow:qna")
+    else:
+        title = request.GET.get("title1")
+        status = request.GET.get("status")
+        print(title, status)
+        if title is None and status is None:
+            Qnas = Qnas.all()
+        else:
+            if status=="---":
+                status=False
+            elif status=="1":
+                status=1
+            else:
+                status=2
+            
+            if title=="" and not status:
+                Qnas = Qnas.all()
+            elif title=="" and status:
+                if status==1:
+                    Qnas = Qnas.filter(
+                        Q(answer='')
+                    )
+                else:
+                    Qnas = Qnas.filter(
+                        ~Q(answer="")
+                    )
+            elif title!="" and not status:
+                Qnas = Qnas.filter(
+                    Q(title__icontains=title)
+                )
+            elif title!="" and status:
+                if status==1:
+                    Qnas = Qnas.filter(
+                        Q(answer="") & Q(title__icontains=title)
+                    )
+                else:
+                    Qnas = Qnas.filter(
+                        ~Q(answer="") & Q(title__icontains=title)
+                    )
+        
+    paginator = Paginator(Qnas, 10)
 
+    page_num = request.GET.get('page')
+    qnas_page = paginator.get_page(page_num)
+    
+    if not status:
+        status="---"
+    elif status==1:
+        status="답변 대기중"
+    else:
+        status="답변 완료"
+    
+    context={
+        "page_title":"Q&A",
+        "Qnas":qnas_page,
+        "title":title,
+        "status":status,
+    }
     return render(request,'fillow/apps/cs/qna.html',context)
+    
 
 
 def qna_details(request, id):
@@ -280,7 +345,34 @@ def qna_details(request, id):
         "page_title":"Q&A_details",
         "qna":qna,
     }
+    
     return render(request, 'fillow/apps/cs/qna_details.html',context)
+
+def qna_details2(request, id):
+    qna = Qna.objects.get(id=id)
+    context={
+        "page_title":"Q&A_details",
+        "qna":qna,
+    }
+    if request.method == "POST":
+        action = request.POST.get("btn-act")
+        if action=="edit":
+            qna.title = request.POST.get("title1")
+            qna.question = request.POST.get("question")
+            qna.edit_date = datetime.now()
+            qna.save()
+            return redirect("fillow:qna-details", id=id)
+        elif action=="del":
+            qna.delete()
+            return redirect("fillow:qna")
+        else:
+            qna.answer = request.POST.get("answer")
+            qna.edit_date = datetime.now()
+            qna.save()
+            return redirect("fillow:qna-details", id=id)
+    
+    return render(request, 'fillow/apps/cs/qna_details2.html',context)
+
 
 def schedule(request):
     context={

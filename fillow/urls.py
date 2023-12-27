@@ -27,6 +27,7 @@ urlpatterns = [
     path('faq/',fillow_views.faq,name="faq"),
     path('qna/',fillow_views.qna,name="qna"),
     path('qna/<int:id>/',fillow_views.qna_details,name="qna-details"),
+    path('qna/<int:id>/update/', fillow_views.qna_details2, name="qna-details2"),
     path('app-calendar/',fillow_views.app_calender,name="app-calendar"),
     path('ecom-product-grid/',fillow_views.ecom_product_grid,name="ecom-product-grid"),
     path('ecom-product-list/',fillow_views.ecom_product_list,name="ecom-product-list"),
