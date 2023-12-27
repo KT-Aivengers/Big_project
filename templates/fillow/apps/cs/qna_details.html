@@ -21,10 +21,20 @@
                 <hr>
                 <div class="card-body">
                     <h3>내용 : {{qna.question}}</h3>
+                    {% if not qna.answer %}
+                        <div class="col-12">
+                            <a href='{% url "fillow:qna-details2" qna.id %}' style="color:white" class="btn btn-primary mb-2">수정하기</a>
+                        </div>
+                    {% else %}
+                    {% endif %}
+                </div>
                 </div>
                 <div class="card-body">
                     <h3>답변 : {{qna.answer}}</h3>
-                </div>
+                    {% if request.user.is_staff %}
+                        <a href='{% url "fillow:qna-details2" qna.id %}' style="color:white" class="btn btn-primary mb-2">답변하기</a>
+                    {% else %}
+                    {% endif %}
             </div>
         </div>
     </div>

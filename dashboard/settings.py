@@ -80,17 +80,14 @@ SITE_ID = 1
 SOCIALACCOUNT_PROVIDERS = {
     'google' : {
         'APP' : {
-            'client_id' : '',
-            'secret' : '',
+            'client_id' : '1074223713682-iqqhcu1qlurfngma6qhuceoaicgs6tgj.apps.googleusercontent.com',
+            'secret' : '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',
             'key' : '',
         },
         'SCOPE' : [
             'profile',
             'email',
-            'https://www.googleapis.com/auth/gmail.readonly',
-            'https://mail.google.com/',
-            'https://www.googleapis.com/auth/gmail.modify',
-            'https://www.googleapis.com/auth/gmail.metadata',
+            
             
         ],
         'AUTH_PARAMS' : {
@@ -98,8 +95,7 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-GMAIL_API_KEY = "AIzaSyBcF5GSdrNFFtqNMESyP_fg1bd3uI_QCaI"
-GMAIL_API_BASE_URL = 'https://www.googleapis.com/gmail/v1/'
+
 SOCIALACCOUNT_LOGIN_ON_GET=True # sign in via 안가도 됨
 
 ACCOUNT_EMAIL_REQUIRED = True # 계정 이메일이 필요한가?
