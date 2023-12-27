@@ -309,7 +309,12 @@ def qna_details(request, id):
     }
     return render(request, 'fillow/apps/cs/qna_details.html',context)
 
+
 def schedule(request):
+    if request.method == "POST":
+        # DB에 올리는 코드
+        print(request.POST)
+
     context={
         "page_title":"일정 관리"
     }
