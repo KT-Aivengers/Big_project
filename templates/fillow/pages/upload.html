@@ -14,7 +14,8 @@
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">파일업로드</button>
+        <button type="submit" class="btn btn-primary btn-margin-adjust" >파일업로드</button>
+
       </form>
     </div>
 </div>
