@@ -117,19 +117,26 @@
 										</div>
 									{% endfor %}
 
-									<div class="row mt-4">
-									<div class="col-12 ps-3">
-										<nav>
-											<ul class="pagination pagination-gutter pagination-primary pagination-sm no-bg justify-content-center justify-content-xl-start ">
-												<li class="page-item page-indicator"><a class="page-link" href="javascript:void()"><i class="la la-angle-left"></i></a></li>
-												<li class="page-item "><a class="page-link" href="javascript:void()">1</a></li>
-												<li class="page-item active"><a class="page-link" href="javascript:void()">2</a></li>
-												<li class="page-item"><a class="page-link" href="javascript:void()">3</a></li>
-												<li class="page-item"><a class="page-link" href="javascript:void()">4</a></li>
-												<li class="page-item page-indicator"><a class="page-link" href="javascript:void()"><i class="la la-angle-right"></i></a></li>
-											</ul>
-										</nav>
-									</div>
+									{% if page_obj.paginator.num_pages > 1 %}
+										<div class="row mt-4">
+											<div class="col-12 ps-3">
+												<nav>
+													<ul class="pagination pagination-gutter pagination-primary pagination-sm no-bg justify-content-center justify-content-xl-start">
+														{% if page_obj.has_previous %}
+															<li class="page-item page-indicator"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i class="la la-angle-left"></i></a></li>
+														{% endif %}
+														{% for num in page_obj.paginator.page_range %}
+															<li class="page-item {% if page_obj.number == num %}active{% endif %}"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+														{% endfor %}
+														{% if page_obj.has_next %}
+															<li class="page-item page-indicator"><a class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="la la-angle-right"></i></a></li>
+														{% endif %}
+													</ul>
+												</nav>
+											</div>
+										</div>
+									{% endif %}
+									
 								</div>
 							</div>
 						</div>
