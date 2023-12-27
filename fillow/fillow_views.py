@@ -79,7 +79,7 @@ def home(request):
     }
     return render(request,'fillow/home/home.html',context)
 
-
+from .models import AdditionalInform
 def index(request):
     context={
         "page_title":"메인",
@@ -88,8 +88,32 @@ def index(request):
     most4 = get_most_4_category()
     
     context.update(most4)
+    if request.user.is_authenticated:
+        # 로그인이 된 상태에서 해당 유저의 id가 fillow_additionalinform 테이블의 user_ptr_id에 존재하는지 확인
+        if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
+            # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
+            return redirect('fillow:additional_info')
+        
+    return render(request,'fillow/index.html', context)
+
+
+
+from .forms import AdditionalInformForm
+
+ 
+def fillow_additionalinform(request):
+    if request.method == "POST":
+        form = AdditionalInformForm(request.POST)
+        if form.is_valid():
+            # 로그인된 사용자의 추가 정보를 저장
+            additional_inform = form.save(commit=False)
+            additional_inform.user = request.user
+            additional_inform.save()
+            return redirect("fillow:index")
+    else:
+        form = AdditionalInformForm()
     
-    return render(request,'fillow/index.html', context)  
+    return render(request, 'fillow/pages/page-additionalinform.html', {'form': form})
 
 
 def index_2(request):
@@ -641,19 +665,21 @@ from django.contrib.auth import views
 
 def page_register(request):
     if request.method == "POST":
-        form = UserForm(request.POST)
-        print(form)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_pw = form.cleaned_data.get('password1')
-            user = authenticate(username = username, password = raw_pw)
-            login(request, user)
+        user_form = UserForm(request.POST)
+        additional_form = AdditionalInformForm(request.POST)
+        if user_form.is_valid() and additional_form.is_valid():
+            user = user_form.save()
+            additional_inform = additional_form.save(commit=False)
+            additional_inform.user = user
+            additional_inform.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+
             return redirect("fillow:index")
     else:
-        form = UserForm()
-    
-    return render(request,'fillow/pages/page-register.html', {'form':form})
+        user_form = UserForm()
+        additional_form = AdditionalInformForm()
+    return render(request, 'fillow/pages/page-register.html', {'user_form': user_form, 'additional_form': additional_form})
 
 def page_forgot_password(request):
     return render(request,'fillow/pages/page-forgot-password.html')

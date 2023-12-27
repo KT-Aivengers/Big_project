@@ -45,8 +45,7 @@
 							<h4 class="text-center mb-4">Sign up your account</h4>
 							<form action="" method="POST">
 								{% csrf_token %}
-								{{ user_form }}
-								{{ additional_form }}
+								{{ form }}
 								<br>
 								{% comment %} <div class="form-group mb-4">
 									<label class="form-label" for="username">Username</label>

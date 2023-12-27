@@ -96,6 +96,7 @@ urlpatterns = [
     # path('page-login/',fillow_views.page_login,name="page-login"),
     path('page-register/',fillow_views.page_register,name="page-register"),
     path('page-forgot-password/',fillow_views.page_forgot_password,name="page-forgot-password"),
+    path('additionalinfo/', fillow_views.fillow_additionalinform, name='additional_info'),
     path('page-lock-screen/',fillow_views.page_lock_screen,name="page-lock-screen"),
     path('page-empty/',fillow_views.page_empty,name="page-empty"),
     path('page-error-400/',fillow_views.page_error_400,name="page-error-400"),
