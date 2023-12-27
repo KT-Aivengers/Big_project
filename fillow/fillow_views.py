@@ -633,7 +633,7 @@ def table_datatable_basic(request):
 
 
 from django.shortcuts import redirect
-from .forms import UserForm, LoginForm, EmailComposeTplForm
+from .forms import UserForm, LoginForm, EmailComposeTplForm, DocumentForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
