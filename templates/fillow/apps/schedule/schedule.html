@@ -6,6 +6,13 @@
     .fc-header-toolbar {
         padding: 5px;
     }
+
+    .save-discard {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
 </style>
 {% endblock %}
         
@@ -40,6 +47,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card-footer save-discard">
+                        <button type="button" class="btn btn-primary" id="save">저장하기</button>
+                        <button type="button" class="btn btn-danger" id="discard">취소</button>
+                    </div>
                 </div>
             </div>
             <div class="col-xl-9 col-xxl-8">
@@ -58,11 +69,44 @@
 <script src="{% static 'fillow/vendor/jquery/jquery.min.js' %}"></script>
 <script>
     "use strict"
+    var changed = false;
+
+    // 버튼 활성화/비활성화 변경
+    function changeDisable() {
+        $('#save').prop('disabled', !changed);
+        $('#discard').prop('disabled', !changed);
+    }
 
     function fullCalender() {
-        // DB 업데이트
-        var updateDB = function(arg) {
-            console.log(arg)
+        // 내용 변경 여부 확인하기
+        var isChanged = function(arg) {
+            var currentSchedule = calendar.getEvents()
+            var newList = []
+            
+            currentSchedule.forEach(function(schedule) {
+                var scheduleData = {};
+                var title = schedule.title;
+                var start = schedule.start;
+                var end = schedule.end;
+
+                scheduleData['title'] = title;
+
+                start.setDate(start.getDate() + 1);
+                var fstart = start.toISOString().substring(0, 10);
+                scheduleData['start'] = fstart;
+
+                if (end) {
+                    end.setDate(end.getDate() + 1);
+                    var fend = end.toISOString().substring(0, 10);
+                    scheduleData['end'] = fend;
+                }
+
+                newList.push(scheduleData);
+            });
+
+            var isEqual = JSON.stringify(scheduleList) !== JSON.stringify(newList);
+            changed = isEqual;
+            changeDisable();
         }
 
         var scheduleList = {{ schedule_data | safe }};
@@ -82,6 +126,8 @@
         -----------------------------------------------------------------*/
         var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
+                // 이벤트 목록
+                events: scheduleList,
                 height: '100%',
                 locale: 'kr',
                 headerToolbar: {
@@ -100,9 +146,9 @@
                         icon: "info",
                         showCancelButton: true,
                         confirmButtonText: "추가",
-                        cancelButtonText: "뒤로",
-                        confirmButtonColor: '#fc2e53',
-                        cancelButtonColor: '#15c08c',
+                        cancelButtonText: "취소",
+                        confirmButtonColor: '#15c08c',
+                        cancelButtonColor: '#fc2e53',
                         preConfirm: function () {
                             var title = document.getElementById('swal-title').value;
                             if (!title) {
@@ -125,17 +171,17 @@
 
                 // 일정 추가시
                 eventAdd: function (arg) {
-                    updateDB(arg);
+                    isChanged();
                 },
 
                 // 일정 변경 시
                 eventChange: function (arg) {
-                    updateDB(arg);
+                    isChanged();
                 },
 
                 // 일정 제거 시
                 eventRemove: function (arg) {
-                    updateDB(arg);
+                    isChanged();
                 },
 
                 // 일정 드래그 앤 드롭 시
@@ -162,11 +208,9 @@
                 // 외부에서 드래그 앤 드롭
                 eventReceive: function (arg) {
                     // 목록에서 삭제하기
+                    isChanged();
                     arg.draggedEl.parentNode.removeChild(arg.draggedEl);
                 },
-                
-                // 이벤트 목록
-                events: scheduleList,
 
                 // 달력에서 '일' 제거
                 dayCellContent: function (info) {
@@ -184,6 +228,7 @@
                 }
             });
             calendar.render();
+            changeDisable();
     }
 
     jQuery(window).on('load', function() {

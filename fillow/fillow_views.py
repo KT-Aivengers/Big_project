@@ -55,7 +55,7 @@ def get_schedule():
         {
             'title': '크리스마스',
             'start': '2023-12-25',
-            'className': 'bg-danger',
+            # 'className': 'bg-danger',
         },
         {
             'title': '연락 바람',
@@ -66,8 +66,8 @@ def get_schedule():
             'title': '이메일 페이지로',
             'start': '2023-12-10',
             'end': '2023-12-15',
-            'url': 'http://127.0.0.1:8000/email-inbox/',
-            'className': 'bg-info',
+            # 'url': 'http://127.0.0.1:8000/email-inbox/',
+            # 'className': 'bg-info',
         },
     ]
     return schedule_list
