@@ -337,14 +337,30 @@
 					<!-- 내 정보 -->
 					<li class="nav-item dropdown  header-profile">
 						<a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
-							<img src="{% static 'fillow/images/user.jpg' %}" width="56" alt="">
+							{% comment %} <img src="{% static 'fillow/images/user.jpg' %}" width="56" alt=""> {% endcomment %}
+							{% comment %} {% if user.is_authenticated %}
+								<a href='{% url "fillow:page-login" %}'>{{user.username}}님 로그아웃</a>
+							{% else %}
+								<a href='{% url "fillow:page-login" %}'>로그인</a>
+							{% endif %} {% endcomment %}
+							{% comment %} {% if userInSession %}
+								<div>{{userInSession}}님 안녕하세요.</div>
+							{% else %}
+								<a href='{% url "fillow:page-login" %}'>로그인</a>
+							{% endif %} {% endcomment %}
+
+							{% if request.user.is_authenticated %}
+								<div>{{request.user.first_name}}님 안녕하세요!</div>
+							{% else %}
+								<a href='{% url "fillow:page-login" %}'>로그인</a>
+							{% endif %}
 						</a>
 						<div class="dropdown-menu dropdown-menu-end">
 							<a href="{% url 'fillow:app-profile' %}" class="dropdown-item ai-icon">
 								<i class="fa-solid fa-user"></i>
 								<span class="ms-2">내 정보</span>
 							</a>
-							<a href="{% url 'fillow:page-login' %}" class="dropdown-item ai-icon">
+							<a href="{% url 'fillow:page-logout' %}" class="dropdown-item ai-icon">
 								<i class="fa-solid fa-right-to-bracket"></i>
 								<span class="ms-2">로그아웃</span>
 							</a>

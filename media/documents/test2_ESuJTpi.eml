@@ -1,0 +1,230 @@
+Delivered-To: aivle041237@gmail.com
+Received: by 2002:a05:7110:a93:b0:226:a7f7:6ff8 with SMTP id bu19csp310613geb;
+        Thu, 14 Dec 2023 17:33:00 -0800 (PST)
+X-Google-Smtp-Source:
+ AGHT+IGy7p5+sfeND1u54lquGwQuMZHBe9phDJhWr6rcBE3CIXz06kBp73xh5gxQ681SchDlIgDO
+X-Received: by 2002:ad4:5e8c:0:b0:67f:e35:bcb6 with SMTP id
+ jl12-20020ad45e8c000000b0067f0e35bcb6mr2975947qvb.5.1702603980198;       
+ Thu, 14 Dec 2023 17:33:00 -0800 (PST)
+ARC-Seal: i=2; a=rsa-sha256; t=1702603980; cv=pass;        d=google.com;
+ s=arc-20160816;       
+ b=YACuWnaC3aRhAYD5LncyLo44QOXwSDLGCc1wasOosXvNW+fOlzTSCgFpLvnYf1VSB3        
+ YnXC1v+ZNn1t0ai4rouM9eLUHip763Edc4NvR/tkP2Te2JVDXS2F9FCmA4+NzWyZOsxo        
+ PLBAFsYt7VwABsVtBALY7LTT43B74l0ufemjJyFUZUDXRMoryigScs908x9OzCH7PAXI        
+ s8VTqYmtArUkDt9Mbc9OjlSKtw2CeNvDY1SY2zigad+36AqwIZVqQB9lYwXvxw4Q2VzR        
+ 0R5J8WjYvdA2yMt5viD4fAGUWSapB/6HeA6n60qAhZZNiTgHTT3ZQ97bPaTeHS9DZrYa        
+ ac6A==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20160816;       
+ h=mime-version:msip_labels:content-language:accept-language        
+ :message-id:date:thread-index:thread-topic:subject:to:from        
+ :dkim-signature;        bh=STug+GOqXah+UcDKt+laf9AsO+PCtwOl3e7cZ3wzwvQ=;
+        fh=4s9LN1K+wD/2XxpIil6ryz+46XrW7vignxs9QE9G1No=;       
+ b=f3yB2f3+syzGyYzR/GVMCVQ4siBCSTMzcfeu4AxH+yNZL6MSL/MDCPx7TkiMCj3x0+        
+ sTf7J/NF4hdgQv0WSqNZduX96TeE+WxMUP4+h/EDukQGvXPZwEoFxxFCkxJ0+F1j1I64        
+ aYASOHQdpUNzIswC6MjS4SIb14VZ3heMY+J3lLQVBG5mdMeD5d/0QRkcsKvd7iTaYmY9        
+ Yx1BmktnQ0NQwd8xZJwa+PoQBuw00tNrhnuIYtrHj8Baz1Q96viv0zDD2SSaMnekVsmB        
+ vvdJmoZBwpaFreqWK/49L0nzLaiYYzHPeKa9avn/Wy1U4uehhRew3A3DpYITC32U4ShH        
+ 4Rog==
+ARC-Authentication-Results: i=2; mx.google.com;       dkim=pass
+ header.i=@outlook.com header.s=selector1 header.b=BNcoqrCd;       arc=pass
+ (i=1);       spf=pass (google.com: domain of
+ outlook_d6a25194cfb1287a@outlook.com designates 2a01:111:f400:feac::81f as
+ permitted sender) smtp.mailfrom=outlook_D6A25194CFB1287A@outlook.com;      
+ dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=outlook.com
+Return-Path: <outlook_D6A25194CFB1287A@outlook.com>
+Received: from KOR01-SL2-obe.outbound.protection.outlook.com
+ (mail-sl2kor01olkn081f.outbound.protection.outlook.com.
+ [2a01:111:f400:feac::81f])        by mx.google.com with ESMTPS id
+ z4-20020a0cf004000000b0067f1830b63bsi314503qvk.563.2023.12.14.17.32.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Dec 2023 17:33:00 -0800 (PST)
+Received-SPF: pass (google.com: domain of outlook_d6a25194cfb1287a@outlook.com
+ designates 2a01:111:f400:feac::81f as permitted sender)
+ client-ip=2a01:111:f400:feac::81f;
+Authentication-Results: mx.google.com;       dkim=pass header.i=@outlook.com
+ header.s=selector1 header.b=BNcoqrCd;       arc=pass (i=1);       spf=pass
+ (google.com: domain of outlook_d6a25194cfb1287a@outlook.com designates
+ 2a01:111:f400:feac::81f as permitted sender)
+ smtp.mailfrom=outlook_D6A25194CFB1287A@outlook.com;       dmarc=pass (p=NONE
+ sp=QUARANTINE dis=NONE) header.from=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none; 
+ =?utf-8?q?b=3DhboztN8JF568oJrVHZbE1u8MmDaaVNdNfGtuDc2vGgXm9o4WL6LvwFYq7bV1m?=
+ =?utf-8?q?eAAUx+Y9s8ZtcmRFUdtoOpLgejiQD/1jbVSbfo05ggpx144dj3aS16AVvr8voJino?=
+ =?utf-8?q?/bN8uHKgdK4PD1A00ypoJMB6Kfqu5b0wX8ffuWuK+lAK+ulLMi8Vf8oUKqLrNLz/0?=
+ =?utf-8?q?MFXsY+HM/JKHH16STgJGcg2568r3zskrejeDOm9q9gyenHJRPowBxAU5LsPxxD8CE?=
+ =?utf-8?q?XrGEElkwVjqKXA8Iw4L0GYMvSSV6zrfvm5JaSEDTPRNfQcxkqh9DByu98ZUku5DiW?=
+ =?utf-8?q?9NUJSlGKjT3GIotGPnlQg=3D=3D?=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; =?utf-8?q?h=3DFrom=3ADate=3ASubject=3AMessage-ID=3AConte?=
+ =?utf-8?q?nt-Type=3AMIME-Version=3AX-MS-Exchange-AntiSpam-MessageData-Chunk?=
+ =?utf-8?q?Count=3AX-MS-Exchange-AntiSpam-MessageData-0=3AX-MS-Exchange-Anti?=
+ =?utf-8?q?Spam-MessageData-1=3B?=
+ bh=STug+GOqXah+UcDKt+laf9AsO+PCtwOl3e7cZ3wzwvQ=; =?utf-8?q?b=3DUKs/mfdJqjrH?=
+ =?utf-8?q?UOnhsGUt0D67MkX/AqUbX46NIgcymZGuMoeh284OE416l8f+BaVqmS+fUF6qpFtmx?=
+ =?utf-8?q?UZt7eFrUQqZCvNUy28i8D9eQPJ+mmDrLAIRppxSiIK4B9o+jOGO3+xgP/UUS7lGR/?=
+ =?utf-8?q?12fNeBsaB6t17bl0t1H9Pb6tWP8aXedzXUhBOO4e93yDKh74CD+EYydj2y3n+J4tv?=
+ =?utf-8?q?vpGJxTKTSmLxxH5syaZsaEOX1S5ztBrcdW75AVeRMpFF1a4C5o8GJLuFXVCvpeT6r?=
+ =?utf-8?q?NYzlXp6UaeId/EyukN2QmpPEaCbz30dmNaGxny6iLZYe3eTGrNoB6uXQnnL4wnHYs?=
+ =?utf-8?q?JB4sw=3D=3D?=
+ARC-Authentication-Results:
+ i=1; mx.microsoft.com 1; spf=none; dmarc=none; dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1; =?utf-8?q?h=3DFrom=3ADate=3ASubject=3AMessage-ID=3AContent-Typ?=
+ =?utf-8?q?e=3AMIME-Version=3AX-MS-Exchange-SenderADCheck=3B?=
+ bh=STug+GOqXah+UcDKt+laf9AsO+PCtwOl3e7cZ3wzwvQ=; =?utf-8?q?b=3DBNcoqrCdfgy/?=
+ =?utf-8?q?e4VdfBC269QKJCzxjBslaIWVyrnd/m+POlUNcEJoqaLbb8fHZQpypS9oXke8esOuu?=
+ =?utf-8?q?Ee4019/ewfTYomhTGB22fp9npxoY2a1DU5e8C6eWn7pi0nZUskn9d9CN6FHH8oRQH?=
+ =?utf-8?q?5kTcb2QvWigKnkyO7AdFkjxvplzJ40HGqXNo+aYj/ydDQNBtMrAtlQpsO6juC9/5s?=
+ =?utf-8?q?A3kYrBVDDMctgLnbfSB5s32gxjI+eSfm9XetDAW54VJkDJ0OsYgWPa3bS8W0SYz7Q?=
+ =?utf-8?q?5gkxS24rYEYtkfqTYg44DEstHWHLBh3p1cWMB3TUAGj/oHJVxPDgEWVFqdFXQPCmA?=
+ =?utf-8?q?9Ubzw=3D=3D?=
+Received: from SLXP216MB1034.KORP216.PROD.OUTLOOK.COM (2603:1096:101:d::14) by
+ SE1P216MB1559.KORP216.PROD.OUTLOOK.COM (2603:1096:101:2a::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7091.31; Fri, 15 Dec 2023 01:32:56 +0000
+Received: from SLXP216MB1034.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a935:1220:490b:2c63]) by SLXP216MB1034.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a935:1220:490b:2c63%4]) with mapi id 15.20.7091.030; Fri, 15 Dec 2023
+ 01:32:56 +0000
+From: =?utf-8?b?6rmAIOyEuOycpA==?= <outlook_D6A25194CFB1287A@outlook.com>
+To: "aivle970317@gmail.com" <aivle970317@gmail.com>,
+ "aivle041237@gmail.com"	<aivle041237@gmail.com>,
+ "turkeyjay823@gmail.com" <turkeyjay823@gmail.com>
+Subject:  =?utf-8?b?67CU7IGcIOyLnOqwhCDsho3sl5DshJzrj4Qg67mb64KY64qUIOyXkA==?=
+ =?utf-8?b?7J2067iUIO2MgOyXkOqyjA==?=
+Thread-Topic:  =?utf-8?b?67CU7IGcIOyLnOqwhCDsho3sl5DshJzrj4Qg67mb64KY64qU?=
+  =?utf-8?b?7JeQ7J2067iUIO2MgOyXkOqyjA==?=
+Thread-Index: AQHaLvWzIjiL6a8PakKVsWUDOg3uvw==
+Date: Fri, 15 Dec 2023 01:32:56 +0000
+Message-ID:  <SLXP216MB1034CE38181E352D17FD29BCE893A@SLXP216MB1034.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: ko-KR, en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn: [sz1kdxnjRCEn2do6Zcsfy/zG0Qa8EOXVC2HUCr6flRI=]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SLXP216MB1034:EE_|SE1P216MB1559:EE_
+x-ms-office365-filtering-correlation-id: a561d42c-3eff-4df5-d6a4-08dbfd0dc400
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:  =?utf-8?q?0SdTvZC3q4CSemB3Xbb8irCPvkxRZk?=
+ =?utf-8?q?3kOkOZx5RS9EmAji5pjiYEqmRwlfBPM2dII5vPOe8h8YU31RD5ffrv3FyAQzp2G95?=
+ =?utf-8?q?uN7cSuVQ7hzmYpvHqP0Px+GXN3qZoZNvsyuVxO0Nc5HL1SKNBB3SS84vg0EXT/VHe?=
+ =?utf-8?q?woUCg8YfwlqMdaYdbq1wt+KyLI3rKP9w9JnHgAJty0GUhsVCLDD7G4cflLBHZ3tVM?=
+ =?utf-8?q?NsGlkWKzE7i4OMDEKAn9R4ACXJMd3oM1ElP+udcp4GyF4eo56tNqTL83yaVA2wV9R?=
+ =?utf-8?q?4WKAzOF9TYewMrJuQGYehH5IU0KGqAgdNw1rWocfZvnsn1smnlhtB2mSua8vXEhLC?=
+ =?utf-8?q?Wz5LIBgARMxC82cnEEgntGCgdvGPNsbRR8i0XkLrCquU6KtNImkZGC/x6PMdb5fQW?=
+ =?utf-8?q?20j8qXzWrJlJAE4EgDXFsyXM9h/NrtN5IYdrnHWP+8gSE5rCPUoFvRsAFT3NIwrPr?=
+ =?utf-8?q?jpiFupt2ubLS7jcg+BIuuP88nnUwfHeISd3q0JtN1jujSnLdt/z/YXp33laJn27V6?=
+ =?utf-8?q?aFFffaA3mXhVTyVZCUMd9tJhnn?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:  KHudGGrKYDzwVFalsRWEjtQTJ6ROdAvx7+sVjyl
+ =?utf-8?q?5qy42BeokT4kxEm3WX1TiRx9inSm9LpbFWc0lMa?==?utf-8?q?GBEoC2Jt4vdKct?=
+ =?utf-8?q?Cq/gabc1Hv6iAtep9CqzQZZijJlUS+wbeoIDmA8r/bSKOc+E3YofVCW9H9RRlPjQ5?=
+ =?utf-8?q?i9yWPZaPzFBbaN54raMTb4pEjZw70Q3KOVW0BzGq2MA0giKjs/p7qTC9nwar18O2P?=
+ =?utf-8?q?fH+VdkHznt8pKZpnN9hZQDqEeK8XyPyUsJYRDeTTng/Pxiqua4HXIr6i0qgNrZOvR?=
+ =?utf-8?q?EbC5Nd52gia1Wd/V04CV1AsGyz2gZV/BvPy2e2U9q/PolRvHppnPo+eYLYvAkDVw1?=
+ =?utf-8?q?E5vE+h2p61L5n5tGl2uFmF3tbPldZhkZ+AhYRJMiYGFqUB958FoSeS0gGQlc1/DGO?=
+ =?utf-8?q?05wOe4dLq/0RiVVfKDNkEJGxBjtUOT9ycWHqF9MWbD8v/WCdckyMkxJliPhEjOnLg?=
+ =?utf-8?q?RSkYvcXFUQknVxIfI+NrHtTj0Y7l+BWLw8aFrwa70HGOxHLIP9sP4C8e/hmuc9DmT?=
+ =?utf-8?q?X2SGWfTD4LvwN+0KKx4zsDJi9h4tyJX77jcagWOlkaYduOU2hFoABe8QIiSi9qRro?=
+ =?utf-8?q?Dxyru4/c4BMPXYvIIRloGOZkaqGTBhiOSQ6OzZRYMpPZs2qtjV22K26N6cqJlAF6l?=
+ =?utf-8?q?KL32IyjR5OMDjd9AtyMjGfw4SPPVghizG40Bowd4vTQ1m0vfUj2OLBfdqI9NDn+Z7?=
+ =?utf-8?q?uuuRUoTkX7vuKMCfeaXbpL59QWA3dkb2RMIXWfDkdY0mx/yv+uLnxFC8+5sGAn1MX?=
+ =?utf-8?q?gD/O7DbsbP++HlqZKYCHTZgFIatoVIZ2HpHe6hCtZlpP15xzaKMiJunYwDclUaQtD?=
+ =?utf-8?q?x3m9pXU4JOSMZn/CIyndBCk//gMnH8pLKqVpdZOUo7oJgDFlLavko0GhA+gS+tyaW?=
+ =?utf-8?q?7T4irljWlH0izrL3edFq/ehvNj0mk4ncazwa8WCY3Cc/8HwewCsOmEnPHAJInk000?=
+ =?utf-8?q?k20/cVQNX8LyOJWpfu37Vphn90MaIlCa9uEaMq5YlUuRWOzHh9fMcikRm90W9Lcpt?=
+ =?utf-8?q?sOu4jijqcDAe2W2dVVzsJMY4rNFBBV6kLzSMCzqPMwoFEu3P7Ut19IRdjROkildOf?=
+ =?utf-8?q?m/WT7b/beh2a76UyjmQTsM6IeKWRxbCITEu+VOsyOubFCuXVmNhZDs9xPxjKcsG6G?=
+ =?utf-8?q?bSgX0d1jOMXkdh4nA7z6vZArgyK11jUMRIzyUSFazj8a3JqbYNvf88q8URdo31RzC?=
+ =?utf-8?q?1t+KvPAWK7puzQkmbd?=
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SLXP216MB1034.KORP216.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+ 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id:
+ a561d42c-3eff-4df5-d6a4-08dbfd0dc400
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Dec 2023 01:32:56.7343 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg:
+ 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE1P216MB1559
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+=EC=95=88=EB=85=95=ED=95=98=EC=84=B8=EC=9A=94, =EC=97=90=EC=9D=B4=EB=B8=94=EC=
+=9D=98 CEO =EA=B9=80=EC=84=B8=EC=9C=A4=EC=9E=85=EB=8B=88=EB=8B=A4.
+
+
+
+
+=EC=9A=B0=EC=84=A0, =EA=B0=81=EC=9E=90=EC=9D=98 =EC=9E=90=EB=A6=AC=EC=97=90=
+=EC=84=9C =EC=B5=9C=EC=84=A0=EC=9D=84 =EB=8B=A4=ED=95=B4 =EC=A3=BC=EC=8B=9C=
+=EB=8A=94 =EB=AA=A8=EB=93=A0 =EB=B6=84=EB=93=A4=EA=BB=98 =EA=B0=90=EC=82=AC=
+=EC=9D=98 =EC=9D=B8=EC=82=AC=EB=A5=BC =EC=A0=84=ED=95=A9=EB=8B=88=EB=8B=A4. =
+=EC=A0=80=ED=9D=AC =EC=97=90=EC=9D=B4=EB=B8=94=EC=9D=B4 =EC=A7=80=EA=B8=88=EC=
+=9D=98 =EC=9C=84=EC=B9=98=EC=97=90 =EC=9E=88=EC=9D=84 =EC=88=98 =EC=9E=88=EB=
+=8A=94 =EA=B2=83=EC=9D=80 =EB=B0=94=EB=A1=9C =EC=97=AC=EB=9F=AC=EB=B6=84=EB=
+=93=A4=EC=9D=98 =EB=85=B8=EB=A0=A5=EA=B3=BC =ED=97=8C=EC=8B=A0 =EB=8D=95=EB=
+=B6=84=EC=9E=85=EB=8B=88=EB=8B=A4.
+
+=EC=96=B8=EC=A0=9C=EB=82=98 =EB=B3=80=ED=95=98=EC=A7=80 =EC=95=8A=EB=8A=94 =
+=EC=97=B4=EC=A0=95=EA=B3=BC =ED=97=8C=EC=8B=A0=EC=9C=BC=EB=A1=9C =EC=B5=9C=EA=
+=B3=A0=EC=9D=98 ICT =EC=86=94=EB=A3=A8=EC=85=98=EC=9D=84 =EC=A0=9C=EA=B3=B5=
+=ED=95=98=EA=B8=B0 =EC=9C=84=ED=95=B4 =EB=81=8A=EC=9E=84=EC=97=86=EC=9D=B4 =
+=EB=85=B8=EB=A0=A5=ED=95=98=EB=8A=94 =EC=97=AC=EB=9F=AC=EB=B6=84 =EB=AA=A8=EB=
+=91=90=EC=97=90=EA=B2=8C =EA=B0=90=EC=82=AC=EC=9D=98 =EB=A7=90=EC=94=80=EC=9D=
+=84 =EC=A0=84=ED=95=98=EA=B3=A0 =EC=8B=B6=EC=8A=B5=EB=8B=88=EB=8B=A4. =EC=97=
+=AC=EB=9F=AC=EB=B6=84=EB=93=A4=EC=9D=98 =EB=85=B8=EB=A0=A5=EC=9D=B4 =EB=AA=A8=
+=EC=97=AC =EC=97=90=EC=9D=B4=EB=B8=94=EC=9D=98 =EC=84=B1=EC=9E=A5=EC=9D=84 =
+=EC=9D=B4=EB=81=8C=EA=B3=A0 =EC=9E=88=EC=9D=8C=EC=9D=84 =EC=9E=8A=EC=A7=80 =
+=EB=A7=90=EC=95=84=EC=A3=BC=EC=8B=9C=EA=B8=B0 =EB=B0=94=EB=9E=8D=EB=8B=88=EB=
+=8B=A4.
+
+
+
+
+=EC=97=90=EC=9D=B4=EB=B8=94=EC=9D=80 =EC=97=AC=EB=9F=AC=EB=B6=84=EB=93=A4=EA=
+=B3=BC =ED=95=A8=EA=BB=98 =EC=84=B1=EC=9E=A5=ED=95=98=EB=A9=B0, =EC=82=AC=ED=
+=9A=8C=EC=97=90 =EA=B8=B0=EC=97=AC=ED=95=98=EB=8A=94 =EA=B8=B0=EC=97=85=EC=9C=
+=BC=EB=A1=9C=EC=84=9C=EC=9D=98 =EC=B1=85=EC=9E=84=EA=B3=BC =EC=97=AD=ED=95=A0=
+=EC=9D=84 =EB=8B=A4=ED=95=98=EA=B2=A0=EC=8A=B5=EB=8B=88=EB=8B=A4. =EC=9A=B0=
+=EB=A6=AC =EB=AA=A8=EB=91=90=EA=B0=80 =ED=95=A8=EA=BB=98=ED=95=98=EB=8A=94 =
+=EC=9D=B4 =EA=B8=B8=EC=9D=B4 =ED=9E=98=EB=93=A4=EA=B3=A0 =EC=96=B4=EB=A0=A4=
+=EC=9A=B8=EC=A7=80=EB=9D=BC=EB=8F=84, =EC=A0=80=EB=8A=94 =EC=97=AC=EB=9F=AC=
+=EB=B6=84=EB=93=A4=EA=B3=BC =ED=95=A8=EA=BB=98=EB=9D=BC=EB=A9=B4 =EC=96=B4=EB=
+=96=A4 =EB=82=9C=EA=B4=80=EB=8F=84 =EA=B7=B9=EB=B3=B5=ED=95=A0 =EC=88=98 =EC=
+=9E=88=EC=9D=84 =EA=B2=83=EC=9D=B4=EB=9D=BC =ED=99=95=EC=8B=A0=ED=95=A9=EB=8B=
+=88=EB=8B=A4.
+
+
+
+
+=EC=A0=80=EC=99=80 =EC=97=90=EC=9D=B4=EB=B8=94=EA=B3=BC=EC=9D=98 =EC=86=8C=ED=
+=86=B5=EC=9D=B4 =ED=95=84=EC=9A=94=ED=95=98=EC=8B=A0 =EB=B6=84=EB=93=A4=EC=9D=
+=80 =EC=96=B8=EC=A0=9C=EB=93=A0=EC=A7=80 =EC=97=B0=EB=9D=BD=EC=A3=BC=EC=8B=9C=
+=EA=B8=B0 =EB=B0=94=EB=9E=8D=EB=8B=88=EB=8B=A4.=20
+
+=EC=97=AC=EB=9F=AC=EB=B6=84=EB=93=A4=EC=9D=98 =EC=9D=98=EA=B2=AC=EA=B3=BC =EC=
+=83=9D=EA=B0=81=EC=9D=B4 =EC=A0=80=ED=9D=AC =EC=97=90=EC=9D=B4=EB=B8=94=EC=97=
+=90 =ED=81=B0 =ED=9E=98=EC=9D=B4 =EB=90=A9=EB=8B=88=EB=8B=A4.
+
+
+
+
+=EA=B8=B4 =EA=B8=80 =EC=9D=BD=EC=96=B4=EC=A3=BC=EC=85=94=EC=84=9C =EA=B0=90=
+=EC=82=AC=ED=95=A9=EB=8B=88=EB=8B=A4. =ED=95=AD=EC=83=81 =EA=B1=B4=EA=B0=95=
+=ED=95=98=EC=8B=9C=EA=B3=A0, =ED=96=89=EB=B3=B5=ED=95=9C =ED=95=98=EB=A3=A8 =
+=EB=90=98=EC=8B=9C=EA=B8=B8 =EB=B0=94=EB=9E=8D=EB=8B=88=EB=8B=A4.
+
+=EA=B0=90=EC=82=AC=ED=95=A9=EB=8B=88=EB=8B=A4.
+
+=EA=B9=80=EC=84=B8=EC=9C=A4 CEO, =EC=97=90=EC=9D=B4=EB=B8=94 =ED=9A=8C=EC=82=
+=AC =EC=97=B0=EB=9D=BD=EC=B2=98 : 02-1234-1234 =ED=9C=B4=EB=8C=80=ED=8F=B0 : =
+010-2979-5966
+

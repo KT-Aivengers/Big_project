@@ -1,12 +1,36 @@
 from django.db import models
-
+from django.conf import settings
+from django.contrib.auth.models import User
 # Create your models here.
 
-class User(models.Model):
-    user_id = models.CharField(max_length=20)
-    user_pw = models.CharField(max_length=30)
-    user_dep = models.CharField(max_length=10)
-    user_email = models.EmailField()
+class AdditionalInform(User):
+    department = models.CharField(max_length=10)
+    phone = models.CharField(max_length=16)
     
-    def __str__(self):
-        return self.user_id
+class Document(models.Model):
+    uploaded_file = models.FileField(upload_to='documents/')
+    
+class Email(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='emails')
+    email_file_name = models.CharField(max_length=100)
+    email_subject = models.CharField(max_length=100)
+    email_date = models.CharField(max_length=100)
+    email_from = models.CharField(max_length=1000)
+    email_to = models.CharField(max_length=1000)
+    email_cc = models.CharField(max_length=1000)
+    email_text_content = models.CharField(max_length=10000)
+    
+class Qna(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="qna")
+    question = models.CharField(max_length=300, blank=True)
+    # image = models.ImageField(blank=True, upload_to='fillow')
+    answer = models.CharField(max_length=300, blank=True)
+    title = models.CharField(max_length=50, blank=True)
+    status = models.CharField(max_length=10, blank=True)
+    edit_date = models.DateField()
+    
+
+class EmailComposeTpl(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='email_tpl')
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="email_tpl")
+    texts = models.CharField(max_length=1000)

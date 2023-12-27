@@ -11,4 +11,12 @@ sqlparse==0.4.4
 typing_extensions==4.9.0
 tzdata==2023.3
 whitenoise==6.6.0
+mysqlclient
+langchain
+django-allauth
+compoundfiles
+compressed-rtf
+html2text
 win32-setctime==1.1.0
+google-api-python-client
+django-mailbox

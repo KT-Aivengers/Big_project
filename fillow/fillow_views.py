@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render
 from django.http import HttpResponse
 
@@ -216,6 +217,27 @@ def email_compose(request):
     }
     return render(request,'fillow/apps/email/email-compose.html',context)
 
+def email_compose_tpl(request):
+    context={
+        "page_title":"전송 템플릿"
+    }
+    if request.method == "POST":
+        form = EmailComposeTplForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            texts = form.cleaned_data.get('texts', '')
+            print(texts)
+            EmailComposeTpl.objects.create(texts = texts, user = user)
+
+            
+            return redirect("fillow:email-template")
+
+    else:
+        form = EmailComposeTplForm()
+    
+    return render(request,'fillow/apps/email/email-compose-tpl.html',context)
+
+
 
 def email_inbox(request):
     context={
@@ -244,18 +266,42 @@ def faq(request):
     }
     return render(request,'fillow/apps/cs/faq.html',context)
 
+from .models import Qna, EmailComposeTpl
+from datetime import datetime
+from django.shortcuts import get_object_or_404
+
 
 def qna(request):
+    Qnas = Qna.objects.all().order_by('-edit_date')  # 내림차순 정렬
     context={
-        "page_title":"Q&A"
+        "page_title":"Q&A",
+        'Qnas':Qnas
     }
-    
-    if request.method == 'POST':
-        print(request)
-        return HttpResponse('문의글을 성공적으로 올렸습니다.', status=200)
-    
+
+    if request.method == "POST":
+        action = request.POST.get('btn_action')
+        if action == "close":
+            return redirect("fillow:qna")
+        user_id = request.user.id
+        title = request.POST.get("title1")
+        question = request.POST.get("question")
+        edit_date = datetime.now()
+        
+        Qna.objects.create(question = question, title = title, user_id = user_id, edit_date = edit_date, status = "답변 대기중")
+        
+        return redirect("fillow:qna")
+
     return render(request,'fillow/apps/cs/qna.html',context)
 
+
+def qna_details(request, id):
+    qna = get_object_or_404(Qna, id=id)
+    
+    context={
+        "page_title":"Q&A_details",
+        "qna":qna,
+    }
+    return render(request, 'fillow/apps/cs/qna_details.html',context)
 
 def schedule(request):
     context={
@@ -587,24 +633,27 @@ def table_datatable_basic(request):
 
 
 from django.shortcuts import redirect
-from .forms import UserForm
-from .models import User
-
+from .forms import UserForm, LoginForm, EmailComposeTplForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import views
 
 def page_register(request):
-    
     if request.method == "POST":
         form = UserForm(request.POST)
+        print(form)
         if form.is_valid():
-            user = User.objects.create(**form.cleaned_data)
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_pw = form.cleaned_data.get('password1')
+            user = authenticate(username = username, password = raw_pw)
+            login(request, user)
             return redirect("fillow:index")
     else:
         form = UserForm()
     
     return render(request,'fillow/pages/page-register.html', {'form':form})
-
-def page_login(request):
-    return render(request,'fillow/pages/page-login.html')
 
 def page_forgot_password(request):
     return render(request,'fillow/pages/page-forgot-password.html')
@@ -632,17 +681,122 @@ def page_error_500(request):
 
 def page_error_503(request):
     return render(request,'503.html')
-    
 
 
+from fillow import emlExtracter
+import os
+import sys
+from .models import Document
+from django.core.files.base import ContentFile
+import io
+from fillow.msgToEml import load
+from .spam_detection import *
+from .gpt import *
+from .translation import *
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            form.save()
+            
+            msg_name = request.FILES['uploaded_file'].name
+            form.cleaned_data['uploaded_file'].seek(0)
+            msg_contents = form.cleaned_data['uploaded_file'].read()
+            
+            uploaded_file = request.FILES['uploaded_file'] 
+            recent_document = Document.objects.latest('id')
+            file_path = recent_document.uploaded_file.path
+            
+            # eml_name = os.path.basename(file_path).split('.msg')[0] + '.eml'
+            eml_name = file_path.split('.msg')[0] + '.eml'
+            print(eml_name)
+            
+            with open(eml_name , "wb") as f:
+                contents = load(uploaded_file)
+                f.write(contents.as_bytes())        
+                    
+            headers = ['file_name','Subject','Date','From','To','Cc','text_content']
+            result = emlExtracter.prcessing_dir(headers, eml_name)
+            
+            process_file(result['text_content'])
+            text=translate(result['text_content'])
+            print("translate text",text)
+            detect_spam(text)
+            email_instance = Email(
+            user=request.user,
+            email_file_name=result.get('file_name', ''),
+            email_subject=result.get('Subject', ''),
+            email_date=result.get('Date', ''),
+            email_from=result.get('From', ''),
+            email_to=result.get('To', ''),
+            email_cc=result.get('Cc', ''),
+            email_text_content=result.get('text_content', '')
+            )
+
+            email_instance.save()
+            
+            return redirect("fillow:index")
+    else:
+        form = DocumentForm()
+    return render(request, 'fillow/pages/upload.html', {'form': form})
+
+from django.shortcuts import render
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView, FormView
+from django.urls import reverse_lazy
+from .models import Email
+
+class EmailListView(ListView):
+    model = Email
+    #template_name = 'fillow/test2.html'  # 수정: template_name을 inbox.html로 변경
+    template_name = 'fillow/apps/email/email-inbox.html'  # 수정: template_name을 inbox.html로 변경
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(user=self.request.user).order_by('-email_date')  # 받은 편지함, 발신 날짜 기준 정렬
+        return queryset
+
+class EmailDetailView(DetailView):
+    model = Email
+    #template_name = 'fillow/test.html'
+    template_name = 'fillow/apps/email/email-read.html'  # 수정: template_name을 read.html로 변경
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['attachments'] = self.object.email_attachments  # 첨부파일 추가
+        return context
 
 
+class EmailDeleteView(DeleteView):
+    model = Email
+    success_url = reverse_lazy('email_list')
 
 
+class EmailUpdateView(UpdateView):
+    model = Email
+
+    fields = [
+        'email_subject',
+        'email_from',
+        'email_to',
+        'email_cc',
+        'email_text_content',
+    ]
 
 
+class EmailCreateView(CreateView):
+    model = Email
+    fields = [
+        'email_file_name',
+        'email_subject',
+        'email_from',
+        'email_to',
+        'email_cc',
+        'email_text_content',
+    ]
 
-
-
-
+    def form_valid(self, form):
+        form.instance.email_attachments = self.request.FILES['email_attachments']
+        return super().form_valid(form)
 

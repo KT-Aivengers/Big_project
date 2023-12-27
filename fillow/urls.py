@@ -1,5 +1,8 @@
 from django.urls import path
 from fillow import fillow_views
+from django.contrib.auth import views as auth_views
+from .forms import LoginForm
+
 app_name='fillow'
 urlpatterns = [
     path('home/',fillow_views.home,name='home'),
@@ -18,11 +21,13 @@ urlpatterns = [
     path('edit-profile/',fillow_views.edit_profile,name="edit-profile"),
     path('post-details/',fillow_views.post_details,name="post-details"),
     path('email-compose/',fillow_views.email_compose,name="email-compose"),
+    path('email-compose-tpl/',fillow_views.email_compose_tpl,name="email-compose-tpl"),
     path('email-inbox/',fillow_views.email_inbox,name="email-inbox"),
     path('email-read/',fillow_views.email_read,name="email-read"),
     path('email-sent/',fillow_views.email_sent,name="email-sent"),
     path('faq/',fillow_views.faq,name="faq"),
     path('qna/',fillow_views.qna,name="qna"),
+    path('qna/<int:id>/',fillow_views.qna_details,name="qna-details"),
     path('app-calendar/',fillow_views.app_calender,name="app-calendar"),
     path('ecom-product-grid/',fillow_views.ecom_product_grid,name="ecom-product-grid"),
     path('ecom-product-list/',fillow_views.ecom_product_list,name="ecom-product-list"),
@@ -85,7 +90,10 @@ urlpatterns = [
     path('table-datatable-basic/',fillow_views.table_datatable_basic,name="table-datatable-basic"),
 
 
-    path('page-login/',fillow_views.page_login,name="page-login"),
+    path('page-login/', auth_views.LoginView.as_view(template_name="fillow/pages/page-login.html", form_class = LoginForm), name="page-login"),
+    # path('page-login/', auth_views.LoginView.as_view(template_name="fillow/pages/page-login.html"), name="page-login"),
+    path('page-logout/', auth_views.LogoutView.as_view(template_name="fillow/index.html"), name='page-logout'),
+    # path('page-login/',fillow_views.page_login,name="page-login"),
     path('page-register/',fillow_views.page_register,name="page-register"),
     path('page-forgot-password/',fillow_views.page_forgot_password,name="page-forgot-password"),
     path('page-lock-screen/',fillow_views.page_lock_screen,name="page-lock-screen"),
@@ -96,4 +104,11 @@ urlpatterns = [
     path('page-error-500/',fillow_views.page_error_500,name="page-error-500"),
     path('page-error-503/',fillow_views.page_error_503,name="page-error-503"),
 
+    path('upload/', fillow_views.upload_file, name='upload_file'),
+    
+    path('email/', fillow_views.EmailListView.as_view(), name='email_list'),
+    path('email/<int:pk>', fillow_views.EmailDetailView.as_view(), name='email_detail'),
+    path('email/create/', fillow_views.EmailCreateView.as_view(), name='email_create'),
+    path('email/<int:pk>/update/', fillow_views.EmailUpdateView.as_view(), name='email_update'),
+    path('email/<int:pk>/delete/', fillow_views.EmailDeleteView.as_view(), name='email_delete'),
 ]
