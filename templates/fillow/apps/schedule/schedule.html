@@ -41,15 +41,33 @@
                                 <p>AI가 자동으로 생성한 일정입니다.</p>
                                 <p>드래그 앤 드롭하여 배치하세요.</p>
                                 <p>직접 일정을 추가하기 위해 달력의 날짜를 클릭하세요.</p>
+                                {% comment %}
                                 <!-- 1 단위 -->
                                 <div class="external-event btn-primary light" data-class="bg-primary"><i class="fa fa-move"></i><span>배치 테스트</span></div>
                                 <!-- 1 단위 끝 -->
+                                {% endcomment %}
+                                {% for schedule in not_in_calendar %}
+                                    <div class="external-event btn-primary light" data-class="bg-primary"><i class="fa fa-move"></i><span>{{ schedule.title }}</span></div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
                     <div class="card-footer save-discard">
-                        <button type="button" class="btn btn-primary" id="save">저장하기</button>
+                        <button type="button" class="btn btn-primary" id="save" data-bs-toggle="modal" data-bs-target="#saveModal">저장하기</button>
                         <button type="button" class="btn btn-danger" id="discard">취소</button>
+                    </div>
+                    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="saveModal" data-bs-backdrop="static" data-bs-keyboard="false">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">변경사항을 저장하시겠습니까?</h5>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="save">저장하기</button>
+                                    <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">뒤로</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -76,6 +94,8 @@
         $('#save').prop('disabled', !changed);
         $('#discard').prop('disabled', !changed);
     }
+
+    changeDisable();
 
     function fullCalender() {
         // 내용 변경 여부 확인하기
@@ -109,7 +129,7 @@
             changeDisable();
         }
 
-        var scheduleList = {{ schedule_data | safe }};
+        var scheduleList = {{ in_calendar | safe }};
 
         /* 드래그 앤 드롭 초기화
         -----------------------------------------------------------------*/
@@ -228,7 +248,6 @@
                 }
             });
             calendar.render();
-            changeDisable();
     }
 
     jQuery(window).on('load', function() {
