@@ -1,6 +1,24 @@
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Upload</button>
-  </form>
-{% comment %} noting {% endcomment %}
+{% extends 'fillow/elements/layouts/admin.html' %}
+{% load static %}
+        
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+<!--**********************************
+    Content body start
+***********************************-->
+<div class="content-body default-height">
+    <!-- row -->
+    <div class="container-fluid">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">파일업로드</button>
+      </form>
+    </div>
+</div>
+<!--**********************************
+    Content body end
+***********************************-->
+{% endblock %}

@@ -1,7 +1,7 @@
 from typing import Any
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from fillow.forms import DocumentForm
 
 # 분류된 이메일 현황 받기
 def get_most_4_category():
@@ -55,7 +55,7 @@ def get_schedule():
         {
             'title': '크리스마스',
             'start': '2023-12-25',
-            'className': 'bg-danger',
+            # 'className': 'bg-danger',
         },
         {
             'title': '연락 바람',
@@ -66,9 +66,15 @@ def get_schedule():
             'title': '이메일 페이지로',
             'start': '2023-12-10',
             'end': '2023-12-15',
-            'url': 'http://127.0.0.1:8000/email-inbox/',
-            'className': 'bg-info',
+            # 'url': 'http://127.0.0.1:8000/email-inbox/',
+            # 'className': 'bg-info',
         },
+        {
+            'title': 'AI가 생성한 일정1',
+        },
+        {
+            'title': 'AI가 생성한 일정2',
+        }
     ]
     return schedule_list
 
@@ -332,7 +338,18 @@ def schedule(request):
         "page_title":"일정 관리"
     }
     
-    context['schedule_data'] = get_schedule()
+    schedule_list = get_schedule()
+    in_calendar = []
+    not_in_calendar = []
+    
+    for schedule in schedule_list:
+        if (schedule.get('start')):
+            in_calendar.append(schedule)
+        else:
+            not_in_calendar.append(schedule)
+        
+    context['in_calendar'] = in_calendar
+    context['not_in_calendar'] = not_in_calendar
     
     return render(request,'fillow/apps/schedule/schedule.html',context)
 
