@@ -21,6 +21,7 @@ urlpatterns = [
     path('edit-profile/',fillow_views.edit_profile,name="edit-profile"),
     path('post-details/',fillow_views.post_details,name="post-details"),
     path('email-compose/',fillow_views.email_compose,name="email-compose"),
+    path('email-compose-tpl/',fillow_views.email_compose_tpl,name="email-compose-tpl"),
     path('email-inbox/',fillow_views.email_inbox,name="email-inbox"),
     path('email-read/',fillow_views.email_read,name="email-read"),
     path('email-sent/',fillow_views.email_sent,name="email-sent"),
@@ -96,6 +97,7 @@ urlpatterns = [
     # path('page-login/',fillow_views.page_login,name="page-login"),
     path('page-register/',fillow_views.page_register,name="page-register"),
     path('page-forgot-password/',fillow_views.page_forgot_password,name="page-forgot-password"),
+    path('additionalinfo/', fillow_views.fillow_additionalinform, name='additional_info'),
     path('page-lock-screen/',fillow_views.page_lock_screen,name="page-lock-screen"),
     path('page-empty/',fillow_views.page_empty,name="page-empty"),
     path('page-error-400/',fillow_views.page_error_400,name="page-error-400"),
@@ -105,4 +107,10 @@ urlpatterns = [
     path('page-error-503/',fillow_views.page_error_503,name="page-error-503"),
 
     path('upload/', fillow_views.upload_file, name='upload_file'),
+    
+    path('email/', fillow_views.EmailListView.as_view(), name='email_list'),
+    path('email/<int:pk>', fillow_views.EmailDetailView.as_view(), name='email_detail'),
+    path('email/create/', fillow_views.EmailCreateView.as_view(), name='email_create'),
+    path('email/<int:pk>/update/', fillow_views.EmailUpdateView.as_view(), name='email_update'),
+    path('email/<int:pk>/delete/', fillow_views.EmailDeleteView.as_view(), name='email_delete'),
 ]

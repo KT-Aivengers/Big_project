@@ -1,4 +1,4 @@
-{% extends 'fillow/elements/layouts/home.html' %}
+{% extends 'fillow/elements/layouts/home.html'%}
 {% load static %}
         
 {% block additional_css %}
@@ -48,8 +48,8 @@
 <!--**********************************
     Content body start
 ***********************************-->
+
 <div class="content-body default-height home">
-    <!-- row -->
     <div class="container-fluid">
         <div class="background card">
             <div>
@@ -66,10 +66,13 @@
                     </span>Contact</button>
                 </div>                
             </div>
-            <div>
+            <div class="col-md-6 text-left">
                 <div class="landing-wording">
-                    <h1>휴가 갔다오면 쌓여 있는 이메일..! 생각만해도 머리아프다 😭</h1>
-                    <h4>쌓여있는 이메일을 AI기술을 통해 분류해주는 협재씨서비스를 사용해보세요! 사용자 데이터기반으로 답장이 필요하거나 중요도 높은 이메일을 분류해주어 여러분이 정말로 중요한 일에만 집중할 수 있도록 도와드리겠습니다!<br><br>자 그럼, 매일 쏟아지는 이메일 홍수 속에서 중요한 이메일만 남은 에메랄드 빛 협재씨로 가볼까요?</h4>
+                    <h2>휴가 갔다오면 쌓여 있는 이메일..!
+                        <br> 생각만해도 머리아프다 😭</h3>                    
+                    <h4>쌓여있는 이메일을 AI기술을 통해 분류해주는 <strong>협재씨</strong>서비스를 사용해보세요!<br>
+                        사용자 데이터기반으로 답장이 필요하거나 중요도 높은 이메일을 분류해주어<br>
+                        여러분이 정말로 중요한 일에만 집중할 수 있도록 도와드리겠습니다!<br><br>자 그럼, Mail 쏟아지는 이메일 홍수 속에서 <br> 중요한 이메일만 남은 에메랄드 빛 <strong>HyeopJaeSea</strong>로 가볼까요?</h4>
                 </div>
                 <button type="button" class="btn btn-primary"><a href='{% url "fillow:page-login" %}' style="color:white">로그인</a></button>
                 <button type="button" class="btn btn-warning"><a href='{% url "fillow:page-register" %}' style="color:white">회원가입</a></button>
@@ -78,6 +81,31 @@
         </div>
     </div>
 </div>
+
+<!-- Content body start -->
+<div class="content-body default-height home">
+    <!-- container -->
+    <div class="container-fluid">
+        <div class="background card">
+            <div class="row">
+                <!-- Left aligned text and buttons -->
+                <div class="col-md-6 text-left">
+                    <div class="landing-wording">
+                        <h1>휴가 갔다오면 쌓여 있는 이메일..! 생각만해도 머리아프다 😭</h1>
+                        <h4>쌓여있는 이메일을 AI기술을 통해 분류해주는 협재씨서비스를 사용해보세요! 사용자 데이터기반으로 답장이 필요하거나 중요도 높은 이메일을 분류해주어 여러분이 정말로 중요한 일에만 집중할 수 있도록 도와드리겠습니다!<br><br>자 그럼, 매일 쏟아지는 이메일 홍수 속에서 중요한 이메일만 남은 에메랄드 빛 협재씨로 가볼까요?</h4>
+                    </div>
+                    <button type="button" class="btn btn-primary">로그인</button>
+                    <button type="button" class="btn btn-warning">회원가입</button>
+                </div>
+                
+                <!-- Keep the other content here if necessary -->
+                
+            </div>            
+        </div>
+    </div>
+</div>
+<!-- Content body end -->
+
 <!--**********************************
     Content body end
 ***********************************-->

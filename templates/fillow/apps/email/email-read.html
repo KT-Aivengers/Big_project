@@ -111,8 +111,8 @@
                                                         <div class="clearfix mb-3 d-flex">
                                                             <img class="me-3 rounded" width="70" height="70" alt="image" src="{% static 'fillow/images/avatar/1.jpg' %}">
                                                             <div class="media-body me-2">
-                                                                <h5 class="text-primary mb-0 mt-1">Ingredia Nutrisha</h5>
-                                                                <p class="mb-0">20 May 2020</p>
+                                                                <h5 class="text-primary mb-0 mt-1">{{ email.email_from }}</h5>
+                                                                <p class="mb-0">{{ email.email_date }}/p>
                                                             </div>
                                                         </div>
                                                         <div class="clearfix mb-3">
@@ -123,23 +123,16 @@
                                                     </div>
                                                     <hr>
                                                     <div class="media mb-2 mt-3">
-                                                        <div class="media-body"><span class="pull-end">07:23 AM</span>
-                                                            <h5 class="my-1 text-primary">A collection of textile samples lay spread</h5>
+                                                        <div class="media-body"><span class="pull-end">{{ email.email_date }}</span>
+                                                            <h5 class="my-1 text-primary"> {{ email.email_subject }}</h5>
                                                             <p class="read-content-email">
-                                                                To: Me, info@example.com</p>
+                                                                To: {{ email.email_to }}</p>
+                                                            <p class="read-content-email">
+                                                                Cc: {{ email.email_cc }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="read-content-body default-height">
-                                                        <h5 class="mb-4">Hi,Ingredia,</h5>
-                                                        <p class="mb-2"><strong>Ingredia Nutrisha,</strong> A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture</p>
-                                                        <p class="mb-2">Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for
-                                                            the far World of Grammar. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
-                                                        </p>
-                                                        <p class="mb-2">Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut
-                                                            metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum
-                                                            rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar,</p>
-                                                        <h5 class="pt-3">Kind Regards</h5>
-                                                        <p>Mr Smith</p>
+                                                        {{ email.email_text_content }}
                                                         <hr>
                                                     </div>
                                                     <div class="read-content-attachment">

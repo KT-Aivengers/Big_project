@@ -79,7 +79,7 @@ def home(request):
     }
     return render(request,'fillow/home/home.html',context)
 
-
+from .models import AdditionalInform
 def index(request):
     context={
         "page_title":"메인",
@@ -88,8 +88,32 @@ def index(request):
     most4 = get_most_4_category()
     
     context.update(most4)
+    if request.user.is_authenticated:
+        # 로그인이 된 상태에서 해당 유저의 id가 fillow_additionalinform 테이블의 user_ptr_id에 존재하는지 확인
+        if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
+            # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
+            return redirect('fillow:additional_info')
+        
+    return render(request,'fillow/index.html', context)
+
+
+
+from .forms import AdditionalInformForm
+
+ 
+def fillow_additionalinform(request):
+    if request.method == "POST":
+        form = AdditionalInformForm(request.POST)
+        if form.is_valid():
+            # 로그인된 사용자의 추가 정보를 저장
+            additional_inform = form.save(commit=False)
+            additional_inform.user = request.user
+            additional_inform.save()
+            return redirect("fillow:index")
+    else:
+        form = AdditionalInformForm()
     
-    return render(request,'fillow/index.html', context)  
+    return render(request, 'fillow/pages/page-additionalinform.html', {'form': form})
 
 
 def index_2(request):
@@ -217,6 +241,27 @@ def email_compose(request):
     }
     return render(request,'fillow/apps/email/email-compose.html',context)
 
+def email_compose_tpl(request):
+    context={
+        "page_title":"전송 템플릿"
+    }
+    if request.method == "POST":
+        form = EmailComposeTplForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            texts = form.cleaned_data.get('texts', '')
+            print(texts)
+            EmailComposeTpl.objects.create(texts = texts, user = user)
+
+            
+            return redirect("fillow:email-template")
+
+    else:
+        form = EmailComposeTplForm()
+    
+    return render(request,'fillow/apps/email/email-compose-tpl.html',context)
+
+
 
 def email_inbox(request):
     context={
@@ -245,7 +290,7 @@ def faq(request):
     }
     return render(request,'fillow/apps/cs/faq.html',context)
 
-from .models import Qna
+from .models import Qna, EmailComposeTpl
 from datetime import datetime
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
@@ -704,7 +749,7 @@ def table_datatable_basic(request):
 
 
 from django.shortcuts import redirect
-from .forms import UserForm, LoginForm
+from .forms import UserForm, LoginForm, EmailComposeTplForm, DocumentForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
@@ -712,19 +757,21 @@ from django.contrib.auth import views
 
 def page_register(request):
     if request.method == "POST":
-        form = UserForm(request.POST)
-        print(form)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_pw = form.cleaned_data.get('password1')
-            user = authenticate(username = username, password = raw_pw)
-            login(request, user)
+        user_form = UserForm(request.POST)
+        additional_form = AdditionalInformForm(request.POST)
+        if user_form.is_valid() and additional_form.is_valid():
+            user = user_form.save()
+            additional_inform = additional_form.save(commit=False)
+            additional_inform.user = user
+            additional_inform.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+
             return redirect("fillow:index")
     else:
-        form = UserForm()
-    
-    return render(request,'fillow/pages/page-register.html', {'form':form})
+        user_form = UserForm()
+        additional_form = AdditionalInformForm()
+    return render(request, 'fillow/pages/page-register.html', {'user_form': user_form, 'additional_form': additional_form})
 
 def page_forgot_password(request):
     return render(request,'fillow/pages/page-forgot-password.html')
@@ -757,10 +804,13 @@ def page_error_503(request):
 from fillow import emlExtracter
 import os
 import sys
-
+from .models import Document
 from django.core.files.base import ContentFile
 import io
 from fillow.msgToEml import load
+from .spam_detection import *
+from .gpt import *
+from .translation import *
 
 def upload_file(request):
     if request.method == 'POST':
@@ -793,6 +843,7 @@ def upload_file(request):
             print("translate text",text)
             detect_spam(text)
             email_instance = Email(
+            user=request.user,
             email_file_name=result.get('file_name', ''),
             email_subject=result.get('Subject', ''),
             email_date=result.get('Date', ''),
@@ -809,14 +860,70 @@ def upload_file(request):
         form = DocumentForm()
     return render(request, 'fillow/pages/upload.html', {'form': form})
 
+from django.shortcuts import render
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView, FormView
+from django.urls import reverse_lazy
+from .models import Email
+from django.core.paginator import Paginator
+class EmailListView(ListView):
+    model = Email
+    template_name = 'fillow/apps/email/email-inbox.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(user=self.request.user).order_by('-email_date')
+        self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
+        page_number = self.request.GET.get('page')
+        self.page_obj = self.paginator.get_page(page_number)
+        return self.page_obj.object_list
+
+    def render_to_response(self, context, **response_kwargs):
+        context.update({
+            'paginator': self.paginator,
+            'page_obj': self.page_obj,
+        })
+        return super().render_to_response(context, **response_kwargs)
+    
+class EmailDetailView(DetailView):
+    model = Email
+    #template_name = 'fillow/test.html'
+    template_name = 'fillow/apps/email/email-read.html'  # 수정: template_name을 read.html로 변경
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['attachments'] = self.object.email_attachments  # 첨부파일 추가
+        return context
 
 
+class EmailDeleteView(DeleteView):
+    model = Email
+    success_url = reverse_lazy('email_list')
 
 
+class EmailUpdateView(UpdateView):
+    model = Email
+
+    fields = [
+        'email_subject',
+        'email_from',
+        'email_to',
+        'email_cc',
+        'email_text_content',
+    ]
 
 
+class EmailCreateView(CreateView):
+    model = Email
+    fields = [
+        'email_file_name',
+        'email_subject',
+        'email_from',
+        'email_to',
+        'email_cc',
+        'email_text_content',
+    ]
 
-
-
-
+    def form_valid(self, form):
+        form.instance.email_attachments = self.request.FILES['email_attachments']
+        return super().form_valid(form)
 

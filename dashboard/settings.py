@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # provider 	구글, 페이스북, 카톡, 깃헙
     'allauth.socialaccount.providers.google',
+    'oauth2client', 
+    'django_mailbox',
 ]
 
 MIDDLEWARE = [
@@ -78,13 +80,15 @@ SITE_ID = 1
 SOCIALACCOUNT_PROVIDERS = {
     'google' : {
         'APP' : {
-            'client_id' : '',
-            'secret' : '',
+            'client_id' : '1074223713682-iqqhcu1qlurfngma6qhuceoaicgs6tgj.apps.googleusercontent.com',
+            'secret' : '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',
             'key' : '',
         },
         'SCOPE' : [
             'profile',
             'email',
+            
+            
         ],
         'AUTH_PARAMS' : {
             'access_type' : 'online',
@@ -184,3 +188,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
