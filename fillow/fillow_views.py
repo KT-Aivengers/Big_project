@@ -267,7 +267,7 @@ def email_inbox(request):
     context={
         "page_title":"받은 이메일"
     }
-    return render(request,'fillow/apps/email/email-inbox.html',context)
+    return render(request,'fillow/apps/email/email-inbox_origin.html',context)
 
 
 def email_read(request):
@@ -871,6 +871,27 @@ class EmailListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        queryset = queryset.filter(trash=False)
+        queryset = queryset.filter(user=self.request.user).order_by('-email_date')
+        self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
+        page_number = self.request.GET.get('page')
+        self.page_obj = self.paginator.get_page(page_number)
+        return self.page_obj.object_list
+
+    def render_to_response(self, context, **response_kwargs):
+        context.update({
+            'paginator': self.paginator,
+            'page_obj': self.page_obj,
+        })
+        return super().render_to_response(context, **response_kwargs)
+    
+class EmailListView_Trash(ListView):
+    model = Email
+    template_name = 'fillow/apps/email/email-trash.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(trash=True)
         queryset = queryset.filter(user=self.request.user).order_by('-email_date')
         self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
         page_number = self.request.GET.get('page')
@@ -894,11 +915,15 @@ class EmailDetailView(DetailView):
         # context['attachments'] = self.object.email_attachments  # 첨부파일 추가
         return context
 
+def email_trash(request, pk):
+    email = Email.objects.get(pk=pk)
 
-class EmailDeleteView(DeleteView):
-    model = Email
-    success_url = reverse_lazy('email_list')
+    if not email.trash:
+        email.trash = True  # 휴지통 상태로 변경
+        email.save()
+        return redirect("fillow:email-list-trash")
 
+    return redirect("fillow:email-list-trash")
 
 class EmailUpdateView(UpdateView):
     model = Email

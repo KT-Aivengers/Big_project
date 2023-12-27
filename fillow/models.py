@@ -21,6 +21,7 @@ class Email(models.Model):
     email_to = models.CharField(max_length=1000)
     email_cc = models.CharField(max_length=1000)
     email_text_content = models.CharField(max_length=10000)
+    trash = models.BooleanField(default=False)  
     
 class Qna(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="qna")
