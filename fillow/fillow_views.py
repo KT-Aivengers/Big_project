@@ -69,6 +69,12 @@ def get_schedule():
             # 'url': 'http://127.0.0.1:8000/email-inbox/',
             # 'className': 'bg-info',
         },
+        {
+            'title': 'AI가 생성한 일정1',
+        },
+        {
+            'title': 'AI가 생성한 일정2',
+        }
     ]
     return schedule_list
 
@@ -308,7 +314,18 @@ def schedule(request):
         "page_title":"일정 관리"
     }
     
-    context['schedule_data'] = get_schedule()
+    schedule_list = get_schedule()
+    in_calendar = []
+    not_in_calendar = []
+    
+    for schedule in schedule_list:
+        if (schedule.get('start')):
+            in_calendar.append(schedule)
+        else:
+            not_in_calendar.append(schedule)
+        
+    context['in_calendar'] = in_calendar
+    context['not_in_calendar'] = not_in_calendar
     
     return render(request,'fillow/apps/schedule/schedule.html',context)
 
