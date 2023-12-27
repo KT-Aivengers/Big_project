@@ -1,7 +1,15 @@
 from typing import Any
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from .models import Qna, EmailCompose, EmailComposeTpl
+from datetime import datetime
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from .forms import UserForm, LoginForm, EmailComposeTplForm, EmailComposeForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import views
 
 # 분류된 이메일 현황 받기
 def get_most_4_category():
@@ -212,9 +220,31 @@ def post_details(request):
 
 
 def email_compose(request):
+    email_compose_tpl = EmailComposeTpl.objects.filter(user=request.user).last()
+    
     context={
-        "page_title":"이메일 전송"
+        "page_title":"이메일 전송",
+        "email_compose_tpl": email_compose_tpl
     }
+    if request.method == "POST":
+        form = EmailComposeForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            email_to = form.cleaned_data.get('email_to', '')
+            email_cc = form.cleaned_data.get('email_cc', '')
+            email_subject = form.cleaned_data.get('email_subject', '')
+            email_file = form.cleaned_data.get('email_file', '')
+            email_text_content = form.cleaned_data.get('email_text_content', '')
+            EmailCompose.objects.create(email_to = email_to, email_cc=email_cc, email_subject=email_subject, 
+                                        email_file=email_file, email_text_content=email_text_content, user = user)
+            return redirect("fillow:email-compose")
+
+        else:
+            print(form.errors)
+            
+    else:
+        form = EmailComposeForm()
+    
     return render(request,'fillow/apps/email/email-compose.html',context)
 
 def email_compose_tpl(request):
@@ -226,14 +256,13 @@ def email_compose_tpl(request):
         if form.is_valid():
             user = request.user
             texts = form.cleaned_data.get('texts', '')
-            print(texts)
             EmailComposeTpl.objects.create(texts = texts, user = user)
-
             
-            return redirect("fillow:email-template")
+            return redirect("fillow:email-compose-tpl")
 
     else:
         form = EmailComposeTplForm()
+    
     
     return render(request,'fillow/apps/email/email-compose-tpl.html',context)
 
@@ -265,11 +294,6 @@ def faq(request):
         "page_title":"FAQ"
     }
     return render(request,'fillow/apps/cs/faq.html',context)
-
-from .models import Qna, EmailComposeTpl
-from datetime import datetime
-from django.shortcuts import get_object_or_404
-
 
 def qna(request):
     Qnas = Qna.objects.all().order_by('-edit_date')  # 내림차순 정렬
@@ -630,14 +654,6 @@ def table_datatable_basic(request):
         "page_title":"Table Datatable"
     }
     return render(request,'fillow/table/table-datatable-basic.html',context)
-
-
-from django.shortcuts import redirect
-from .forms import UserForm, LoginForm, EmailComposeTplForm
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth import views
 
 def page_register(request):
     if request.method == "POST":
