@@ -746,17 +746,26 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView, FormView
 from django.urls import reverse_lazy
 from .models import Email
-
+from django.core.paginator import Paginator
 class EmailListView(ListView):
     model = Email
-    #template_name = 'fillow/test2.html'  # 수정: template_name을 inbox.html로 변경
-    template_name = 'fillow/apps/email/email-inbox.html'  # 수정: template_name을 inbox.html로 변경
+    template_name = 'fillow/apps/email/email-inbox.html'
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.filter(user=self.request.user).order_by('-email_date')  # 받은 편지함, 발신 날짜 기준 정렬
-        return queryset
+        queryset = queryset.filter(user=self.request.user).order_by('-email_date')
+        self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
+        page_number = self.request.GET.get('page')
+        self.page_obj = self.paginator.get_page(page_number)
+        return self.page_obj.object_list
 
+    def render_to_response(self, context, **response_kwargs):
+        context.update({
+            'paginator': self.paginator,
+            'page_obj': self.page_obj,
+        })
+        return super().render_to_response(context, **response_kwargs)
+    
 class EmailDetailView(DetailView):
     model = Email
     #template_name = 'fillow/test.html'
