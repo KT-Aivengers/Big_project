@@ -1,7 +1,7 @@
 from typing import Any
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from fillow.forms import DocumentForm
 
 # 분류된 이메일 현황 받기
 def get_most_4_category():
@@ -633,7 +633,7 @@ def table_datatable_basic(request):
 
 
 from django.shortcuts import redirect
-from .forms import UserForm, LoginForm, EmailComposeTplForm
+from .forms import UserForm, EmailComposeTplForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password

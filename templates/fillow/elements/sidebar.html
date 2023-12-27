@@ -35,6 +35,24 @@
                     <li><a href="{% url 'fillow:qna' %}">Q&A</a></li>
                 </ul>
             </li>
+            
+            <li>
+                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="nav-text">To Do list </span></span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'fillow:content' %}">Content</a></li>
+                    <li><a href="{% url 'fillow:add-content' %}">Add Content</a></li>
+                    <li><a href="{% url 'fillow:menu' %}">Menus</a></li>
+                    <li><a href="{% url 'fillow:email-template' %}">Email Template</a></li>
+                    <li><a href="{% url 'fillow:add-email' %}">Add Email</a></li>
+                    <li><a href="{% url 'fillow:blog' %}">Blog</a></li>
+                    <li><a href="{% url 'fillow:add-blog' %}">Add Blog</a></li>
+                    <li><a href="{% url 'fillow:blog-category' %}">Blog Category</a></li>		
+                </ul>
+            </li>
+            
             <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                     <i class="fas fa-home"></i>
                     <span class="nav-text">Dashboard</span>
@@ -50,22 +68,7 @@
                 </ul>
 
             </li>
-            <li>
-                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">
-                    <i class="fas fa-chart-line"></i>
-                    <span class="nav-text">CMS <span class="badge badge-xs badge-danger ms-2">New</span></span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="{% url 'fillow:content' %}">Content</a></li>
-                    <li><a href="{% url 'fillow:add-content' %}">Add Content</a></li>
-                    <li><a href="{% url 'fillow:menu' %}">Menus</a></li>
-                    <li><a href="{% url 'fillow:email-template' %}">Email Template</a></li>
-                    <li><a href="{% url 'fillow:add-email' %}">Add Email</a></li>
-                    <li><a href="{% url 'fillow:blog' %}">Blog</a></li>
-                    <li><a href="{% url 'fillow:add-blog' %}">Add Blog</a></li>
-                    <li><a href="{% url 'fillow:blog-category' %}">Blog Category</a></li>		
-                </ul>
-            </li>
+            
             <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                 <i class="fas fa-info-circle"></i>
                     <span class="nav-text">Apps</span>
@@ -163,7 +166,7 @@
 					<li><a href="{% url 'fillow:form-validation' %}">Form Validate</a></li>
                 </ul>
             </li>
-            <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
+            {% comment %} <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                     <i class="fas fa-table"></i>
                     <span class="nav-text">Table</span>
                 </a>
@@ -171,8 +174,8 @@
                     <li><a href="{% url 'fillow:table-bootstrap-basic' %}">Bootstrap</a></li>
 					<li><a href="{% url 'fillow:table-datatable-basic' %}">Datatable</a></li>
                 </ul>
-            </li>
-            <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
+            </li> {% endcomment %}
+            {% comment %} <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                     <i class="fas fa-clone"></i>
                     <span class="nav-text">Pages</span>
                 </a>
@@ -191,7 +194,7 @@
                     <li><a href="{% url 'fillow:page-lock-screen' %}">Lock Screen</a></li>
                     <li><a href="{% url 'fillow:page-empty' %}">Empty Page</a></li>
                 </ul>
-            </li>
+            </li> {% endcomment %}
         </ul>
         <div class="side-bar-profile">
             <div class="d-flex align-items-center justify-content-between mb-3">
