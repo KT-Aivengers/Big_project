@@ -213,11 +213,44 @@ def blog_category(request):
     }
     return render(request,'fillow/cms/blog-category.html',context)
 
+from .models import AdditionalInform
+from django.core.files.storage import FileSystemStorage
 
 def app_profile(request):
+    user_id = request.user.id
+    inform = AdditionalInform.objects.get(user_id=user_id)
+    user = User.objects.get(id=user_id)
+    
+    if request.method=="POST":
+        action = request.POST.get("btn-post")
+        if action=="edit":
+            inform.introduce = request.POST.get("about")
+            inform.department = request.POST.get("dept")
+            inform.phone = request.POST.get("phone")
+            user.first_name = request.POST.get("first_name")
+            user.last_name = request.POST.get("last_name")
+            user.email = request.POST.get("email")
+            
+            user.save()
+            inform.save()
+            
+        elif request.FILES['image']:
+            img = request.FILES['image']
+            inform.image = img
+            inform.save()
+            
+          
+        return redirect("fillow:app-profile")
+    
+    
     context={
-        "page_title":"App Profile"
+        "page_title":"프로필",
+        "dept":inform.department,
+        "phone":inform.phone,
+        "introduce":inform.introduce,
+        "img":inform.image,
     }
+    
     return render(request,'fillow/apps/app-profile.html',context)
 
 
@@ -387,7 +420,7 @@ def qna_details(request, id):
     qna = get_object_or_404(Qna, id=id)
     
     context={
-        "page_title":"Q&A_details",
+        "page_title":"Q&A",
         "qna":qna,
     }
     
@@ -396,7 +429,7 @@ def qna_details(request, id):
 def qna_details2(request, id):
     qna = Qna.objects.get(id=id)
     context={
-        "page_title":"Q&A_details",
+        "page_title":"Q&A",
         "qna":qna,
     }
     if request.method == "POST":
@@ -407,7 +440,7 @@ def qna_details2(request, id):
             qna.edit_date = datetime.now()
             qna.save()
             return redirect("fillow:qna-details", id=id)
-        elif action=="del":
+        elif action=="delete":
             qna.delete()
             return redirect("fillow:qna")
         else:
