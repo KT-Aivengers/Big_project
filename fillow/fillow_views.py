@@ -890,9 +890,9 @@ def upload_file(request):
             result = emlExtracter.prcessing_dir(headers, eml_name)
             
             process_file(result['text_content'])
-            text=translate(result['text_content'])
-            print("translate text",text)
-            detect_spam(text)
+            # text=translate(result['text_content'])
+            # print("translate text",text)
+            # detect_spam(text)
             email_instance = Email(
             user=request.user,
             email_file_name=result.get('file_name', ''),
