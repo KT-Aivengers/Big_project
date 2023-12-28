@@ -72,8 +72,8 @@
                                 </div>
                                 <div class="modal-footer">
                                     {% csrf_token %}
-                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="save-db">저장하기</button>
-                                        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">뒤로</button>
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="save-db">저장하기</button>
+                                    <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">뒤로</button>
                                 </div>
                             </div>
                         </div>
@@ -124,16 +124,18 @@
         var end = schedule.end;
         
         // 실제 날짜보다 1 적게 나와서 전부 1을 더함
-        if (start) {
-            start.setDate(start.getDate() + 1);
-            var fstart = start.toISOString().substring(0, 10);
-        }
+        start = moment(start).add(1, 'days');
+        var fstart = start.toISOString().substring(0, 10);
 
+        // 만약 end 값이 없다면 start의 하루 뒤로 설정
         if (end) {
-            end.setDate(end.getDate() + 1);
+            end = moment(end).add(1, 'days');
             var fend = end.toISOString().substring(0, 10);
+        } else {
+            start = moment(start).add(1, 'days');
+            var fend = start.toISOString().substring(0, 10);
         }
-
+        
         return {
             'title': title,
             'start': fstart,
