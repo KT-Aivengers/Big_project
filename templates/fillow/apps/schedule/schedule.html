@@ -167,13 +167,14 @@
                 newList.push(scheduleData);
             });
             
-            var data_list = newList.concat(notInCalendar);
+            var data_list = {'schedule': newList.concat(notInCalendar)};
             var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
             $.ajax({
                 type: 'POST',
                 url: '/schedule/',
-                data: {'data': data_list},
+                contentType: 'application/json',
+                data: JSON.stringify(data_list),
                 headers: {
                     'X-CSRFToken': csrftoken
                 },
