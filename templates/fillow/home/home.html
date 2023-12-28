@@ -3,15 +3,19 @@
         
 {% block additional_css %}
 <style>
+    .btn-margin-adjust {
+        margin-right: 2rem;
+    }
+
     .home {
-        padding-top: 5rem !important;
+        padding-top: 0.5rem !important;
     }
 
     .background {
         background-image: url("{% static 'fillow/images/background.png'%}");
         background-size: cover;
         background-position: center top;
-        height: 78vh;
+        height: 85vh;
         color: black;
         text-align: center;
         animation: moveBackground 30s ease-in-out infinite;
@@ -40,7 +44,44 @@
         100% {
             background-position: center bottom;
         }
-    }   
+    }  
+   
+    .landing-wording {
+        text-align: left; /* 텍스트를 왼쪽으로 정렬 */
+        padding-top : 3rem ;
+        padding-left: 12rem; 
+    }
+
+    .landing-wording strong {
+        color: #007bff; /* 강조할 텍스트의 색상을 변경합니다. */
+        font-weight: bold; /* 글씨를 두껍게 합니다. */
+    }
+
+    
+    /* 중간 크기의 화면 (태블릿)에 대한 스타일 */
+    @media (min-width: 768px) {
+        .landing-wording {
+            padding-top : 2rem ;
+            padding-left: 8rem;  /* 화면이 768픽셀 이상일 때 적용되는 패딩 값 */
+        }
+    }
+    
+    /* 큰 화면 (데스크톱)에 대한 스타일 */
+    @media (min-width: 992px) {
+        .landing-wording {
+            padding-top : 2.5rem ;
+            padding-left: 10rem;  /* 화면이 992픽셀 이상일 때 적용되는 패딩 값 */
+        }
+    }
+    
+    /* 매우 큰 화면에 대한 스타일 */
+    @media (min-width: 1200px) {
+        .landing-wording {
+            padding-top : 3rem ;
+            padding-left: 12rem; /* 화면이 1200픽셀 이상일 때 적용되는 패딩 값 */
+        }
+    }
+    
 </style>
 {% endblock %}
 
@@ -67,44 +108,21 @@
                 </div>                
             </div>
             <div class="col-md-6 text-left">
-                <div class="landing-wording">
-                    <h2>휴가 갔다오면 쌓여 있는 이메일..!
+                <div class="landing-wording text-left">
+                    <h3 class="text-left">휴가 갔다오면 쌓여 있는 이메일..!!!
                         <br> 생각만해도 머리아프다 😭</h3>                    
                     <h4>쌓여있는 이메일을 AI기술을 통해 분류해주는 <strong>협재씨</strong>서비스를 사용해보세요!<br>
                         사용자 데이터기반으로 답장이 필요하거나 중요도 높은 이메일을 분류해주어<br>
                         여러분이 정말로 중요한 일에만 집중할 수 있도록 도와드리겠습니다!<br><br>자 그럼, Mail 쏟아지는 이메일 홍수 속에서 <br> 중요한 이메일만 남은 에메랄드 빛 <strong>HyeopJaeSea</strong>로 가볼까요?</h4>
                 </div>
-                <button type="button" class="btn btn-primary"><a href='{% url "fillow:page-login" %}' style="color:white">로그인</a></button>
-                <button type="button" class="btn btn-warning"><a href='{% url "fillow:page-register" %}' style="color:white">회원가입</a></button>
+                <button type="button"  class="btn btn-primary btn-margin-adjust" onclick="location.href='{% url 'fillow:page-login' %}'" >로그인</button>
+                <button type="button" class="btn btn-warning" onclick="location.href='{% url 'fillow:page-register' %}'">회원가입</button>
             </div>
             
         </div>
     </div>
 </div>
 
-<!-- Content body start -->
-<div class="content-body default-height home">
-    <!-- container -->
-    <div class="container-fluid">
-        <div class="background card">
-            <div class="row">
-                <!-- Left aligned text and buttons -->
-                <div class="col-md-6 text-left">
-                    <div class="landing-wording">
-                        <h1>휴가 갔다오면 쌓여 있는 이메일..! 생각만해도 머리아프다 😭</h1>
-                        <h4>쌓여있는 이메일을 AI기술을 통해 분류해주는 협재씨서비스를 사용해보세요! 사용자 데이터기반으로 답장이 필요하거나 중요도 높은 이메일을 분류해주어 여러분이 정말로 중요한 일에만 집중할 수 있도록 도와드리겠습니다!<br><br>자 그럼, 매일 쏟아지는 이메일 홍수 속에서 중요한 이메일만 남은 에메랄드 빛 협재씨로 가볼까요?</h4>
-                    </div>
-                    <button type="button" class="btn btn-primary">로그인</button>
-                    <button type="button" class="btn btn-warning">회원가입</button>
-                </div>
-                
-                <!-- Keep the other content here if necessary -->
-                
-            </div>            
-        </div>
-    </div>
-</div>
-<!-- Content body end -->
 
 <!--**********************************
     Content body end
