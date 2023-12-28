@@ -1013,4 +1013,3 @@ class EmailCreateView(CreateView):
     def form_valid(self, form):
         form.instance.email_attachments = self.request.FILES['email_attachments']
         return super().form_valid(form)
-

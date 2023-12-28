@@ -27,7 +27,11 @@
 						</div>
 						<div class="profile-info">
 							<div class="profile-photo">
-								<img src="/media/{{img}}" class="img-fluid rounded-circle" alt="프로필이미지">
+								{% if img %}
+									<img src="/media/{{img}}" class="img-fluid rounded-circle" alt="">
+								{% else %}
+									<img src="{% static 'fillow/images/profile/profile_basic.jpeg' %}" class="img-fluid rounded-circle" alt="">
+								{% endif %}
 							</div>	
 							<div class="profile-details">
 								<div class="profile-name px-3 pt-2">
