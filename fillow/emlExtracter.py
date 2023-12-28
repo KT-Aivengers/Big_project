@@ -140,7 +140,7 @@ def convert_contents(real_file_name, part, msg, content_type, encode_type, check
     text_content = h.handle(text_content)
 
   del h
-  text_content = re.sub('\\s+', ' ', text_content)
+  # text_content = re.sub('\\s+', ' ', text_content)
 
   return text_content        
 

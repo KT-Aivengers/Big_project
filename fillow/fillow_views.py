@@ -48,9 +48,9 @@ def get_most_4_category():
     }
     return result
 
-
 # 일정 불러오기
 def get_schedule():
+    
     # DB에서 일정 불러오기
     schedule_list = [
         # {
@@ -104,7 +104,7 @@ def home(request):
 from .models import AdditionalInform
 def index(request):
     context={
-        "page_title":"메인",
+        "page_title":"",
     }
     
     most4 = get_most_4_category()
@@ -115,6 +115,8 @@ def index(request):
         if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
             # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
             return redirect('fillow:additional_info')
+    else:
+        return redirect('fillow:home')
         
     return render(request,'fillow/index.html', context)
 
@@ -239,6 +241,10 @@ from .models import AdditionalInform
 from django.core.files.storage import FileSystemStorage
 
 def app_profile(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+    
     user_id = request.user.id
     inform = AdditionalInform.objects.get(user_id=user_id)
     user = User.objects.get(id=user_id)
@@ -291,6 +297,10 @@ def post_details(request):
 
 
 def email_compose(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+        
     email_compose_tpl = EmailComposeTpl.objects.filter(user=request.user).last()
     
     context={
@@ -319,6 +329,10 @@ def email_compose(request):
     return render(request,'fillow/apps/email/email-compose.html',context)
 
 def email_compose_tpl(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+    
     context={
         "page_title":"전송 템플릿"
     }
@@ -340,13 +354,19 @@ def email_compose_tpl(request):
 
 
 def email_inbox(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
     context={
         "page_title":"받은 이메일"
     }
-    return render(request,'fillow/apps/email/email-inbox_origin.html',context)
+    return render(request,'fillow/apps/email/email-inbox.html',context)
 
 
 def email_read(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
     context={
         "page_title":"내용 보기"
     }
@@ -354,6 +374,9 @@ def email_read(request):
 
 
 def email_sent(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
     context={
         "page_title":"보낸 이메일"
     }
@@ -374,6 +397,10 @@ from django.db.models import Q
 from django.urls import reverse
 
 def qna(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+        
     user_id = request.user.id
     user_staff = request.user.is_staff
     
@@ -401,7 +428,6 @@ def qna(request):
     else:
         title = request.GET.get("title1")
         status = request.GET.get("status")
-        print(title, status)
         if title is None and status is None:
             Qnas = Qnas.all()
         else:
@@ -460,6 +486,10 @@ def qna(request):
 
 
 def qna_details(request, id):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+    
     qna = get_object_or_404(Qna, id=id)
     
     context={
@@ -470,6 +500,9 @@ def qna_details(request, id):
     return render(request, 'fillow/apps/cs/qna_details.html',context)
 
 def qna_details2(request, id):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
     qna = Qna.objects.get(id=id)
     context={
         "page_title":"Q&A",
@@ -496,13 +529,9 @@ def qna_details2(request, id):
 
 
 def schedule(request):
-    if request.method == "POST":
-        # JSON으로 수정된 일정 데이터 받아옴
-        received_data = json.loads(request.body.decode('utf-8'))
-        
-        # DB에 변경사항 올리는 함수
-        save_schedule(received_data)
-
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
     context={
         "page_title":"일정 관리"
     }
@@ -528,6 +557,9 @@ def schedule(request):
 
 
 def app_calender(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
     context={
         "page_title":"일정 수정하기"
     }
@@ -910,6 +942,10 @@ from .gpt import *
 from .translation import *
 
 def upload_file(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+        
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         
@@ -934,7 +970,7 @@ def upload_file(request):
                     
             headers = ['file_name','Subject','Date','From','To','Cc','text_content']
             result = emlExtracter.prcessing_dir(headers, eml_name)
-            
+            print(result['text_content'])
             process_file(result['text_content'])
             # text=translate(result['text_content'])
             # print("translate text",text)
@@ -962,6 +998,7 @@ from django.views.generic import ListView, DetailView, DeleteView, UpdateView, C
 from django.urls import reverse_lazy
 from .models import Email
 from django.core.paginator import Paginator
+
 class EmailListView(ListView):
     model = Email
     template_name = 'fillow/apps/email/email-inbox.html'
@@ -1013,6 +1050,10 @@ class EmailDetailView(DetailView):
         return context
 
 def email_trash(request, pk):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+    
     email = Email.objects.get(pk=pk)
 
     if not email.trash:
