@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UsernameField
 from django import forms
-from .models import Document, Email, AdditionalInform, Qna, EmailComposeTpl
+from .models import Document, Email, AdditionalInform, Qna, EmailCompose, EmailComposeTpl
 from django.core.validators import RegexValidator
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.text import capfirst
@@ -83,7 +83,24 @@ class QnaForm(forms.ModelForm):
     class Meta:
         model = Qna
         fields = ['title', 'question']
+
+class EmailComposeForm(forms.ModelForm):
+    class Meta:
+        model = EmailCompose
+        fields = ['email_to','email_cc','email_subject','email_file','email_text_content']
+        widgets = {
+            'email_to': forms.TextInput(attrs={'class': 'form-control bg-transparent', 'placeholder': ''}),
+            'email_cc': forms.TextInput(attrs={'class': 'form-control bg-transparent', 'placeholder': ''}),
+            'email_subject': forms.TextInput(attrs={'class': 'form-control bg-transparent', 'placeholder': ''}),
+            'email_file': forms.FileInput(attrs={'class': 'form-control', 'id': 'formFileMultiple', 'multiple': True}),
+            'email_text_content': forms.Textarea(attrs={'class': 'form-control bg-transparent', 'rows': 15, 'placeholder': '내용을 입력하세요'}),
+        }
         
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['email_cc'].required = False  
+            self.fields['email_file'].required = False  
+    
 class EmailComposeTplForm(forms.ModelForm):
     class Meta:
         model = EmailComposeTpl
@@ -92,8 +109,4 @@ class EmailComposeTplForm(forms.ModelForm):
             'texts': forms.Textarea(attrs={'placeholder': ''}),
         }
     
-    # def __init__(self, *args, **kwargs):
-    #     super(EmailComposeTplForm, self).__init__(*args, **kwargs)
-    #     self.fields['texts'].required = False
-        
-       
+    

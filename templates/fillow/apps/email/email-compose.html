@@ -32,39 +32,59 @@
                             <div class="col-xl-12">
                                 <div>
                                     <div class="compose-content">
-                                        <form action="#">
+                                        <form action="" method="POST" enctype="multipart/form-data">
+                                            {% csrf_token %} 
                                             <div class="row">
                                                 <div class="col-lg-3">
                                                     <div class="mb-3">
                                                         <label class="form-label">받는 사람</label>
-                                                        <input type="text" class="form-control bg-transparent" placeholder="">
+                                                        <input type="text" name="email_to" class="form-control bg-transparent" placeholder="">
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">참조</label>
-                                                        <input type="text" class="form-control bg-transparent" placeholder="">
+                                                        <input type="text" name="email_cc" class="form-control bg-transparent" placeholder="">
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">제목</label>
-                                                        <input type="text" class="form-control bg-transparent" placeholder="">
+                                                        <input type="text" name="email_subject" class="form-control bg-transparent" placeholder="">
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">첨부파일</label>
-                                                        <input class="form-control" type="file" id="formFileMultiple" multiple="">
+                                                        <input name="email_file" class="form-control" type="email_file" id="formFileMultiple" multiple="">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-9">
                                                     <div class="mb-3">
                                                         <label class="form-label">내용</label>
-                                                        <textarea id="email-compose-editor" class=" form-control bg-transparent" rows="15" placeholder=""></textarea>
+                                                        <textarea id="email_text_content" name="email_text_content" class=" form-control bg-transparent" rows="15" placeholder="">{{ email_compose_tpl.texts }}</textarea>
                                                     </div>
                                                 </div>
+                                                <div class="text-start mt-4 mb-3">
+                                                    <button class="btn btn-primary btn-sl-sm me-2" data-bs-toggle="modal" data-bs-target="#emailModal" type="button"><span class="me-2"><i class="fa fa-paper-plane"></i></span>보내기</button>
+                                                    <button class="btn btn-danger light btn-sl-sm" type="button"><span class="me-2"><i class="fa fa-times"></i></span>삭제  </button>                                               
+                                                    
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="emailModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="emailModalLabel">메일 전송 결과</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <p>메일이 성공적으로 전송되었습니다.</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div> 
                                             </div>
-                                        </form>
-                                    </div>
-                                    <div class="text-start mt-4 mb-3">
-                                        <button class="btn btn-primary btn-sl-sm me-2" type="button"><span class="me-2"><i class="fa fa-paper-plane"></i></span>보내기</button>
-                                        <button class="btn btn-danger light btn-sl-sm" type="button"><span class="me-2"><i class="fa fa-times"></i></span>삭제  </button>
-                                    </div>
+                                        </form> 
+                                    </div> 
                                 </div>
                             </div>
                         </div>
@@ -78,4 +98,6 @@
 <!--**********************************
     Content body end
 ***********************************-->
+
 {% endblock %}
+

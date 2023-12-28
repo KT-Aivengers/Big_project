@@ -1,7 +1,15 @@
 from typing import Any
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from .models import Qna, EmailCompose, EmailComposeTpl
+from datetime import datetime
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from .forms import UserForm, LoginForm, EmailComposeTplForm, EmailComposeForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import views
 
 # 분류된 이메일 현황 받기
 def get_most_4_category():
@@ -269,9 +277,31 @@ def post_details(request):
 
 
 def email_compose(request):
+    email_compose_tpl = EmailComposeTpl.objects.filter(user=request.user).last()
+    
     context={
-        "page_title":"이메일 전송"
+        "page_title":"이메일 전송",
+        "email_compose_tpl": email_compose_tpl
     }
+    if request.method == "POST":
+        form = EmailComposeForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            email_to = form.cleaned_data.get('email_to', '')
+            email_cc = form.cleaned_data.get('email_cc', '')
+            email_subject = form.cleaned_data.get('email_subject', '')
+            email_file = form.cleaned_data.get('email_file', '')
+            email_text_content = form.cleaned_data.get('email_text_content', '')
+            EmailCompose.objects.create(email_to = email_to, email_cc=email_cc, email_subject=email_subject, 
+                                        email_file=email_file, email_text_content=email_text_content, user = user)
+            return redirect("fillow:email-compose")
+
+        else:
+            print(form.errors)
+            
+    else:
+        form = EmailComposeForm()
+    
     return render(request,'fillow/apps/email/email-compose.html',context)
 
 def email_compose_tpl(request):
@@ -283,14 +313,13 @@ def email_compose_tpl(request):
         if form.is_valid():
             user = request.user
             texts = form.cleaned_data.get('texts', '')
-            print(texts)
             EmailComposeTpl.objects.create(texts = texts, user = user)
-
-            
-            return redirect("fillow:email-template")
+                        
+            return redirect("fillow:email-compose-tpl")
 
     else:
         form = EmailComposeTplForm()
+    
     
     return render(request,'fillow/apps/email/email-compose-tpl.html',context)
 
@@ -300,7 +329,7 @@ def email_inbox(request):
     context={
         "page_title":"받은 이메일"
     }
-    return render(request,'fillow/apps/email/email-inbox.html',context)
+    return render(request,'fillow/apps/email/email-inbox_origin.html',context)
 
 
 def email_read(request):
@@ -904,6 +933,27 @@ class EmailListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        queryset = queryset.filter(trash=False)
+        queryset = queryset.filter(user=self.request.user).order_by('-email_date')
+        self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
+        page_number = self.request.GET.get('page')
+        self.page_obj = self.paginator.get_page(page_number)
+        return self.page_obj.object_list
+
+    def render_to_response(self, context, **response_kwargs):
+        context.update({
+            'paginator': self.paginator,
+            'page_obj': self.page_obj,
+        })
+        return super().render_to_response(context, **response_kwargs)
+    
+class EmailListView_Trash(ListView):
+    model = Email
+    template_name = 'fillow/apps/email/email-trash.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(trash=True)
         queryset = queryset.filter(user=self.request.user).order_by('-email_date')
         self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
         page_number = self.request.GET.get('page')
@@ -927,11 +977,15 @@ class EmailDetailView(DetailView):
         # context['attachments'] = self.object.email_attachments  # 첨부파일 추가
         return context
 
+def email_trash(request, pk):
+    email = Email.objects.get(pk=pk)
 
-class EmailDeleteView(DeleteView):
-    model = Email
-    success_url = reverse_lazy('email_list')
+    if not email.trash:
+        email.trash = True  # 휴지통 상태로 변경
+        email.save()
+        return redirect("fillow:email-list-trash")
 
+    return redirect("fillow:email-list-trash")
 
 class EmailUpdateView(UpdateView):
     model = Email
