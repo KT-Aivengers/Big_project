@@ -21,6 +21,7 @@ class Email(models.Model):
     email_to = models.CharField(max_length=1000)
     email_cc = models.CharField(max_length=1000)
     email_text_content = models.CharField(max_length=10000)
+    trash = models.BooleanField(default=False)  
     
 class Qna(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="qna")
@@ -28,11 +29,16 @@ class Qna(models.Model):
     # image = models.ImageField(blank=True, upload_to='fillow')
     answer = models.CharField(max_length=300, blank=True)
     title = models.CharField(max_length=50, blank=True)
-    status = models.CharField(max_length=10, blank=True)
     edit_date = models.DateField()
-    
+
+class EmailCompose(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='email_compose')
+    email_to = models.CharField(max_length=1000)
+    email_cc = models.CharField(max_length=1000, blank=True)
+    email_subject = models.CharField(max_length=100)
+    email_file = models.FileField(upload_to='documents/compose/', blank=True)
+    email_text_content = models.CharField(max_length=1000)    
 
 class EmailComposeTpl(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='email_tpl')
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="email_tpl")
-    texts = models.CharField(max_length=1000)
+    texts = models.CharField(max_length=1000, blank=True)

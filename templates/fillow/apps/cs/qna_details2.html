@@ -1,0 +1,98 @@
+{% extends 'fillow/elements/layouts/admin.html' %}
+{% load static %}
+        
+{% block additional_css %}
+<style>
+    #email-compose-editor {
+        height: 100% !important;
+    }
+</style>
+{% endblock %}
+        
+{% block content %}
+<!--**********************************
+    Content body start
+***********************************-->
+<div class="content-body default-height">
+    <div class="container-fluid">
+        
+        <div class="row page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">고객 센터</a></li>
+				<li class="breadcrumb-item active"><a href="javascript:void(0)">Q&A</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">{{qna.title}}</a></li>
+            </ol>
+        </div>
+        
+        <!-- row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div>
+                                    <div class="compose-content">
+                                        <form action="" method="POST">
+                                            {% csrf_token %}
+                                            {% if request.user.is_staff %}
+                                            <div class="col">
+                                                <div class="col-lg-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">제목</label>
+                                                        <input type="text" class="form-control bg-transparent" value="{{qna.title}}" name="title1">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">내용</label>
+                                                        <textarea id="email-compose-editor" class=" form-control bg-transparent" rows="15" name="question">{{qna.question}}</textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">답변</label>
+                                                        <textarea id="email-compose-editor" class=" form-control bg-transparent" rows="15" name="answer">{{qna.answer}}</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-start mt-4 mb-3">
+                                                <button class="btn btn-primary btn-sl-sm me-2" type="submit" name="btn-act" value="ans">답변하기</button>
+                                            </div>
+
+                                            {% else %}
+                                            <div class="col">
+                                                <div class="col-lg-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">제목</label>
+                                                        <input type="text" class="form-control bg-transparent" value="{{qna.title}}" name="title1">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">내용</label>
+                                                        <textarea id="email-compose-editor" class=" form-control bg-transparent" rows="15" name="question">{{qna.question}}</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-start mt-4 mb-3">
+                                                <button class="btn btn-primary btn-sl-sm me-2" type="submit" name="btn-act" value="edit">수정하기</button>
+                                                <button class="btn btn-danger light btn-sl-sm" type="submit" name="btn-act" value="delete"><span class="me-2"><i class="fa fa-times"></i></span>삭제</button>
+                                            </div>
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--**********************************
+    Content body end
+***********************************-->
+{% endblock %}
