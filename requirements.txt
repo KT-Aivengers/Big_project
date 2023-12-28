@@ -20,6 +20,6 @@ html2text
 win32-setctime==1.1.0
 google-api-python-client
 django-mailbox
-ouath2client
+oauth2client
 tensorflow
 openai
