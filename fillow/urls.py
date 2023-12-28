@@ -2,6 +2,8 @@ from django.urls import path
 from fillow import fillow_views
 from django.contrib.auth import views as auth_views
 from .forms import LoginForm
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name='fillow'
 urlpatterns = [
@@ -114,4 +116,4 @@ urlpatterns = [
     path('email/trash/', fillow_views.EmailListView_Trash.as_view(), name='email-list-trash'),
     path('email/create/', fillow_views.EmailCreateView.as_view(), name='email_create'),
     path('email/<int:pk>/update/', fillow_views.EmailUpdateView.as_view(), name='email_update'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

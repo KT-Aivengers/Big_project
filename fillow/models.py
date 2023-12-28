@@ -1,12 +1,21 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 # Create your models here.
 
 class AdditionalInform(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     department = models.CharField(max_length=10)
-    phone = models.CharField(max_length=16)
+    phone = models.CharField(max_length=16, 
+        validators=[
+            RegexValidator(
+                regex=r'^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$',
+                message="010-****-****의 형태로 입력해주세요."
+            ),
+        ],)
+    introduce = models.CharField(max_length=500)
+    image = models.ImageField(upload_to="profile/")
     USERNAME_FIELD = 'email'
     
 class Document(models.Model):
