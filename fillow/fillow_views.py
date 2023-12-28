@@ -64,6 +64,7 @@ def get_schedule():
         {
             'title': '크리스마스',
             'start': '2023-12-25',
+            'end': '2023-12-26',
             # 'className': 'bg-danger',
         },
         {
@@ -86,6 +87,12 @@ def get_schedule():
         }
     ]
     return schedule_list
+
+
+# DB에 올리는 코드 여기에 작성
+def save_schedule(schedule_json):
+    print(schedule_json)
+    return
 
 
 def home(request):
@@ -490,17 +497,23 @@ def qna_details2(request, id):
 
 def schedule(request):
     if request.method == "POST":
-        # DB에 올리는 코드
-        print(request.POST)
+        # JSON으로 수정된 일정 데이터 받아옴
+        received_data = json.loads(request.body.decode('utf-8'))
+        
+        # DB에 변경사항 올리는 함수
+        save_schedule(received_data)
 
     context={
         "page_title":"일정 관리"
     }
     
     schedule_list = get_schedule()
+    # 달력에 배정 된 일정
     in_calendar = []
+    # 배정되지 않은 일정
     not_in_calendar = []
     
+    # 받아온 일정 리스트에서 start 속성이 없는(배정이 되지 않은) 일정 분리
     for schedule in schedule_list:
         if (schedule.get('start')):
             in_calendar.append(schedule)

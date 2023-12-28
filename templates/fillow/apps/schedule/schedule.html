@@ -13,6 +13,14 @@
         align-items: center;
         gap: 10px;
     }
+
+    [data-theme-version=dark] .fc-daygrid-event {
+        background: #094f3a;
+    }
+
+    [data-theme-version=dark] .swal2-html-container {
+        color: #fff;
+    }
 </style>
 {% endblock %}
         
@@ -64,8 +72,8 @@
                                 </div>
                                 <div class="modal-footer">
                                     {% csrf_token %}
-                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="save-db">저장하기</button>
-                                        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">뒤로</button>
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="save-db">저장하기</button>
+                                    <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">뒤로</button>
                                 </div>
                             </div>
                         </div>
@@ -101,8 +109,12 @@
 <script src="{% static 'fillow/vendor/jquery/jquery.min.js' %}"></script>
 <script>
     "use strict"
+
+    // 일정 데이터 받아오기
     var scheduleList = {{ in_calendar | safe }};
     var notInCalendar = {{ not_in_calendar | safe }};
+
+    // 일정에 변경점이 있는지 저장
     var changed = false;
 
     // 날짜 데이터 파싱
@@ -111,16 +123,19 @@
         var start = schedule.start;
         var end = schedule.end;
         
-        if (start) {
-            start.setDate(start.getDate() + 1);
-            var fstart = start.toISOString().substring(0, 10);
-        }
+        // 실제 날짜보다 1 적게 나와서 전부 1을 더함
+        start = moment(start).add(1, 'days');
+        var fstart = start.toISOString().substring(0, 10);
 
+        // 만약 end 값이 없다면 start의 하루 뒤로 설정
         if (end) {
-            end.setDate(end.getDate() + 1);
+            end = moment(end).add(1, 'days');
             var fend = end.toISOString().substring(0, 10);
+        } else {
+            start = moment(start).add(1, 'days');
+            var fend = start.toISOString().substring(0, 10);
         }
-
+        
         return {
             'title': title,
             'start': fstart,
@@ -141,11 +156,12 @@
         $('#reset').prop('disabled', !changed);
     }
 
-    // 초기화(새로고침)
+    // 초기화(단순 새로고침)
     $('#reset-db').click(function() {
         location.reload();
     });
 
+    // 화면이 나오기 전, 버튼 비활성화 하기
     changeDisable();
 
     function fullCalender() {
@@ -153,23 +169,31 @@
         $('#save-db').click(function() {
             var currentSchedule = calendar.getEvents();
             var newList = []
-                
+            
+            // 모든 일정 날짜 파싱하여 저장
             currentSchedule.forEach(function(schedule) {
                 var scheduleData = dateParsing(schedule);
                 newList.push(scheduleData);
             });
             
-            var data_list = newList.concat(notInCalendar);
+            // 달력 위 일정, 배정 안된 일정 합쳐서 json 형태로 저장
+            var data_list = {'schedule': newList.concat(notInCalendar)};
+
+            // csrf 토큰 설정
             var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
+            // AJAX 요청
             $.ajax({
                 type: 'POST',
                 url: '/schedule/',
-                data: {'data': data_list},
+                contentType: 'application/json',
+                data: JSON.stringify(data_list),
                 headers: {
                     'X-CSRFToken': csrftoken
                 },
             });
+
+            // DB에 저장된 뒤 새로고침
             location.reload();
         });
 
@@ -183,8 +207,8 @@
                 newList.push(scheduleData);
             });
 
-            var isEqual = JSON.stringify(scheduleList) !== JSON.stringify(newList);
-            changed = isEqual;
+            // 일정의 상태를 문자열화 하여 기존 데이터와 비교
+            changed = JSON.stringify(scheduleList) !== JSON.stringify(newList);
             changeDisable();
         }
 
@@ -300,6 +324,7 @@
         calendar.render();
     }
 
+    // 캘린더 잘 표시 안되는 버그 수정한 코드
     jQuery(window).on('load', function() {
         setTimeout(function() {
             fullCalender();
