@@ -95,7 +95,7 @@ urlpatterns = [
 
     path('page-login/', auth_views.LoginView.as_view(template_name="fillow/pages/page-login.html", form_class = LoginForm), name="page-login"),
     # path('page-login/', auth_views.LoginView.as_view(template_name="fillow/pages/page-login.html"), name="page-login"),
-    path('page-logout/', auth_views.LogoutView.as_view(template_name="fillow/index.html"), name='page-logout'),
+    path('page-logout/', auth_views.LogoutView.as_view(template_name="fillow/home/  home.html"), name='page-logout'),
     # path('page-login/',fillow_views.page_login,name="page-login"),
     path('page-register/',fillow_views.page_register,name="page-register"),
     path('page-forgot-password/',fillow_views.page_forgot_password,name="page-forgot-password"),
