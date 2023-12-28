@@ -55,6 +55,7 @@ def get_schedule():
         {
             'title': '크리스마스',
             'start': '2023-12-25',
+            'end': '2023-12-26',
             # 'className': 'bg-danger',
         },
         {
@@ -77,6 +78,12 @@ def get_schedule():
         }
     ]
     return schedule_list
+
+
+# DB에 올리는 코드 여기에 작성
+def save_schedule(schedule_json):
+    print(schedule_json)
+    return
 
 
 def home(request):
@@ -314,8 +321,9 @@ def schedule(request):
     if request.method == "POST":
         # JSON으로 수정된 일정 데이터 받아옴
         received_data = json.loads(request.body.decode('utf-8'))
-        # DB에 올리는 코드 여기에 작성
-        print(received_data)
+        
+        # DB에 변경사항 올리는 함수
+        save_schedule(received_data)
 
     context={
         "page_title":"일정 관리"
