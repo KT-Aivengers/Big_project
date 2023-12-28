@@ -9,7 +9,8 @@ from .forms import UserForm, LoginForm, EmailComposeTplForm, EmailComposeForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth import viewsfrom fillow.forms import DocumentForm
+from django.contrib.auth import views
+from fillow.forms import DocumentForm
 
 # 분류된 이메일 현황 받기
 def get_most_4_category():
