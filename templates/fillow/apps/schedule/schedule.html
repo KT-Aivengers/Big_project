@@ -2,6 +2,7 @@
 {% load static %}
         
 {% block additional_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
     .fc-header-toolbar {
         padding: 5px;
@@ -21,6 +22,39 @@
     [data-theme-version=dark] .swal2-html-container {
         color: #fff;
     }
+
+    .감사인사 {
+        background-color: #15c08c !important;
+    }
+
+    .결재승인 {
+        background-color: #ffa7d7 !important;
+    }
+
+    .공지 {
+        background-color: #09bd3c !important;
+    }
+
+    .보고 {
+        background-color: #fc2e53 !important;
+    }
+
+    .스크랩 {
+        background-color: #ffbf00 !important;
+    }
+
+    .진행업무 {
+        background-color: #d653c1 !important;
+    }
+
+    .휴가 {
+        background-color: #312a2a !important;
+    }
+
+    .기타 {
+        background-color: #c8c8c8 !important;
+    }
+
 </style>
 {% endblock %}
         
@@ -55,7 +89,7 @@
                                 <!-- 1 단위 끝 -->
                                 {% endcomment %}
                                 {% for schedule in not_in_calendar %}
-                                    <div class="external-event btn-primary light" data-class="bg-primary"><i class="fa fa-move"></i><span>{{ schedule.title }}</span></div>
+                                    <div class="external-event btn-primary light {{ schedule.category }}" category="{{ schedule.category }}" pk="{{ schedule.pk }}"><i class="fa fa-move"></i><span>{{ schedule.title }}</span></div>
                                 {% endfor %}
                             </div>
                         </div>
@@ -107,6 +141,7 @@
     Content body end
 ***********************************-->
 <script src="{% static 'fillow/vendor/jquery/jquery.min.js' %}"></script>
+
 <script>
     "use strict"
 
@@ -119,9 +154,11 @@
 
     // 날짜 데이터 파싱
     function dateParsing(schedule) {
+        var pk = schedule.extendedProps.pk;
         var title = schedule.title;
         var start = schedule.start;
         var end = schedule.end;
+        var category = schedule.extendedProps.category;
         
         // 실제 날짜보다 1 적게 나와서 전부 1을 더함
         start = moment(start).add(1, 'days');
@@ -137,16 +174,18 @@
         }
         
         return {
+            'pk': pk,
             'title': title,
             'start': fstart,
             'end': fend,
+            'category': category,
         }
     }
 
-    // AI 일정에서 삭제하기
-    function removeAI(title) {
+    // 이동된 일정 삭제하기
+    function removeAI(pk) {
         notInCalendar = notInCalendar.filter(function(schedule) {
-            return schedule['title'] !== title;
+            return schedule['pk'] != pk;
         });
     }
 
@@ -198,7 +237,7 @@
         });
 
         // 내용 변경 여부 확인하기
-        var isChanged = function(arg) {
+        var isChanged = function(info) {
             var currentSchedule = calendar.getEvents()
             var newList = []
             
@@ -219,7 +258,9 @@
 		    itemSelector: '.external-event',
 		    eventData: function(eventEl) {
 			    return {
-			        title: eventEl.innerText.trim()
+                    pk: eventEl.getAttribute('pk'),
+			        title: eventEl.innerText.trim(),
+                    category: eventEl.getAttribute('category'),
 			    }
 		    }
 		});
@@ -238,8 +279,51 @@
             },
             selectable: true,
             editable: true,
+            
+            // 색상 설정
+            eventContent: function(info) {
+                var color = '#c8c8c8';
+
+                // extendedProps에서 값을 가져와서 색상 설정
+                if (info.event.extendedProps.category === '감사인사') {
+                    color = '#15c08c';
+                } else if (info.event.extendedProps.category === '결재승인') {
+                    color = '#ffa7d7';
+                } else if (info.event.extendedProps.category === '공지') {
+                    color = '#09bd3c';
+                } else if (info.event.extendedProps.category === '보고') {
+                    color = '#fc2e53';
+                } else if (info.event.extendedProps.category === '스크랩') {
+                    color = '#ffbf00';
+                } else if (info.event.extendedProps.category === '진행업무') {
+                    color = '#d653c1';
+                } else if (info.event.extendedProps.category === '휴가') {
+                    color = '#312a2a';
+                }
+
+                info.backgroundColor = color;
+                info.boxShadow = color;
+            },
+
+            // 툴팁 설정
+            eventMouseEnter: function (info) {
+                $(info.el).popover({
+                    title: info.event.title,
+                    placement: 'top',
+                    trigger: 'hover',
+                    content: moment(info.event.start).add(1, 'days').toISOString().substring(0, 10) +
+                    '~' +
+                    moment(info.event.end).add(1, 'days').toISOString().substring(0, 10),
+                    container: 'body'
+                });
+
+                $(info.el).on('hidden.bs.popover', function () {
+                    $(this).popover('dispose');
+                });
+            },
+
             // 날짜 클릭 시
-            select: function (arg) {
+            select: function (info) {
                 Swal.fire({
                     html: "<div class='mb-5'>새로운 일정 추가하기</div><input type='text' class='form-control' id='swal-title' />",
                     icon: "info",
@@ -259,24 +343,24 @@
                     if (result.isConfirmed) {
                         calendar.addEvent({
                             title: result['value'],
-                            start: arg.start,
-                            end: arg.end,
-                            allDay: arg.allDay
+                            start: info.start,
+                            end: info.end,
+                            allDay: info.allDay
                         })
                         calendar.unselect()
                     }
                 });
             },
             // 일정 추가시
-            eventAdd: function (arg) {
+            eventAdd: function (info) {
                 isChanged();
             },
             // 일정 변경 시
-            eventChange: function (arg) {
+            eventChange: function (info) {
                 isChanged();
             },
             // 일정 제거 시
-            eventRemove: function (arg) {
+            eventRemove: function (info) {
                 isChanged();
             },
             // 일정 드래그 앤 드롭 시
@@ -284,27 +368,83 @@
             // },
             
             // 클릭 시
-            eventClick: function (arg) {
+            eventClick: function (info) {
+                const defaultSchedule = dateParsing(info.event);
+                let defaultTitled = defaultSchedule['title'];
+                let defaultStart = defaultSchedule['start'];
+                let defaultEnd = defaultSchedule['end'];
+
                 Swal.fire({
-                    text: "이 일정을 삭제하시겠습니까?",
+                    text: "이 일정에 어떤 작업을 하시겠습니까?",
                     icon: "warning",
+                    showCloseButton: true,
+                    showDenyButton: true,
                     showCancelButton: true,
-                    confirmButtonText: "삭제",
-                    cancelButtonText: "뒤로",
+                    confirmButtonText: '삭제',
+                    denyButtonText: '수정',
+                    cancelButtonText: '이동',
                     confirmButtonColor: '#fc2e53',
+                    denyButtonColor: '#ffc107',
                     cancelButtonColor: '#15c08c',
                 }).then(function (result) {
-                    if (result.value) {
-                        arg.event.remove()
+                    if (result.isConfirmed) {
+                        info.event.remove();
+                    } else if (result.isDenied) {
+                        Swal.fire({
+                            title: '일정 수정하기',
+                            html:
+                                `
+                                <input id="title" class="swal2-input" value="${defaultTitled}">
+                                <input id="date-range" class="swal2-input">
+                                `,
+                            showCancelButton: true,
+                            confirmButtonText: '수정',
+                            cancelButtonText: '취소',
+                            didOpen: () => {
+                                $('#date-range').daterangepicker({
+                                    opens: 'left',
+                                    startDate: defaultStart,
+                                    endDate: defaultEnd,
+                                    locale: {
+                                        format: 'YYYY-MM-DD',
+                                        applyLabel: '적용',
+                                        cancelLabel: '취소',
+                                        daysOfWeek: ['일', '월', '화', '수', '목', '금', '토'],
+                                        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
+                                    },
+                                });
+                            }
+                        }).then(function(result) {
+                            if (result.isConfirmed) {
+                                const changedTitle = $('#title').val();
+                                const selectedRange = $('#date-range').val();
+                                const dates = selectedRange.split(' - ');
+                                const changedStart = dates[0];
+                                var changedEnd = dates[1];
+                                info.event.setProp('title', changedTitle);
+
+                                // 선택한 날짜가 같은 날짜일 때 종료 날짜에 1을 더함
+                                if (changedStart === changedEnd) {
+                                    var temp = new Date(changedEnd);
+                                    temp.setDate(temp.getDate() + 1);
+                                    changedEnd = temp.toISOString().substring(0, 10);
+                                }
+                                info.event.setStart(changedStart);
+                                info.event.setEnd(changedEnd);
+                                Swal.fire('성공적으로 수정하였습니다', '', 'success');
+                            }
+                        });
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        window.location.href = '{% url "fillow:email_list" %}' + `${info.event.extendedProps.pk}`;
                     }
                 });
             },
             // 외부에서 드래그 앤 드롭
-            eventReceive: function (arg) {
+            eventReceive: function (info) {
                 // 목록에서 삭제하기
                 isChanged();
-                arg.draggedEl.parentNode.removeChild(arg.draggedEl);
-                removeAI(arg['event']['_def']['title']);
+                info.draggedEl.parentNode.removeChild(info.draggedEl);
+                removeAI(info.event.extendedProps.pk);
             },
             // 달력에서 '일' 제거
             dayCellContent: function (info) {

@@ -55,16 +55,69 @@ def get_schedule(request):
     # DB에서 일정 불러오기
     
     emails = Email.objects.filter(user_id=request.user.id, reply_req_yn=True)
-
-
-    schedule_list = [
-        {
-            
-            'title': email.category + " / " + email.email_from,
-            'start': email.reply_start_date.strftime('%Y-%m-%d'),
-            'end': (email.reply_end_date + datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
-        } for email in emails
+    emails_list = [
+    {
+        'pk':email.id,
+        'title': email.category + " / " + email.email_from,
+        'start': email.reply_start_date.strftime('%Y-%m-%d'),
+        'end': (email.reply_end_date + datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
+    } for email in emails
     ]
+    
+    schedule_list = emails_list +  [
+        
+        {
+            'pk': 1,
+            'title': '감사인사',
+            'start': '2023-12-25',
+            'end': '2023-12-26',
+            'category': '감사인사',
+        },
+        {
+            'pk': 2,
+            'title': '결재승인',
+            'start': '2023-12-21',
+            'end': '2023-12-27',
+            'category': '결재승인',
+        },
+        {
+            'pk': 3,
+            'title': '공지',
+            'start': '2023-12-10',
+            'end': '2023-12-15',
+            'category': '공지',
+        },
+        {
+            'pk': 4,
+            'title': '보고',
+            'start': '2023-12-6',
+            'end': '2023-12-28',
+            'category': '보고',
+        },
+        {
+            'pk': 5,
+            'title': '스크랩',
+            'start': '2023-12-27',
+            'end': '2023-12-31',
+            'category': '스크랩',
+        },
+        {
+            'pk': 6,
+            'title': '진행업무',
+            'category': '진행업무',
+        },
+        {
+            'pk': 7,
+            'title': '휴가',
+            'category': '휴가',
+        },
+        {
+            'pk': 8,
+            'title': '기타',
+            'category': '기타',
+        },
+    ]
+    
     # schedule_list = [
     #     # {
     #     #     'title' 제목

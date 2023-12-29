@@ -151,6 +151,7 @@ dz_array = {
                         "schedule": [
                             f"{folder_name}/vendor/fullcalendar/css/main.min.css",
                             f"{folder_name}/vendor/sweetalert2/sweetalert2.min.css",
+                            f"{folder_name}/vendor/bootstrap-daterangepicker/daterangepicker.css",
                         ],
                         "form_editor": [
                         ],
@@ -415,6 +416,7 @@ dz_array = {
                             f"{folder_name}/vendor/moment/moment.min.js",
                             f"{folder_name}/vendor/fullcalendar/js/main.min.js",
                             f"{folder_name}/vendor/sweetalert2/sweetalert2.min.js",
+                            f"{folder_name}/vendor/bootstrap-daterangepicker/daterangepicker.js",
                         ],
                         "form_editor": [
                             f"{folder_name}/vendor/ckeditor/ckeditor.js",
