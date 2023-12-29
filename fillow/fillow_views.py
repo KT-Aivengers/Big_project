@@ -532,6 +532,11 @@ def schedule(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
+    
+    # POST 요청 시 일정 데이터 변경
+    if request.method == "POST":
+        save_schedule(json.loads(request.body))
+        
     context={
         "page_title":"일정 관리"
     }

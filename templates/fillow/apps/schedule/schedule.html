@@ -2,6 +2,7 @@
 {% load static %}
         
 {% block additional_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
     .fc-header-toolbar {
         padding: 5px;
@@ -107,6 +108,7 @@
     Content body end
 ***********************************-->
 <script src="{% static 'fillow/vendor/jquery/jquery.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     "use strict"
 
@@ -285,17 +287,68 @@
             
             // 클릭 시
             eventClick: function (arg) {
+                const defaultSchedule = dateParsing(arg.event);
+                let defaultTitled = defaultSchedule['title'];
+                let defaultStart = defaultSchedule['start'];
+                let defaultEnd = defaultSchedule['end'];
+
                 Swal.fire({
-                    text: "이 일정을 삭제하시겠습니까?",
+                    text: "이 일정에 어떤 작업을 하시겠습니까?",
                     icon: "warning",
-                    showCancelButton: true,
+                    showCloseButton: true,
+                    showDenyButton: true,
                     confirmButtonText: "삭제",
-                    cancelButtonText: "뒤로",
+                    denyButtonText: '수정',
                     confirmButtonColor: '#fc2e53',
-                    cancelButtonColor: '#15c08c',
+                    denyButtonColor: '#ffc107',
                 }).then(function (result) {
-                    if (result.value) {
-                        arg.event.remove()
+                    if (result.isConfirmed) {
+                        arg.event.remove();
+                    } else if (result.isDenied) {
+                        Swal.fire({
+                            title: '일정 수정하기',
+                            html:
+                                `
+                                <input id="title" class="swal2-input" value="${defaultTitled}">
+                                <input id="date-range" class="swal2-input">
+                                `,
+                            showCancelButton: true,
+                            confirmButtonText: '수정',
+                            cancelButtonText: '취소',
+                            didOpen: () => {
+                                $('#date-range').daterangepicker({
+                                    opens: 'left',
+                                    startDate: defaultStart,
+                                    endDate: defaultEnd,
+                                    locale: {
+                                        format: 'YYYY-MM-DD',
+                                        applyLabel: '적용',
+                                        cancelLabel: '취소',
+                                        daysOfWeek: ['일', '월', '화', '수', '목', '금', '토'],
+                                        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
+                                    },
+                                });
+                            }
+                        }).then(function(result) {
+                            if (result.isConfirmed) {
+                                const changedTitle = $('#title').val();
+                                const selectedRange = $('#date-range').val();
+                                const dates = selectedRange.split(' - ');
+                                const changedStart = dates[0];
+                                var changedEnd = dates[1];
+                                arg.event.setProp('title', changedTitle);
+
+                                // 선택한 날짜가 같은 날짜일 때 종료 날짜에 1을 더함
+                                if (changedStart === changedEnd) {
+                                    var temp = new Date(changedEnd);
+                                    temp.setDate(temp.getDate() + 1);
+                                    changedEnd = temp.toISOString().substring(0, 10);
+                                }
+                                arg.event.setStart(changedStart);
+                                arg.event.setEnd(changedEnd);
+                                Swal.fire('성공적으로 수정하였습니다', '', 'success');
+                            }
+                        });
                     }
                 });
             },
