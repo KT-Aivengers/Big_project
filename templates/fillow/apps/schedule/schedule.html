@@ -47,6 +47,10 @@
         background-color: #d653c1 !important;
     }
 
+    .회의 {
+        background-color: #ffdc00 !important;
+    }
+
     .휴가 {
         background-color: #312a2a !important;
     }
@@ -57,6 +61,15 @@
 
     [data-theme-version=dark] .swal2-title {
         color: #fff;
+    }
+
+    .swal2-input {
+        font-size: 14px;
+        width: 350px;
+    }
+
+    [data-theme-version=dark] .end-date {
+        background-color: #15c08c !important;
     }
 
 </style>
@@ -156,7 +169,7 @@
     // 일정에 변경점이 있는지 저장
     var changed = false;
 
-    // 날짜 데이터 파싱
+    // 일정 데이터 파싱
     function dateParsing(schedule) {
         var pk = schedule.extendedProps.pk;
         var title = schedule.title;
@@ -186,7 +199,7 @@
         }
     }
 
-    // 이동된 일정 삭제하기
+    // 이동된 일정 삭제하기(pk값)
     function removeAI(pk) {
         notInCalendar = notInCalendar.filter(function(schedule) {
             return schedule['pk'] != pk;
@@ -303,6 +316,8 @@
                     color = '#ffbf00';
                 } else if (cat === '진행업무') {
                     color = '#d653c1';
+                } else if (cat === '회의') {
+                    color = '#ffdc00';
                 } else if (cat === '휴가') {
                     color = '#312a2a';
                 } else if (cat === '기타') {
@@ -311,6 +326,7 @@
 
                 info.backgroundColor = color;
                 info.boxShadow = color;
+                info.fon
             },
 
             // 툴팁 설정
@@ -416,9 +432,9 @@
                         });
                     } else if (result.isDenied) {
                         Swal.fire({
-                            title: '일정 수정하기',
                             html:
                                 `
+                                <h3>일정 수정하기</h3>
                                 <input id="title" class="swal2-input" value="${defaultTitled}">
                                 <input id="date-range" class="swal2-input">
                                 `,
