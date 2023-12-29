@@ -515,6 +515,10 @@ def qna_details(request, id):
     
     qna = get_object_or_404(Qna, id=id)
     
+    # url로 직접 접근 하는 거 막기 - 404 띄우기
+    if not request.user.is_staff and qna.user_id != request.user.id:
+        return redirect("fillow:page-error-404")
+    
     context={
         "page_title":"Q&A",
         "qna":qna,
@@ -528,7 +532,13 @@ def qna_details2(request, id):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
-    qna = Qna.objects.get(id=id)
+    
+    qna = get_object_or_404(Qna, id=id)
+    
+    # url로 직접 접근 하는 거 막기 - 404 띄우기
+    if not request.user.is_staff and qna.user_id != request.user.id:
+        return redirect("fillow:page-error-404")
+    
     context={
         "page_title":"Q&A",
         "qna":qna,
