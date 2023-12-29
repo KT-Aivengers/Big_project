@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import views
 from .models import AdditionalInform
+from .gpt import process_file
 
 # 분류된 이메일 현황 받기
 def get_most_4_category():
@@ -989,9 +990,10 @@ def upload_file(request):
             result = emlExtracter.prcessing_dir(headers, eml_name)
             
             process_file(result['text_content'])
-            text=translate(result['text_content'])
-            print("translate text",text)
-            detect_spam(text)
+            
+            # text=translate(result['text_content'])
+            # print("translate text",text)
+            # detect_spam(text)
             email_instance = Email(
             user=request.user,
             email_file_name=result.get('file_name', ''),
