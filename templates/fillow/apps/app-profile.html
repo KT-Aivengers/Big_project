@@ -141,10 +141,29 @@
 													{% csrf_token %}
 													<div class="mb-3">
 														<label for="formFile" class="form-label">프로필 사진 등록</label>
-														<input class="form-control" type="file" id="formFile" name="image">
+														<input class="form-control" type="file" id="formFile-upload" name="image" accept="image/jpg,image/png,image/jpeg">
 													</div>
-													<button class="btn btn-primary" type="submit" name="btn-post" value="img">등록</button>
+													<button class="btn btn-primary" id="btn-upload" type="submit" name="btn-post" value="img">등록</button>
 												</form>
+												
+												<!-- Modal start-->
+												<div class="modal fade" id="submitModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title" id="submitModalLabel">선택된 파일이 없습니다.</h5>
+																<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+																<p>파일을 선택해주세요.</p>
+															</div>
+															<div class="modal-footer">
+																<button type="submit" class="btn btn-secondary" data-bs-dismiss="modal" style="color:red">닫기</button>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!--Modal end-->
 												<br>
 												<form method="POST" action="">
 													{% csrf_token %}
@@ -210,4 +229,16 @@
 <!--**********************************
 	Content body end
 ***********************************-->
+<script src="{% static 'fillow/vendor/jquery/jquery.min.js' %}"></script>
+<script>
+    document.getElementById('btn-upload').addEventListener('click', function(e) {
+        var fileInput = document.getElementById('formFile-upload');
+        if (fileInput.files.length === 0) {
+            e.preventDefault();
+            $('#submitModal').modal('show');
+        }
+    });
+</script>
+
+
 {% endblock %}
