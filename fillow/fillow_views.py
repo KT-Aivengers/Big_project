@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from fillow.forms import DocumentForm
 from .models import Qna, EmailCompose, EmailComposeTpl
-from datetime import datetime
+import datetime
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from .forms import UserForm, LoginForm, EmailComposeTplForm, EmailComposeForm
@@ -50,43 +50,55 @@ def get_most_4_category():
     return result
 
 # 일정 불러오기
-def get_schedule():
+def get_schedule(request):
     
     # DB에서 일정 불러오기
+    
+    emails = Email.objects.filter(user_id=request.user.id, reply_req_yn=True)
+
+
     schedule_list = [
-        # {
-        #     'title' 제목
-        #     'start' 시작일
-        #     'end' 종료일
-        #     'url' 클릭 시 이동할 url
-        #     'groupID' 같이 움직일 일정 설정(쓸 일 없을 듯?)
-        #     'className' 설정할 클래스
-        # }
         {
-            'title': '크리스마스',
-            'start': '2023-12-25',
-            'end': '2023-12-26',
-            # 'className': 'bg-danger',
-        },
-        {
-            'title': '연락 바람',
-            'start': '2023-12-21',
-            'end': '2023-12-27',
-        },
-        {
-            'title': '이메일 페이지로',
-            'start': '2023-12-10',
-            'end': '2023-12-15',
-            # 'url': 'http://127.0.0.1:8000/email-inbox/',
-            # 'className': 'bg-info',
-        },
-        {
-            'title': 'AI가 생성한 일정1',
-        },
-        {
-            'title': 'AI가 생성한 일정2',
-        }
+            
+            'title': email.category + " / " + email.email_from,
+            'start': email.reply_start_date.strftime('%Y-%m-%d'),
+            'end': (email.reply_end_date + datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
+        } for email in emails
     ]
+    # schedule_list = [
+    #     # {
+    #     #     'title' 제목
+    #     #     'start' 시작일
+    #     #     'end' 종료일
+    #     #     'url' 클릭 시 이동할 url
+    #     #     'groupID' 같이 움직일 일정 설정(쓸 일 없을 듯?)
+    #     #     'className' 설정할 클래스
+    #     # }
+    #     {
+    #         'title': '크리스마스',
+    #         'start': '2023-12-25',
+    #         'end': '2023-12-26',
+    #         # 'className': 'bg-danger',
+    #     },
+    #     {
+    #         'title': '연락 바람',
+    #         'start': '2023-12-21',
+    #         'end': '2023-12-27',
+    #     },
+    #     {
+    #         'title': '이메일 페이지로',
+    #         'start': '2023-12-10',
+    #         'end': '2023-12-15',
+    #         # 'url': 'http://127.0.0.1:8000/email-inbox/',
+    #         # 'className': 'bg-info',
+    #     },
+    #     {
+    #         'title': 'AI가 생성한 일정1',
+    #     },
+    #     {
+    #         'title': 'AI가 생성한 일정2',
+    #     }
+    # ]
     return schedule_list
 
 
@@ -104,6 +116,14 @@ def home(request):
 
 from .models import AdditionalInform
 def index(request):
+    
+    if request.user.is_authenticated:
+        # 로그인이 된 상태에서 해당 유저의 id가 fillow_additionalinform 테이블의 user_ptr_id에 존재하는지 확인
+        if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
+            # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
+            return redirect('fillow:additional_info')
+    else:
+        return redirect('fillow:home')
     context={
         "page_title":"",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
@@ -113,14 +133,6 @@ def index(request):
     most4 = get_most_4_category()
     
     context.update(most4)
-    if request.user.is_authenticated:
-        # 로그인이 된 상태에서 해당 유저의 id가 fillow_additionalinform 테이블의 user_ptr_id에 존재하는지 확인
-        if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
-            # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
-            return redirect('fillow:additional_info')
-    else:
-        return redirect('fillow:home')
-        
     return render(request,'fillow/index.html', context)
 
 
@@ -406,7 +418,7 @@ def faq(request):
     return render(request,'fillow/apps/cs/faq.html',context)
 
 from .models import Qna, EmailComposeTpl
-from datetime import datetime
+
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -567,7 +579,7 @@ def schedule(request):
         "masking_name":request.user.first_name[1:],
     }
     
-    schedule_list = get_schedule()
+    schedule_list = get_schedule(request)
     # 달력에 배정 된 일정
     in_calendar = []
     # 배정되지 않은 일정
