@@ -17,7 +17,7 @@ class AdditionalInform(models.Model):
     introduce = models.CharField(max_length=500)
     image = models.ImageField(upload_to="profile/")
     USERNAME_FIELD = 'email'
-    
+    company = models.CharField(max_length=10)
 class Document(models.Model):
     uploaded_file = models.FileField(upload_to='documents/')
     

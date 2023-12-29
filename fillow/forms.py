@@ -10,6 +10,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 
 class AdditionalInformForm(forms.ModelForm):
+    company = forms.CharField(label = "회사", widget=forms.TextInput(attrs={"class":"form-control"}))
     department = forms.CharField(label = "부서", widget=forms.TextInput(attrs={"class":"form-control"}))
     phone = forms.CharField(
         label="전화번호",
@@ -25,7 +26,7 @@ class AdditionalInformForm(forms.ModelForm):
 
     class Meta:
         model = AdditionalInform
-        fields = ['department', 'phone']
+        fields = ['company','department', 'phone']
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(

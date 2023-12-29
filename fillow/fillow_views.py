@@ -255,6 +255,7 @@ def app_profile(request):
     
     context={
         "page_title":"프로필",
+        "company":inform.company,
         "dept":inform.department,
         "phone":inform.phone,
         "introduce":inform.introduce,
