@@ -53,38 +53,61 @@ def get_schedule():
     
     # DB에서 일정 불러오기
     schedule_list = [
-        # {
-        #     'title' 제목
-        #     'start' 시작일
-        #     'end' 종료일
-        #     'url' 클릭 시 이동할 url
-        #     'groupID' 같이 움직일 일정 설정(쓸 일 없을 듯?)
-        #     'className' 설정할 클래스
-        # }
+            # pk: 이메일의 pk값
+            # title 제목
+            # start 시작일
+            # end 종료일
+            # category 카테고리
         {
-            'title': '크리스마스',
+            'pk': 1,
+            'title': '감사인사',
             'start': '2023-12-25',
             'end': '2023-12-26',
-            # 'className': 'bg-danger',
+            'category': '감사인사',
         },
         {
-            'title': '연락 바람',
+            'pk': 2,
+            'title': '결재승인',
             'start': '2023-12-21',
             'end': '2023-12-27',
+            'category': '결재승인',
         },
         {
-            'title': '이메일 페이지로',
+            'pk': 3,
+            'title': '공지',
             'start': '2023-12-10',
             'end': '2023-12-15',
-            # 'url': 'http://127.0.0.1:8000/email-inbox/',
-            # 'className': 'bg-info',
+            'category': '공지',
         },
         {
-            'title': 'AI가 생성한 일정1',
+            'pk': 4,
+            'title': '보고',
+            'start': '2023-12-6',
+            'end': '2023-12-28',
+            'category': '보고',
         },
         {
-            'title': 'AI가 생성한 일정2',
-        }
+            'pk': 5,
+            'title': '스크랩',
+            'start': '2023-12-27',
+            'end': '2023-12-31',
+            'category': '스크랩',
+        },
+        {
+            'pk': 6,
+            'title': '진행업무',
+            'category': '진행업무',
+        },
+        {
+            'pk': 7,
+            'title': '휴가',
+            'category': '휴가',
+        },
+        {
+            'pk': 8,
+            'title': '기타',
+            'category': '기타',
+        },
     ]
     return schedule_list
 
