@@ -11,12 +11,24 @@
 <div class="content-body default-height">
     <!-- row -->
     <div class="container-fluid">
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary btn-margin-adjust" >파일업로드</button>
+      <div class="card">
+        <div class="card-header">
+          <h2>이메일 업로드</h2>
+        </div>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <!-- 각 필드를 원하는 방식으로 표시 -->
+          <div class="card-body">
+            <label for="id_uploaded_file"></label>
+            <input class="form-control" name="uploaded_file" type="file" id="id_uploaded_file" multiple="">
+          </div>
 
-      </form>
+          <!-- submit 버튼 -->
+          <div class="card-footer">
+            <button type="submit" class="btn btn-primary btn-margin-adjust" >이메일 업로드</button>
+          </div>
+        </form>
+      </div>
     </div>
 </div>
 <!--**********************************
