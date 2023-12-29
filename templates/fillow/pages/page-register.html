@@ -29,7 +29,6 @@
 	{% endfor %}
 	{% block additional_css %}
 	{% endblock %}
-	
 </head>
 
 <body>
@@ -45,6 +44,9 @@
 							<h4 class="text-center mb-4">Sign up your account</h4>
 							<form action="" method="POST">
 								{% csrf_token %}
+								{% if msg %}
+									<p style="color:red">{{ msg }}</p>
+								{% endif %}
 								{{ user_form }}
 								{{ additional_form }}
 								<br>
