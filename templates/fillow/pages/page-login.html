@@ -49,8 +49,10 @@
 								  <a href="{% url 'fillow:home' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
 							  </div>
 							  <h4 class="text-center mb-4">서비스 사용을 위해 로그인해주세요</h4>
-							  <form action="{% url 'fillow:index' %}">
-								  <div class="form-group mb-4">
+							  <form action="" method="POST">
+									{% csrf_token %}
+									{{form.as_p}}
+								  {% comment %} <div class="form-group mb-4">
 									  <label class="form-label" for="username">사용자 ID</label>
 									  <input type="text" class="form-control" placeholder="아이디를 입력하세요" id="username">
 								  </div>
@@ -61,7 +63,7 @@
 										  <i class="fa fa-eye-slash"></i>
 										  <i class="fa fa-eye"></i>
 									  </span>
-								  </div>
+								  </div> {% endcomment %}
 								  <div class="form-row d-flex flex-wrap justify-content-between mb-2">
 									  <div class="form-group mb-sm-4 mb-1">
 										  <div class="form-check custom-checkbox ms-1">
