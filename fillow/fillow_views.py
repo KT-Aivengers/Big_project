@@ -1,8 +1,9 @@
 from typing import Any
 from django.shortcuts import render
 from django.http import HttpResponse
+from fillow.forms import DocumentForm
 from .models import Qna, EmailCompose, EmailComposeTpl
-from datetime import datetime
+import datetime
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from .forms import UserForm, LoginForm, EmailComposeTplForm, EmailComposeForm
@@ -50,37 +51,62 @@ def get_most_4_category():
     return result
 
 # 일정 불러오기
-def get_schedule():
+def get_schedule(request):
     
     # DB에서 일정 불러오기
+    
+    emails = Email.objects.filter(user_id=request.user.id, reply_req_yn=True)
+
+
     schedule_list = [
-        # {
-        #     'title' 제목
-        #     'start' 시작일
-        #     'end' 종료일
-        #     'url' 클릭 시 이동할 url
-        #     'groupID' 같이 움직일 일정 설정(쓸 일 없을 듯?)
-        #     'className' 설정할 클래스
-        # }
         {
-            'title': '크리스마스',
-            'start': '2023-12-25',
-            'className': 'bg-danger',
-        },
-        {
-            'title': '연락 바람',
-            'start': '2023-12-21',
-            'end': '2023-12-27',
-        },
-        {
-            'title': '이메일 페이지로',
-            'start': '2023-12-10',
-            'end': '2023-12-15',
-            'url': 'http://127.0.0.1:8000/email-inbox/',
-            'className': 'bg-info',
-        },
+            
+            'title': email.category + " / " + email.email_from,
+            'start': email.reply_start_date.strftime('%Y-%m-%d'),
+            'end': (email.reply_end_date + datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
+        } for email in emails
     ]
+    # schedule_list = [
+    #     # {
+    #     #     'title' 제목
+    #     #     'start' 시작일
+    #     #     'end' 종료일
+    #     #     'url' 클릭 시 이동할 url
+    #     #     'groupID' 같이 움직일 일정 설정(쓸 일 없을 듯?)
+    #     #     'className' 설정할 클래스
+    #     # }
+    #     {
+    #         'title': '크리스마스',
+    #         'start': '2023-12-25',
+    #         'end': '2023-12-26',
+    #         # 'className': 'bg-danger',
+    #     },
+    #     {
+    #         'title': '연락 바람',
+    #         'start': '2023-12-21',
+    #         'end': '2023-12-27',
+    #     },
+    #     {
+    #         'title': '이메일 페이지로',
+    #         'start': '2023-12-10',
+    #         'end': '2023-12-15',
+    #         # 'url': 'http://127.0.0.1:8000/email-inbox/',
+    #         # 'className': 'bg-info',
+    #     },
+    #     {
+    #         'title': 'AI가 생성한 일정1',
+    #     },
+    #     {
+    #         'title': 'AI가 생성한 일정2',
+    #     }
+    # ]
     return schedule_list
+
+
+# DB에 올리는 코드 여기에 작성
+def save_schedule(schedule_json):
+    print(schedule_json)
+    return
 
 
 def home(request):
@@ -91,12 +117,16 @@ def home(request):
 
 from .models import AdditionalInform
 def index(request):
-    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
-    if not request.user.is_authenticated:
-        return redirect("fillow:home")
     
+    if request.user.is_authenticated:
+        # 로그인이 된 상태에서 해당 유저의 id가 fillow_additionalinform 테이블의 user_ptr_id에 존재하는지 확인
+        if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
+            # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
+            return redirect('fillow:additional_info')
+    else:
+        return redirect('fillow:home')
     context={
-        "page_title":"메인",
+        "page_title":"",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
@@ -104,12 +134,6 @@ def index(request):
     most4 = get_most_4_category()
     
     context.update(most4)
-    if request.user.is_authenticated:
-        # 로그인이 된 상태에서 해당 유저의 id가 fillow_additionalinform 테이블의 user_ptr_id에 존재하는지 확인
-        if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
-            # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
-            return redirect('fillow:additional_info')
-        
     return render(request,'fillow/index.html', context)
 
 
@@ -395,7 +419,7 @@ def faq(request):
     return render(request,'fillow/apps/cs/faq.html',context)
 
 from .models import Qna, EmailComposeTpl
-from datetime import datetime
+
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -516,6 +540,10 @@ def qna_details(request, id):
     
     qna = get_object_or_404(Qna, id=id)
     
+    # url로 직접 접근 하는 거 막기 - 404 띄우기
+    if not request.user.is_staff and qna.user_id != request.user.id:
+        return redirect("fillow:page-error-404")
+    
     context={
         "page_title":"Q&A",
         "qna":qna,
@@ -529,7 +557,13 @@ def qna_details2(request, id):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
-    qna = Qna.objects.get(id=id)
+    
+    qna = get_object_or_404(Qna, id=id)
+    
+    # url로 직접 접근 하는 거 막기 - 404 띄우기
+    if not request.user.is_staff and qna.user_id != request.user.id:
+        return redirect("fillow:page-error-404")
+    
     context={
         "page_title":"Q&A",
         "qna":qna,
@@ -560,13 +594,34 @@ def schedule(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
+    if request.method == "POST":
+        # JSON으로 수정된 일정 데이터 받아옴
+        received_data = json.loads(request.body.decode('utf-8'))
+        
+        # DB에 변경사항 올리는 함수
+        save_schedule(received_data)
+
     context={
         "page_title":"일정 관리",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
     
-    context['schedule_data'] = get_schedule()
+    schedule_list = get_schedule(request)
+    # 달력에 배정 된 일정
+    in_calendar = []
+    # 배정되지 않은 일정
+    not_in_calendar = []
+    
+    # 받아온 일정 리스트에서 start 속성이 없는(배정이 되지 않은) 일정 분리
+    for schedule in schedule_list:
+        if (schedule.get('start')):
+            in_calendar.append(schedule)
+        else:
+            not_in_calendar.append(schedule)
+        
+    context['in_calendar'] = in_calendar
+    context['not_in_calendar'] = not_in_calendar
     
     return render(request,'fillow/apps/schedule/schedule.html',context)
 
@@ -988,8 +1043,12 @@ def upload_file(request):
                     
             headers = ['file_name','Subject','Date','From','To','Cc','text_content']
             result = emlExtracter.prcessing_dir(headers, eml_name)
+            # print(result['text_content'])
             
-            process_file(result['text_content'])
+            gpt_result = process_file(result['text_content'])
+            
+            reply_req_yn = gpt_result.get('회신요청여부','')
+            reply_req_yn = True if reply_req_yn == 'Y' else False
             
             # text=translate(result['text_content'])
             # print("translate text",text)
@@ -1002,7 +1061,14 @@ def upload_file(request):
             email_from=result.get('From', ''),
             email_to=result.get('To', ''),
             email_cc=result.get('Cc', ''),
-            email_text_content=result.get('text_content', '')
+            email_text_content=result.get('text_content', ''),
+            category = gpt_result.get('카테고리',''),
+            from_company = gpt_result.get('회사',''),
+            from_dept = gpt_result.get('부서',''),
+            from_name = gpt_result.get('이름',''),
+            reply_req_yn = reply_req_yn,
+            reply_start_date = result.get('Date',''),
+            reply_end_date = gpt_result.get('회신마감일자',''),
             )
 
             email_instance.save()
