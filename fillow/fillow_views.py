@@ -117,23 +117,23 @@ def home(request):
 
 from .models import AdditionalInform
 def index(request):
-    
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
     if request.user.is_authenticated:
         # 로그인이 된 상태에서 해당 유저의 id가 fillow_additionalinform 테이블의 user_ptr_id에 존재하는지 확인
         if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
             # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
             return redirect('fillow:additional_info')
-    else:
-        return redirect('fillow:home')
+    most4 = get_most_4_category()
     context={
         "page_title":"",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
     
-    most4 = get_most_4_category()
-    
     context.update(most4)
+        
     return render(request,'fillow/index.html', context)
 
 
@@ -956,12 +956,23 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import views
+from django.contrib import messages
 
 def page_register(request):
     if request.method == "POST":
         user_form = UserForm(request.POST)
         additional_form = AdditionalInformForm(request.POST)
         if user_form.is_valid() and additional_form.is_valid():
+            # 이메일 중복되는 경우 안되게 가입 안되게 만들기
+            email = request.POST['email']
+            if User.objects.filter(email=email).exists():
+                context={
+                    'user_form': user_form, 
+                    'additional_form': additional_form,
+                    'msg': "이미 존재하는 이메일입니다."
+                }
+                return render(request, "fillow/pages/page-register.html", context)
+            
             user = user_form.save()
             additional_inform = additional_form.save(commit=False)
             additional_inform.user = user
