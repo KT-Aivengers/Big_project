@@ -71,7 +71,7 @@ class UserForm(UserCreationForm):
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
-        fields = ('uploaded_file',)
+        fields = ['uploaded_file',]
         
 class EmailForm(forms.ModelForm):
     class Meta:
@@ -109,4 +109,9 @@ class EmailComposeTplForm(forms.ModelForm):
             'texts': forms.Textarea(attrs={'placeholder': ''}),
         }
     
+    # def __init__(self, *args, **kwargs):
+    #     super(EmailComposeTplForm, self).__init__(*args, **kwargs)
+    #     self.fields['texts'].required = False
+        
+       
     

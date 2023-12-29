@@ -6,6 +6,21 @@
     .fc-header-toolbar {
         padding: 5px;
     }
+
+    .save-discard {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    [data-theme-version=dark] .fc-daygrid-event {
+        background: #094f3a;
+    }
+
+    [data-theme-version=dark] .swal2-html-container {
+        color: #fff;
+    }
 </style>
 {% endblock %}
         
@@ -31,19 +46,49 @@
 
                         <div class="">
                             <div id="external-events" class="my-3">
-                                <p>일정을 달력위에 드래그 앤 드롭하여 배치</p>
+                                <p>AI가 자동으로 생성한 일정입니다.</p>
+                                <p>드래그 앤 드롭하여 배치하세요.</p>
+                                <p>직접 일정을 추가하기 위해 달력의 날짜를 클릭하세요.</p>
+                                {% comment %}
                                 <!-- 1 단위 -->
                                 <div class="external-event btn-primary light" data-class="bg-primary"><i class="fa fa-move"></i><span>배치 테스트</span></div>
                                 <!-- 1 단위 끝 -->
+                                {% endcomment %}
+                                {% for schedule in not_in_calendar %}
+                                    <div class="external-event btn-primary light" data-class="bg-primary"><i class="fa fa-move"></i><span>{{ schedule.title }}</span></div>
+                                {% endfor %}
                             </div>
-                            <!-- checkbox -->
-                            <div class="checkbox form-check checkbox-event custom-checkbox pt-3 pb-5">
-                                <input type="checkbox" class="form-check-input" id="drop-remove">
-                                <label class="form-check-label" for="drop-remove">Remove After Drop</label>
+                        </div>
+                    </div>
+                    <div class="card-footer save-discard">
+                        <button type="button" class="btn btn-primary" id="save" data-bs-toggle="modal" data-bs-target="#saveModal">저장하기</button>
+                        <button type="button" class="btn btn-danger" id="reset" data-bs-toggle="modal" data-bs-target="#resetModal">초기화</button>
+                    </div>
+                    <div class="modal fade" role="dialog" aria-hidden="true" id="saveModal" data-bs-backdrop="static" data-bs-keyboard="false">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">변경사항을 저장하시겠습니까?</h5>
+                                </div>
+                                <div class="modal-footer">
+                                    {% csrf_token %}
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="save-db">저장하기</button>
+                                    <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">뒤로</button>
+                                </div>
                             </div>
-                            <a href="javascript:void()" data-bs-toggle="modal" data-bs-target="#add-category" class="btn btn-primary btn-event w-100">
-                                <span class="align-middle"><i class="ti-plus"></i></span> 새로 만들기
-                            </a>
+                        </div>
+                    </div>
+                    <div class="modal fade" role="dialog" aria-hidden="true" id="resetModal" data-bs-backdrop="static" data-bs-keyboard="false">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">변경사항이 전부 초기화됩니다.</h5>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="reset-db">초기화</button>
+                                    <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">뒤로</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -55,61 +100,7 @@
                     </div>
                 </div>
             </div>
-            <!-- BEGIN MODAL -->
-            <div class="modal fade none-border" id="event-modal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title"><strong>Add New Event</strong></h4>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default waves-effect" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success save-event waves-effect waves-light">Create
-                                event</button>
-
-                            <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-bs-toggle="modal">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Modal Add Category -->
-            <div class="modal fade none-border" id="add-category">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title"><strong>Add a category</strong></h4>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label class="control-label form-label">Category Name</label>
-                                        <input class="form-control form-white" placeholder="Enter name" type="text" name="category-name">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="control-label form-label">Choose Category Color</label>
-                                        <select class="nice-select form-control default-select wide" data-placeholder="Choose a color..." name="category-color">
-                                            <option value="success">Success</option>
-                                            <option value="danger">Danger</option>
-                                            <option value="info">Info</option>
-                                            <option value="pink">Pink</option>
-                                            <option value="primary">Primary</option>
-                                            <option value="warning">Warning</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger waves-effect" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success waves-effect waves-light save-category" data-bs-toggle="modal">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-
     </div>
 </div>
 <!--**********************************
@@ -119,8 +110,107 @@
 <script>
     "use strict"
 
+    // 일정 데이터 받아오기
+    var scheduleList = {{ in_calendar | safe }};
+    var notInCalendar = {{ not_in_calendar | safe }};
+
+    // 일정에 변경점이 있는지 저장
+    var changed = false;
+
+    // 날짜 데이터 파싱
+    function dateParsing(schedule) {
+        var title = schedule.title;
+        var start = schedule.start;
+        var end = schedule.end;
+        
+        // 실제 날짜보다 1 적게 나와서 전부 1을 더함
+        start = moment(start).add(1, 'days');
+        var fstart = start.toISOString().substring(0, 10);
+
+        // 만약 end 값이 없다면 start의 하루 뒤로 설정
+        if (end) {
+            end = moment(end).add(1, 'days');
+            var fend = end.toISOString().substring(0, 10);
+        } else {
+            start = moment(start).add(1, 'days');
+            var fend = start.toISOString().substring(0, 10);
+        }
+        
+        return {
+            'title': title,
+            'start': fstart,
+            'end': fend,
+        }
+    }
+
+    // AI 일정에서 삭제하기
+    function removeAI(title) {
+        notInCalendar = notInCalendar.filter(function(schedule) {
+            return schedule['title'] !== title;
+        });
+    }
+
+    // 버튼 활성화/비활성화 변경
+    function changeDisable() {
+        $('#save').prop('disabled', !changed);
+        $('#reset').prop('disabled', !changed);
+    }
+
+    // 초기화(단순 새로고침)
+    $('#reset-db').click(function() {
+        location.reload();
+    });
+
+    // 화면이 나오기 전, 버튼 비활성화 하기
+    changeDisable();
+
     function fullCalender() {
-        var scheduleList = {{ schedule_data | safe }};
+        // DB에 변경사항 저장
+        $('#save-db').click(function() {
+            var currentSchedule = calendar.getEvents();
+            var newList = []
+            
+            // 모든 일정 날짜 파싱하여 저장
+            currentSchedule.forEach(function(schedule) {
+                var scheduleData = dateParsing(schedule);
+                newList.push(scheduleData);
+            });
+            
+            // 달력 위 일정, 배정 안된 일정 합쳐서 json 형태로 저장
+            var data_list = {'schedule': newList.concat(notInCalendar)};
+
+            // csrf 토큰 설정
+            var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            // AJAX 요청
+            $.ajax({
+                type: 'POST',
+                url: '/schedule/',
+                contentType: 'application/json',
+                data: JSON.stringify(data_list),
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+            });
+
+            // DB에 저장된 뒤 새로고침
+            location.reload();
+        });
+
+        // 내용 변경 여부 확인하기
+        var isChanged = function(arg) {
+            var currentSchedule = calendar.getEvents()
+            var newList = []
+            
+            currentSchedule.forEach(function(schedule) {
+                var scheduleData = dateParsing(schedule);
+                newList.push(scheduleData);
+            });
+
+            // 일정의 상태를 문자열화 하여 기존 데이터와 비교
+            changed = JSON.stringify(scheduleList) !== JSON.stringify(newList);
+            changeDisable();
+        }
 
         /* 드래그 앤 드롭 초기화
         -----------------------------------------------------------------*/
@@ -136,68 +226,105 @@
         /* 달력 생성
         -----------------------------------------------------------------*/
         var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                height: '100%',
-                locale: 'kr',
-                expandRaws: true,
-                headerToolbar: {
-                    left: 'prev',
-                    center: 'title',
-                    right: 'next',
-                },
-                // selectable: true,
-                editable: true,
-
-                // 일정 추가시
-                eventAdd: function(obj) {
-
-                },
-
-                // 일정 변경 시
-                eventChagne: function(obj) {
-
-                },
-
-                // 일정 제거 시
-                eventRemove: function(obj) {
-
-                },
-                
-                // 드래그로 일정 생성
-                select: function(arg) {
-                    var title = prompt('Event Title:');
-                    if (title) {
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            // 이벤트 목록
+            events: scheduleList,
+            height: '100%',
+            locale: 'kr',
+            headerToolbar: {
+                left: 'prev',
+                center: 'title',
+                right: 'next',
+            },
+            selectable: true,
+            editable: true,
+            // 날짜 클릭 시
+            select: function (arg) {
+                Swal.fire({
+                    html: "<div class='mb-5'>새로운 일정 추가하기</div><input type='text' class='form-control' id='swal-title' />",
+                    icon: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "추가",
+                    cancelButtonText: "취소",
+                    confirmButtonColor: '#15c08c',
+                    cancelButtonColor: '#fc2e53',
+                    preConfirm: function () {
+                        var title = document.getElementById('swal-title').value;
+                        if (!title) {
+                            Swal.showValidationMessage('일정 제목을 입력해주세요.');
+                        }
+                        return title;
+                    }
+                }).then(function (result) {
+                    if (result.isConfirmed) {
                         calendar.addEvent({
-                            title: title,
+                            title: result['value'],
                             start: arg.start,
                             end: arg.end,
                             allDay: arg.allDay
                         })
+                        calendar.unselect()
                     }
-                    calendar.unselect();
-                },
-                
-                // 이벤트 목록
-                events: scheduleList,
-
-                // 달력에서 '일' 제거
-                dayCellContent: function (info) {
-                    var number = document.createElement('a');
-                    number.classList.add('fc-daygrid-day-number');
-                    number.innerHTML = info.dayNumberText.replace('일', '')
-                    if (info.view.type == 'dayGridMonth') {
-                        return {
-                            html: number.outerHTML
-                        };
+                });
+            },
+            // 일정 추가시
+            eventAdd: function (arg) {
+                isChanged();
+            },
+            // 일정 변경 시
+            eventChange: function (arg) {
+                isChanged();
+            },
+            // 일정 제거 시
+            eventRemove: function (arg) {
+                isChanged();
+            },
+            // 일정 드래그 앤 드롭 시
+            // eventDrop: function(obj) {
+            // },
+            
+            // 클릭 시
+            eventClick: function (arg) {
+                Swal.fire({
+                    text: "이 일정을 삭제하시겠습니까?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "삭제",
+                    cancelButtonText: "뒤로",
+                    confirmButtonColor: '#fc2e53',
+                    cancelButtonColor: '#15c08c',
+                }).then(function (result) {
+                    if (result.value) {
+                        arg.event.remove()
                     }
+                });
+            },
+            // 외부에서 드래그 앤 드롭
+            eventReceive: function (arg) {
+                // 목록에서 삭제하기
+                isChanged();
+                arg.draggedEl.parentNode.removeChild(arg.draggedEl);
+                removeAI(arg['event']['_def']['title']);
+            },
+            // 달력에서 '일' 제거
+            dayCellContent: function (info) {
+                var number = document.createElement('a');
+                number.classList.add('fc-daygrid-day-number');
+                number.innerHTML = info.dayNumberText.replace('일', '')
+                if (info.view.type == 'dayGridMonth') {
                     return {
-                        domNodes: []
-                    }
+                        html: number.outerHTML
+                    };
                 }
-            });
-            calendar.render();
+                return {
+                    domNodes: []
+                }
+            }
+        });
+        calendar.render();
     }
 
+    // 캘린더 잘 표시 안되는 버그 수정한 코드
     jQuery(window).on('load', function() {
         setTimeout(function() {
             fullCalender();

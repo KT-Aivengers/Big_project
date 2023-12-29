@@ -1,6 +1,7 @@
 from typing import Any
 from django.shortcuts import render
 from django.http import HttpResponse
+from fillow.forms import DocumentForm
 from .models import Qna, EmailCompose, EmailComposeTpl
 from datetime import datetime
 from django.shortcuts import get_object_or_404
@@ -64,7 +65,8 @@ def get_schedule():
         {
             'title': '크리스마스',
             'start': '2023-12-25',
-            'className': 'bg-danger',
+            'end': '2023-12-26',
+            # 'className': 'bg-danger',
         },
         {
             'title': '연락 바람',
@@ -75,11 +77,23 @@ def get_schedule():
             'title': '이메일 페이지로',
             'start': '2023-12-10',
             'end': '2023-12-15',
-            'url': 'http://127.0.0.1:8000/email-inbox/',
-            'className': 'bg-info',
+            # 'url': 'http://127.0.0.1:8000/email-inbox/',
+            # 'className': 'bg-info',
         },
+        {
+            'title': 'AI가 생성한 일정1',
+        },
+        {
+            'title': 'AI가 생성한 일정2',
+        }
     ]
     return schedule_list
+
+
+# DB에 올리는 코드 여기에 작성
+def save_schedule(schedule_json):
+    print(schedule_json)
+    return
 
 
 def home(request):
@@ -91,7 +105,7 @@ def home(request):
 from .models import AdditionalInform
 def index(request):
     context={
-        "page_title":"메인",
+        "page_title":"",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
@@ -540,13 +554,34 @@ def schedule(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
+    if request.method == "POST":
+        # JSON으로 수정된 일정 데이터 받아옴
+        received_data = json.loads(request.body.decode('utf-8'))
+        
+        # DB에 변경사항 올리는 함수
+        save_schedule(received_data)
+
     context={
         "page_title":"일정 관리",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
     
-    context['schedule_data'] = get_schedule()
+    schedule_list = get_schedule()
+    # 달력에 배정 된 일정
+    in_calendar = []
+    # 배정되지 않은 일정
+    not_in_calendar = []
+    
+    # 받아온 일정 리스트에서 start 속성이 없는(배정이 되지 않은) 일정 분리
+    for schedule in schedule_list:
+        if (schedule.get('start')):
+            in_calendar.append(schedule)
+        else:
+            not_in_calendar.append(schedule)
+        
+    context['in_calendar'] = in_calendar
+    context['not_in_calendar'] = not_in_calendar
     
     return render(request,'fillow/apps/schedule/schedule.html',context)
 
@@ -968,11 +1003,11 @@ def upload_file(request):
                     
             headers = ['file_name','Subject','Date','From','To','Cc','text_content']
             result = emlExtracter.prcessing_dir(headers, eml_name)
-            
+            print(result['text_content'])
             process_file(result['text_content'])
-            text=translate(result['text_content'])
-            print("translate text",text)
-            detect_spam(text)
+            # text=translate(result['text_content'])
+            # print("translate text",text)
+            # detect_spam(text)
             email_instance = Email(
             user=request.user,
             email_file_name=result.get('file_name', ''),
