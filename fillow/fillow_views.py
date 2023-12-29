@@ -1029,6 +1029,18 @@ def upload_file(request):
             reply_req_yn = gpt_result.get('회신요청여부','')
             reply_req_yn = True if reply_req_yn == 'Y' else False
             
+            user_additional_info = AdditionalInform.objects.filter(user=request.user).last()
+
+            from_company = gpt_result.get('회사', '')
+            user_company = user_additional_info.company
+            company_yn = True if from_company == user_company else False
+            
+            from_dept = gpt_result.get('부서', '')
+            user_dept = user_additional_info.department
+            dept_yn = True if from_dept == user_dept else False
+            
+
+            
             # text=translate(result['text_content'])
             # print("translate text",text)
             # detect_spam(text)
@@ -1042,12 +1054,14 @@ def upload_file(request):
             email_cc=result.get('Cc', ''),
             email_text_content=result.get('text_content', ''),
             category = gpt_result.get('카테고리',''),
-            from_company = gpt_result.get('회사',''),
-            from_dept = gpt_result.get('부서',''),
+            from_company = from_company,
+            from_dept = from_dept,
             from_name = gpt_result.get('이름',''),
             reply_req_yn = reply_req_yn,
             reply_start_date = result.get('Date',''),
             reply_end_date = gpt_result.get('회신마감일자',''),
+            company_yn = company_yn,
+            department_yn = dept_yn,
             )
 
             email_instance.save()
