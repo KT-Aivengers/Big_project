@@ -282,23 +282,27 @@
             
             // 색상 설정
             eventContent: function(info) {
-                var color = '#c8c8c8';
+                // 사용자 정의 일정 색
+                var color = '#faefd1';
 
                 // extendedProps에서 값을 가져와서 색상 설정
-                if (info.event.extendedProps.category === '감사인사') {
+                let cat = info.event.extendedProps.category
+                if (cat === '감사인사') {
                     color = '#15c08c';
-                } else if (info.event.extendedProps.category === '결재승인') {
+                } else if (cat === '결재승인') {
                     color = '#ffa7d7';
-                } else if (info.event.extendedProps.category === '공지') {
+                } else if (cat === '공지') {
                     color = '#09bd3c';
-                } else if (info.event.extendedProps.category === '보고') {
+                } else if (cat === '보고') {
                     color = '#fc2e53';
-                } else if (info.event.extendedProps.category === '스크랩') {
+                } else if (cat === '스크랩') {
                     color = '#ffbf00';
-                } else if (info.event.extendedProps.category === '진행업무') {
+                } else if (cat === '진행업무') {
                     color = '#d653c1';
-                } else if (info.event.extendedProps.category === '휴가') {
+                } else if (cat === '휴가') {
                     color = '#312a2a';
+                } else if (cat === '기타') {
+                    color = '#c8c8c8';
                 }
 
                 info.backgroundColor = color;
@@ -345,7 +349,7 @@
                             title: result['value'],
                             start: info.start,
                             end: info.end,
-                            allDay: info.allDay
+                            allDay: info.allDay,
                         })
                         calendar.unselect()
                     }
@@ -374,12 +378,17 @@
                 let defaultStart = defaultSchedule['start'];
                 let defaultEnd = defaultSchedule['end'];
 
+                let cancelButton = true;
+                if (!info.event.extendedProps.pk) {
+                    cancelButton = false;
+                }
+
                 Swal.fire({
                     text: "이 일정에 어떤 작업을 하시겠습니까?",
                     icon: "warning",
                     showCloseButton: true,
                     showDenyButton: true,
-                    showCancelButton: true,
+                    showCancelButton: cancelButton,
                     confirmButtonText: '삭제',
                     denyButtonText: '수정',
                     cancelButtonText: '이동',
