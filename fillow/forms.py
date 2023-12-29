@@ -33,7 +33,7 @@ class LoginForm(AuthenticationForm):
         widget = forms.TextInput(
             attrs={
                 "class": 'form-control',
-                "placeholder": "아이디를 입력하세요"  
+                "placeholder": "아이디를 입력하세요"
             }
         ),
     )

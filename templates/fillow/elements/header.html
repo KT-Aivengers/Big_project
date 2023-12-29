@@ -27,7 +27,13 @@
 						</a>
 					</li>
 
-					<!-- 이메일 -->
+
+					<!--사용자 인사 문구-->
+					<li class="nav-item dropdown">
+						<div style="color:white">{{request.user.last_name}}*{{masking_name}}님, 안녕하세요!</div>
+					</li>
+
+					{% comment %} <!-- 이메일 -->
 					<li class="nav-item dropdown notification_dropdown">
 						<a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
 							<i class="fa-solid fa-envelope"></i>
@@ -98,7 +104,7 @@
 							</div>
 							<a class="all-notification" href="{% url 'fillow:calendar-page' %}">모든 일정 보기<i class="ti-arrow-end"></i></a>
 						</div>
-					</li>
+					</li> {% endcomment %}
 					<!-- <li class="nav-item dropdown notification_dropdown">
 						<a class="nav-link " href="javascript:void(0);" data-bs-toggle="dropdown">
 							<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -350,7 +356,11 @@
 							{% endif %} {% endcomment %}
 
 							{% if request.user.is_authenticated %}
-								<div>{{request.user.first_name}}님 안녕하세요!</div>
+								{% if img %}
+									<img src="/media/{{img}}" width="56" alt="">
+								{% else %}
+									<img src="{% static 'fillow/images/profile/profile_basic.jpeg' %}" width="56" alt="">
+								{% endif %}
 							{% else %}
 								<a href='{% url "fillow:page-login" %}'>로그인</a>
 							{% endif %}
