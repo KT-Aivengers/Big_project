@@ -36,22 +36,27 @@
                         <div class="card-body">
                             <form method="GET" action="">
                                 <div class="row d-flex">
-                                    <div class="col-xl-3 col-sm-6 align-items-center">
+                                {% for field in form %}
+                                    <div class="col-xl-3 col-sm-6 mb-3 mb-xl-0 align-items-center">
+                                        <p>{{field.label}}{{ field }}</p>
+                                    </div>
+                                {% endfor %}
+                                        {% comment %}
                                         <label class="form-label">제목</label>
                                         <input type="text" class="form-control mb-xl-0 mb-3" id="exampleFormControlInput1" name="title1" placeholder="제목">
                                     </div>
                                     <div class="col-xl-3 col-sm-6 mb-3 mb-xl-0 align-items-center">
                                         <label class="form-label me-2">상태</label>
                                         <select class="form-control default-select h-auto wide" aria-label="Default select example" name="status">
-                                            <option selected>---</option>
+                                            <option selected value="0">---</option>
                                             <option value="1" >답변 대기중</option>
                                             <option value="2" >답변 완료</option>
                                         </select> 
-                                    </div>
+                                    </div>{% endcomment %}
                                     <div class="col-xl-3 col-sm-6 align-self-end">
                                         <div>
-                                            <button class="btn btn-primary me-2" title="검색" type="submit"><i class="fa-solid fa-magnifying-glass"></i> 검색</button>
-                                            <button class="btn btn-danger light" title="초기화" type="submit">초기화</button>
+                                            <button class="btn btn-primary me-2" title="검색" type="submit" name="btn-search" value="search"><i class="fa-solid fa-magnifying-glass"></i> 검색</button>
+                                            <button class="btn btn-danger light" title="초기화" type="submit" name="btn-search" value="reset">초기화</button>
                                         </div>
                                     </div>
                                 </div>
@@ -129,23 +134,25 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    <div class="d-flex align-items-center justify-content-between flex-wrap">
-                        <p class="mb-2 me-3">{{Qnas.paginator.num_pages}}페이지 중 {{Qnas.number}}번째</p>
+                    <div class="d-flex align-items-center justify-content-center flex-wrap">
+                        <div class="ms-auto">
+                            <p class="mb-2 me-3">{{Qnas.paginator.num_pages}}페이지 중 {{Qnas.number}}번째</p>
+                        </div>
                         <nav aria-label="Page navigation example mb-2">
                             <ul class="pagination mb-2 mb-sm-0">
-                                <li class="page-item"><a class="page-link" href="?page=1">첫 페이지</a></li>
+                                <li class="page-item"><a class="page-link" href="?title={{title}}&status={{status}}&page=1">첫 페이지</a></li>
                                     {% if Qnas.has_previous %}
-                                        <li class="page-item"><a class="page-link" href="?title1={{title}}&status={{status}}&page={{ Qnas.previous_page_number }}"><i class="fa-solid fa-angle-left"></i></a></li>
+                                        <li class="page-item"><a class="page-link" href="?title={{title}}&status={{status}}&page={{ Qnas.previous_page_number }}"><i class="fa-solid fa-angle-left"></i></a></li>
                                     {% else %}
                                         <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-angle-left"></i></a></li>
                                     {% endif %}
-                                    <li class="page-item"><a class="page-link" href="?title1={{title}}&status={{status}}" style="font-weight:bold">{{Qnas.number}}</a></li>
+                                    <li class="page-item"><a class="page-link" href="?title={{title}}&status={{status}}" style="font-weight:bold">{{Qnas.number}}</a></li>
                                     {% if Qnas.has_next %}
-                                        <li class="page-item"><a class="page-link" href="?title1={{title}}&status={{status}}&page={{ Qnas.next_page_number }}"><i class="fa-solid fa-angle-right"></i></a></li>
+                                        <li class="page-item"><a class="page-link" href="?title={{title}}&status={{status}}&page={{ Qnas.next_page_number }}"><i class="fa-solid fa-angle-right"></i></a></li>
                                     {% else %}
                                     <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-angle-right"></i></a></li>
                                     {% endif %}
-                                <li class="page-item"><a class="page-link " href="?page={{ Qnas.paginator.num_pages }}">마지막 페이지</a></li>
+                                <li class="page-item"><a class="page-link " href="?title={{title}}&status={{status}}&page={{ Qnas.paginator.num_pages }}">마지막 페이지</a></li>
                             </ul>
                         </nav>
                     </div>

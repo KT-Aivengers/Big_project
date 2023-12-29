@@ -109,4 +109,29 @@ class EmailComposeTplForm(forms.ModelForm):
             'texts': forms.Textarea(attrs={'placeholder': ''}),
         }
     
-    
+
+class QnaSearchForm(forms.Form):
+    STATUS_CHOICES = [
+        (0, '---'),
+        (1, '답변 대기중'),
+        (2, '답변 완료'),
+    ]  
+    title = forms.CharField(label = "제목",
+                            widget=forms.TextInput(
+                                attrs={
+                                    "class":"form-control mb-xl-0 mb-3",
+                                    "id":"exampleFormControlInput1",
+                                    "placeholder":"제목",
+                                    }
+                                ),
+                            required=False,
+                            )
+    status = forms.CharField(label = "상태",
+                             widget=forms.Select(
+                                 attrs={
+                                     "class": "form-control default-select h-auto wide",
+                                     "aria-label": "Default select example"
+                                 },
+                                 choices=STATUS_CHOICES,
+                             ),
+                            )

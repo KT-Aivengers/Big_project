@@ -90,6 +90,10 @@ def home(request):
 
 from .models import AdditionalInform
 def index(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+    
     context={
         "page_title":"메인",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
@@ -104,8 +108,6 @@ def index(request):
         if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
             # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
             return redirect('fillow:additional_info')
-    else:
-        return redirect('fillow:home')
         
     return render(request,'fillow/index.html', context)
 
@@ -397,6 +399,7 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.urls import reverse
+from .forms import QnaSearchForm
 
 def qna(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
@@ -428,24 +431,45 @@ def qna(request):
         
         return redirect("fillow:qna")
     else:
-        title = request.GET.get("title1")
-        status = request.GET.get("status")
-        if title is None:
-            Qnas = Qnas.all()
+        action = request.GET.get('btn-search')
+        if action=="reset":
+            title=""
+            status=0
+            form = QnaSearchForm()
         else:
-            if status=="---":
-                status=False
-            elif status=="1":
-                status=1
+            prev_title = request.GET.get('title')
+            prev_status = request.GET.get('status')
+            print(prev_title, prev_status)
+            
+            if not prev_title and not prev_status:
+                # 제목, 상태에 아무 것도 없을 때 or 처음 QnA 사이트 들어왔을 때
+                form = QnaSearchForm()
+                prev_title, prev_status = "", 0
             else:
-                status=2
+                # 제목, 상태에 뭔가 넣었었을 때
+                if not prev_title:
+                    prev_title=""
+                if not prev_status:
+                    prev_status=0
+                else:
+                    if prev_status=="0":
+                        prev_status=0
+                    elif prev_status=="1":
+                        prev_status=1
+                    else:
+                        prev_status=2
+                
+                form = QnaSearchForm(initial={'title': prev_title, 'status': prev_status})
+            
+                
+            title, status = prev_title, prev_status
             
             if title=="" and not status:
-                Qnas = Qnas.all()
+                Qnas = Qnas
             elif title=="" and status:
                 if status==1:
                     Qnas = Qnas.filter(
-                        Q(answer='')
+                        Q(answer="")
                     )
                 else:
                     Qnas = Qnas.filter(
@@ -464,21 +488,16 @@ def qna(request):
                     Qnas = Qnas.filter(
                         ~Q(answer="") & Q(title__icontains=title)
                     )
-        
+            
     paginator = Paginator(Qnas, 10)
 
     page_num = request.GET.get('page')
     qnas_page = paginator.get_page(page_num)
     
-    if not status:
-        status="---"
-    elif status==1:
-        status="답변 대기중"
-    else:
-        status="답변 완료"
     
     context={
         "page_title":"Q&A",
+        "form": form,
         "Qnas":qnas_page,
         "title":title,
         "status":status,
