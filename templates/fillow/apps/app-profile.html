@@ -74,8 +74,11 @@
 										<div class="profile-about-me">
 											<div class="pt-4 border-bottom-1 pb-3">
 												<h4 class="text-primary">자기소개</h4>
-												{% comment %} <p class="mb-2">{{introduce}}</p> {% endcomment %}
-												{{introduce}}
+												{% if introduce %}
+													<p class="mb-2">{{introduce}}</p>
+												{% else %}
+													<p class="mb-2">반갑습니다!</p>
+												{% endif %}
 											</div>
 										</div>
 										{% comment %} <div class="profile-skills mb-5">

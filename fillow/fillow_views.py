@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import views
+from .models import AdditionalInform
 
 # 분류된 이메일 현황 받기
 def get_most_4_category():
@@ -91,6 +92,8 @@ from .models import AdditionalInform
 def index(request):
     context={
         "page_title":"메인",
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     
     most4 = get_most_4_category()
@@ -223,7 +226,7 @@ def blog_category(request):
     }
     return render(request,'fillow/cms/blog-category.html',context)
 
-from .models import AdditionalInform
+
 from django.core.files.storage import FileSystemStorage
 
 def app_profile(request):
@@ -263,6 +266,7 @@ def app_profile(request):
         "phone":inform.phone,
         "introduce":inform.introduce,
         "img":inform.image,
+        "masking_name":request.user.first_name[1:],
     }
     
     return render(request,'fillow/apps/app-profile.html',context)
@@ -291,7 +295,9 @@ def email_compose(request):
     
     context={
         "page_title":"이메일 전송",
-        "email_compose_tpl": email_compose_tpl
+        "email_compose_tpl": email_compose_tpl,
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     if request.method == "POST":
         form = EmailComposeForm(request.POST)
@@ -320,7 +326,9 @@ def email_compose_tpl(request):
         return redirect("fillow:home")
     
     context={
-        "page_title":"전송 템플릿"
+        "page_title":"전송 템플릿",
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     if request.method == "POST":
         form = EmailComposeTplForm(request.POST)
@@ -344,7 +352,9 @@ def email_inbox(request):
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     context={
-        "page_title":"받은 이메일"
+        "page_title":"받은 이메일",
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     return render(request,'fillow/apps/email/email-inbox.html',context)
 
@@ -354,7 +364,9 @@ def email_read(request):
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     context={
-        "page_title":"내용 보기"
+        "page_title":"내용 보기",
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     return render(request,'fillow/apps/email/email-read.html',context)
 
@@ -364,14 +376,18 @@ def email_sent(request):
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     context={
-        "page_title":"보낸 이메일"
+        "page_title":"보낸 이메일",
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     return render(request,'fillow/apps/email/email-sent.html',context)
 
 
 def faq(request):
     context={
-        "page_title":"FAQ"
+        "page_title":"FAQ",
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     return render(request,'fillow/apps/cs/faq.html',context)
 
@@ -414,7 +430,7 @@ def qna(request):
     else:
         title = request.GET.get("title1")
         status = request.GET.get("status")
-        if title is None and status is None:
+        if title is None:
             Qnas = Qnas.all()
         else:
             if status=="---":
@@ -466,6 +482,8 @@ def qna(request):
         "Qnas":qnas_page,
         "title":title,
         "status":status,
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     return render(request,'fillow/apps/cs/qna.html',context)
     
@@ -481,6 +499,8 @@ def qna_details(request, id):
     context={
         "page_title":"Q&A",
         "qna":qna,
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     
     return render(request, 'fillow/apps/cs/qna_details.html',context)
@@ -493,6 +513,8 @@ def qna_details2(request, id):
     context={
         "page_title":"Q&A",
         "qna":qna,
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     if request.method == "POST":
         action = request.POST.get("btn-act")
@@ -519,7 +541,9 @@ def schedule(request):
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     context={
-        "page_title":"일정 관리"
+        "page_title":"일정 관리",
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     
     context['schedule_data'] = get_schedule()
@@ -533,7 +557,9 @@ def app_calender(request):
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     context={
-        "page_title":"일정 수정하기"
+        "page_title":"일정 수정하기",
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
     }
     return render(request,'fillow/apps/app-calendar.html',context)
 
@@ -963,7 +989,13 @@ def upload_file(request):
             return redirect("fillow:index")
     else:
         form = DocumentForm()
-    return render(request, 'fillow/pages/upload.html', {'form': form})
+        
+    context={
+        'form':form,
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
+    }
+    return render(request, 'fillow/pages/upload.html', context)
 
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView, FormView
