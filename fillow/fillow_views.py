@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import views
 from .models import AdditionalInform
+from .gpt import process_file
 
 # 분류된 이메일 현황 받기
 def get_most_4_category():
@@ -83,23 +84,23 @@ def home(request):
 
 from .models import AdditionalInform
 def index(request):
-    
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
     if request.user.is_authenticated:
         # 로그인이 된 상태에서 해당 유저의 id가 fillow_additionalinform 테이블의 user_ptr_id에 존재하는지 확인
         if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
             # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
             return redirect('fillow:additional_info')
-    else:
-        return redirect('fillow:home')
+    most4 = get_most_4_category()
     context={
         "page_title":"",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
     
-    most4 = get_most_4_category()
-    
     context.update(most4)
+        
     return render(request,'fillow/index.html', context)
 
 
@@ -923,12 +924,23 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import views
+from django.contrib import messages
 
 def page_register(request):
     if request.method == "POST":
         user_form = UserForm(request.POST)
         additional_form = AdditionalInformForm(request.POST)
         if user_form.is_valid() and additional_form.is_valid():
+            # 이메일 중복되는 경우 안되게 가입 안되게 만들기
+            email = request.POST['email']
+            if User.objects.filter(email=email).exists():
+                context={
+                    'user_form': user_form, 
+                    'additional_form': additional_form,
+                    'msg': "이미 존재하는 이메일입니다."
+                }
+                return render(request, "fillow/pages/page-register.html", context)
+            
             user = user_form.save()
             additional_inform = additional_form.save(commit=False)
             additional_inform.user = user
@@ -1010,8 +1022,13 @@ def upload_file(request):
                     
             headers = ['file_name','Subject','Date','From','To','Cc','text_content']
             result = emlExtracter.prcessing_dir(headers, eml_name)
-            print(result['text_content'])
-            process_file(result['text_content'])
+            # print(result['text_content'])
+            
+            gpt_result = process_file(result['text_content'])
+            
+            reply_req_yn = gpt_result.get('회신요청여부','')
+            reply_req_yn = True if reply_req_yn == 'Y' else False
+            
             # text=translate(result['text_content'])
             # print("translate text",text)
             # detect_spam(text)
@@ -1023,7 +1040,14 @@ def upload_file(request):
             email_from=result.get('From', ''),
             email_to=result.get('To', ''),
             email_cc=result.get('Cc', ''),
-            email_text_content=result.get('text_content', '')
+            email_text_content=result.get('text_content', ''),
+            category = gpt_result.get('카테고리',''),
+            from_company = gpt_result.get('회사',''),
+            from_dept = gpt_result.get('부서',''),
+            from_name = gpt_result.get('이름',''),
+            reply_req_yn = reply_req_yn,
+            reply_start_date = result.get('Date',''),
+            reply_end_date = gpt_result.get('회신마감일자',''),
             )
 
             email_instance.save()
