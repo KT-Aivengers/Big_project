@@ -55,103 +55,17 @@ def get_schedule(request):
     # DB에서 일정 불러오기
     
     emails = Email.objects.filter(user_id=request.user.id, reply_req_yn=True)
-    emails_list = [
+    schedule_list = [
     {
         'pk':email.id,
         'title': email.category + " / " + email.email_from,
         'start': email.reply_start_date.strftime('%Y-%m-%d'),
         'end': (email.reply_end_date + datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
+        'category': email.category,
     } for email in emails
     ]
     
-    schedule_list = emails_list +  [
-        
-        {
-            'pk': 1,
-            'title': '감사인사',
-            'start': '2023-12-25',
-            'end': '2023-12-26',
-            'category': '감사인사',
-        },
-        {
-            'pk': 2,
-            'title': '결재승인',
-            'start': '2023-12-21',
-            'end': '2023-12-27',
-            'category': '결재승인',
-        },
-        {
-            'pk': 3,
-            'title': '공지',
-            'start': '2023-12-10',
-            'end': '2023-12-15',
-            'category': '공지',
-        },
-        {
-            'pk': 4,
-            'title': '보고',
-            'start': '2023-12-6',
-            'end': '2023-12-28',
-            'category': '보고',
-        },
-        {
-            'pk': 5,
-            'title': '스크랩',
-            'start': '2023-12-27',
-            'end': '2023-12-31',
-            'category': '스크랩',
-        },
-        {
-            'pk': 6,
-            'title': '진행업무',
-            'category': '진행업무',
-        },
-        {
-            'pk': 7,
-            'title': '휴가',
-            'category': '휴가',
-        },
-        {
-            'pk': 8,
-            'title': '기타',
-            'category': '기타',
-        },
-    ]
     
-    # schedule_list = [
-    #     # {
-    #     #     'title' 제목
-    #     #     'start' 시작일
-    #     #     'end' 종료일
-    #     #     'url' 클릭 시 이동할 url
-    #     #     'groupID' 같이 움직일 일정 설정(쓸 일 없을 듯?)
-    #     #     'className' 설정할 클래스
-    #     # }
-    #     {
-    #         'title': '크리스마스',
-    #         'start': '2023-12-25',
-    #         'end': '2023-12-26',
-    #         # 'className': 'bg-danger',
-    #     },
-    #     {
-    #         'title': '연락 바람',
-    #         'start': '2023-12-21',
-    #         'end': '2023-12-27',
-    #     },
-    #     {
-    #         'title': '이메일 페이지로',
-    #         'start': '2023-12-10',
-    #         'end': '2023-12-15',
-    #         # 'url': 'http://127.0.0.1:8000/email-inbox/',
-    #         # 'className': 'bg-info',
-    #     },
-    #     {
-    #         'title': 'AI가 생성한 일정1',
-    #     },
-    #     {
-    #         'title': 'AI가 생성한 일정2',
-    #     }
-    # ]
     return schedule_list
 
 
@@ -667,7 +581,7 @@ def schedule(request):
     
     # 받아온 일정 리스트에서 start 속성이 없는(배정이 되지 않은) 일정 분리
     for schedule in schedule_list:
-        if (schedule.get('start')):
+        if (schedule.get('end')):
             in_calendar.append(schedule)
         else:
             not_in_calendar.append(schedule)
