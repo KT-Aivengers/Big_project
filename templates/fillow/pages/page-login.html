@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
 {% load socialaccount %}
 {% providers_media_js %}
 <head>
@@ -40,60 +40,66 @@
 
 <body>
 	<div class="fix-wrapper">
-		  <div class="container">
-			  <div class="row justify-content-center">
-				  <div class="col-lg-5 col-md-6">
-					  <div class="card mb-0 h-auto">
-						  <div class="card-body">
-							  <div class="text-center mb-3">
-								  <a href="{% url 'fillow:home' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
-							  </div>
-							  <h4 class="text-center mb-4">서비스 사용을 위해 로그인해주세요</h4>
-							  <form action="" method="POST">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-5 col-md-6">
+					<div class="card mb-0 h-auto">
+						<div class="card-header">
+							<a class="nav-link bell dz-theme-mode" href="javascript:void(0);">
+								<i id="icon-light" class="fas fa-sun"></i>
+								<i id="icon-dark" class="fas fa-moon"></i>
+							</a>
+						</div>
+						<div class="card-body">
+							<div class="text-center mb-3">
+								<a href="{% url 'fillow:home' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
+							</div>
+							<h4 class="text-center mb-4">서비스 사용을 위해 로그인해주세요</h4>
+							<form action="" method="POST">
 									{% csrf_token %}
 									{{form.as_p}}
-								  {% comment %} <div class="form-group mb-4">
-									  <label class="form-label" for="username">사용자 ID</label>
-									  <input type="text" class="form-control" placeholder="아이디를 입력하세요" id="username">
-								  </div>
-								  <div class="mb-sm-4 mb-3 position-relative">
-									  <label class="form-label" for="dlab-password">비밀번호</label>
-									  <input type="password" id="dlab-password" class="form-control" placeholder="비밀번호를 입력하세요">
-									  <span class="show-pass eye">
-										  <i class="fa fa-eye-slash"></i>
-										  <i class="fa fa-eye"></i>
-									  </span>
-								  </div> {% endcomment %}
-								  <div class="form-row d-flex flex-wrap justify-content-between mb-2">
-									  <div class="form-group mb-sm-4 mb-1">
-										  <div class="form-check custom-checkbox ms-1">
-											  <input type="checkbox" class="form-check-input" id="basic_checkbox_1">
-											  <label class="form-check-label" for="basic_checkbox_1">로그인 정보 기억하기</label>
-										  </div>
-									  </div>
-									  <div class="form-group ms-2">
-										  <a href="{% url 'fillow:page-forgot-password' %}">비밀번호 찾기</a>
-									  </div>
-								  </div>
-								  <div class="text-center">
-									  <button type="submit" class="btn btn-primary btn-block">로그인</button>
-								  </div>
+								{% comment %} <div class="form-group mb-4">
+									<label class="form-label" for="username">사용자 ID</label>
+									<input type="text" class="form-control" placeholder="아이디를 입력하세요" id="username">
+								</div>
+								<div class="mb-sm-4 mb-3 position-relative">
+									<label class="form-label" for="dlab-password">비밀번호</label>
+									<input type="password" id="dlab-password" class="form-control" placeholder="비밀번호를 입력하세요">
+									<span class="show-pass eye">
+										<i class="fa fa-eye-slash"></i>
+										<i class="fa fa-eye"></i>
+									</span>
+								</div> {% endcomment %}
+								<div class="form-row d-flex flex-wrap justify-content-between mb-2">
+									<div class="form-group mb-sm-4 mb-1">
+										<div class="form-check custom-checkbox ms-1">
+											<input type="checkbox" class="form-check-input" id="basic_checkbox_1">
+											<label class="form-check-label" for="basic_checkbox_1">로그인 정보 기억하기</label>
+										</div>
+									</div>
+									<div class="form-group ms-2">
+										<a href="{% url 'fillow:page-forgot-password' %}">비밀번호 찾기</a>
+									</div>
+								</div>
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary btn-block">로그인</button>
+								</div>
 
-								  {% comment %} 구글 로그인  {% endcomment %}
-								  <a role="button" class="btn btn-outline-dark btn-block btn-sm google" href="{% provider_login_url 'google' %}">
+								{% comment %} 구글 로그인  {% endcomment %}
+								<a role="button" class="btn btn-outline-dark btn-block btn-sm google" href="{% provider_login_url 'google' %}">
 									<i class="fa-brands fa-google"></i> Login with Google
-								  </a>
-								  {% comment %}  {% endcomment %}
-							  </form>
-							  <div class="new-account mt-3">
-								  <p>계정이 없으신가요? <a class="text-primary" href="{% url 'fillow:page-register' %}">회원가입</a></p>
-							  </div>
-						  </div>
-					  </div>
-				  </div>
-			  </div>
-		  </div>
-	  </div>
+								</a>
+								{% comment %}  {% endcomment %}
+							</form>
+							<div class="new-account mt-3">
+								<p>계정이 없으신가요? <a class="text-primary" href="{% url 'fillow:page-register' %}">회원가입</a></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 <!--**********************************
 	Scripts

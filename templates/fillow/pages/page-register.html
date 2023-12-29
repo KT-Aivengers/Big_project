@@ -42,16 +42,22 @@
 
 <body>
 	<div class="fix-wrapper">
-		 <div class="container">
-			 <div class="row justify-content-center">
-				 <div class="col-lg-5 col-md-6">
-					 <div class="card mb-0 h-auto">
-						 <div class="card-body">
-							 <div class="text-center mb-3">
-								 <a href="{% url 'fillow:home' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
-							 </div>
-							 <h4 class="text-center mb-4">회원가입</h4>
-							 <form action="" method="POST">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-5 col-md-6">
+					<div class="card mb-0 h-auto">
+						<div class="card-header">
+							<a class="nav-link bell dz-theme-mode" href="javascript:void(0);">
+								<i id="icon-light" class="fas fa-sun"></i>
+								<i id="icon-dark" class="fas fa-moon"></i>
+							</a>
+						</div>
+						<div class="card-body">
+							<div class="text-center mb-3">
+								<a href="{% url 'fillow:home' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
+							</div>
+							<h4 class="text-center mb-4">회원가입</h4>
+							<form action="" method="POST">
 								{% csrf_token %}
 								{{ user_form }}
 								{{ additional_form }}
