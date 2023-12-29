@@ -55,6 +55,10 @@
         background-color: #c8c8c8 !important;
     }
 
+    [data-theme-version=dark] .swal2-title {
+        color: #fff;
+    }
+
 </style>
 {% endblock %}
         
@@ -385,7 +389,7 @@
 
                 Swal.fire({
                     text: "이 일정에 어떤 작업을 하시겠습니까?",
-                    icon: "warning",
+                    icon: "info",
                     showCloseButton: true,
                     showDenyButton: true,
                     showCancelButton: cancelButton,
@@ -397,7 +401,19 @@
                     cancelButtonColor: '#15c08c',
                 }).then(function (result) {
                     if (result.isConfirmed) {
-                        info.event.remove();
+                        Swal.fire({
+                            text: '해당 일정이 삭제됩니다',
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "네",
+                            cancelButtonText: "아니오",
+                            confirmButtonColor: '#15c08c',
+                            cancelButtonColor: '#fc2e53',
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                info.event.remove();
+                            }
+                        });
                     } else if (result.isDenied) {
                         Swal.fire({
                             title: '일정 수정하기',
@@ -409,7 +425,18 @@
                             showCancelButton: true,
                             confirmButtonText: '수정',
                             cancelButtonText: '취소',
-                            didOpen: () => {
+                            confirmButtonColor: '#15c08c',
+                            cancelButtonColor: '#fc2e53',
+
+                            preConfirm: function () {
+                                var title = document.getElementById('title').value;
+                                if (!title) {
+                                    Swal.showValidationMessage('일정 제목을 입력해주세요.');
+                                }
+                                return title;
+                            },
+                            
+                            didOpen : function() {
                                 $('#date-range').daterangepicker({
                                     opens: 'left',
                                     startDate: defaultStart,
@@ -440,11 +467,28 @@
                                 }
                                 info.event.setStart(changedStart);
                                 info.event.setEnd(changedEnd);
-                                Swal.fire('성공적으로 수정하였습니다', '', 'success');
+                                Swal.fire({
+                                    text: '성공적으로 수정하였습니다',
+                                    icon: 'success',
+                                    confirmButtonText: "확인",
+                                    confirmButtonColor: '#15c08c',  
+                                });
                             }
                         });
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        window.location.href = '{% url "fillow:email_list" %}' + `${info.event.extendedProps.pk}`;
+                        Swal.fire({
+                            text: '해당 이메일 페이지로 이동합니다',
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "네",
+                            cancelButtonText: "아니오",
+                            confirmButtonColor: '#15c08c',
+                            cancelButtonColor: '#fc2e53',
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                window.location.href = '{% url "fillow:email_list" %}' + `${info.event.extendedProps.pk}`;
+                            }
+                        });
                     }
                 });
             },
