@@ -2,15 +2,6 @@
 {% load static %}
         
 {% block additional_css %}
-<script>
-    function scrollToAboutSection() {
-        document.getElementById('about-section').scrollIntoView({
-            behavior: 'smooth'
-        });
-    }
-</script>
-    
-
 <style>
     .landing-section {
         width: 100%;
@@ -394,4 +385,13 @@
 <!--**********************************
     Content body end
 ***********************************-->
+{% endblock %}
+{% block additional_js %}
+<script>
+    function scrollToAboutSection() {
+        document.getElementById('about-section').scrollIntoView({
+            behavior: 'smooth'
+        });
+    }
+</script>
 {% endblock %}
