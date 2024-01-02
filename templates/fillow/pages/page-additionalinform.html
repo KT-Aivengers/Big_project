@@ -55,9 +55,9 @@
 						</div>
 						<div class="card-body">
 							<div class="text-center mb-3">
-								<a href="{% url 'fillow:index' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" width="200" height="200" alt=""></a>
+								<a href="{% url 'fillow:home' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
 							</div>
-							<h4 class="text-center mb-4">서비스 이용을 위해 가입해주세요</h4>
+							<h4 class="text-center mb-4">서비스 이용을 위해 추가 정보를 입력해주세요</h4>
 							<form action="" method="POST">
 								{% csrf_token %}
 								{{ form }}
@@ -67,7 +67,7 @@
 								</div>
 							</form>
 							<div class="new-account mt-3">
-								<p>계정이 있으신가요? <a class="text-primary" href="{% url 'fillow:page-login' %}">로그인</a></p>
+								<p>다른 계정으로 로그인하기 <a class="text-primary" href="{% url 'fillow:page-login' %}">로그인</a></p>
 							</div>
 						</div>
 					</div>
