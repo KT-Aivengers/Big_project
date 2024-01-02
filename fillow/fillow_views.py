@@ -1097,6 +1097,13 @@ class EmailListView(ListView):
         page_number = self.request.GET.get('page')
         self.page_obj = self.paginator.get_page(page_number)
         return self.page_obj.object_list
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        unread_email_count = Email.objects.filter(
+            user=self.request.user, read=False
+        ).count()
+        context['unread_email_count'] = unread_email_count
+        return context
 
     def render_to_response(self, context, **response_kwargs):
         context.update({
@@ -1117,7 +1124,13 @@ class EmailListView_Trash(ListView):
         page_number = self.request.GET.get('page')
         self.page_obj = self.paginator.get_page(page_number)
         return self.page_obj.object_list
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        unread_email_count = Email.objects.filter(
+            user=self.request.user, read=False
+        ).count()
+        context['unread_email_count'] = unread_email_count
+        return context
     def render_to_response(self, context, **response_kwargs):
         context.update({
             'paginator': self.paginator,
@@ -1129,11 +1142,15 @@ class EmailDetailView(DetailView):
     model = Email
     #template_name = 'fillow/test.html'
     template_name = 'fillow/apps/email/email-read.html'  # 수정: template_name을 read.html로 변경
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # context['attachments'] = self.object.email_attachments  # 첨부파일 추가
+        if not self.object.read:
+            self.object.read = True
+            self.object.save()
         return context
+
 
 def email_trash(request, pk):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
@@ -1148,6 +1165,7 @@ def email_trash(request, pk):
         return redirect("fillow:email-list-trash")
 
     return redirect("fillow:email-list-trash")
+
 
 class EmailUpdateView(UpdateView):
     model = Email
