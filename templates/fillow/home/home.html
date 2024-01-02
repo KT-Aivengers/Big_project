@@ -12,6 +12,48 @@
     
 
 <style>
+    .landing-section {
+        width: 100%;
+        padding: 20px;
+    }
+    
+    .feature {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-direction: row;
+        height : 40em ;
+        max-width : 110% ;
+    }
+    
+    .feature-image {
+        width: 50%;
+        height: auto;
+        margin-right: 20px;
+    }
+    
+    .feature-description {
+        width: 50%;
+    }
+    
+    .feature-description h3 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .feature-description p {
+        font-size: 16px;
+    }
+
+    .feature-reverse {
+        flex-direction: row-reverse; /* 이미지와 텍스트의 순서를 반대로 */
+    }
+    
+    .feature-reverse .feature-description {
+        margin-right: 20px; /* 설명과 이미지 사이의 간격 */
+        margin-left: 0;
+    }
+
     .popover-test {
         margin-top: 3%%; /* 위쪽 마진 조정 */
         background-color: #51f5ae; /* 에메랄드 색상 코드 */
@@ -98,11 +140,11 @@
         background-image: url("{% static 'fillow/images/background.png'%}");
         background-size: cover;
         background-position: center top;
-        height: 80vh;
+        height: 90vh;
         color: black;
         text-align: center;
         animation: moveBackground 30s ease-in-out infinite;
-        margin-top: 3rem !important;
+        margin-top: 0.5rem !important;
     }
 
     [data-theme-version=dark] .background {
@@ -143,7 +185,7 @@
 
     #about-section {
         padding: 5em;
-        background-color: #007bff;
+        background-color: ;
         /* 추가적인 스타일링 */
     }
     
@@ -208,9 +250,7 @@
                                 <div class="modal-body">
                                     <h5>연락처</h5>
                                     <p><a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="이메일주소" data-bs-content="cjaylee823@gmail.com">E-mail</a>            
-                                    <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="전화번호" data-bs-content="02-1234-1234">Tel</a></p>              
-                                
-                                                          
+                                    <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="전화번호" data-bs-content="02-1234-1234">Tel</a></p>                          
                                 </div>
                                 <hr>  
                                 <p><h3>Aivengers 팀원소개</h3></p>
@@ -221,14 +261,42 @@
                                     <img src="{% static 'fillow/images/profile/seyoonprofile.png' %}" alt="팀원 이름" class="team-member-photo">
                                     <div class="team-member-info">
                                         <p class="team-member-name">김세윤</p>
-                                        <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="팀장" data-bs-content="세윤해줘">소개</a>
+                                        <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="팀장,BE,AI 그리고 기도" data-bs-content="컴퓨터님이 안된다고 하시면 니 잘못인거다">소개</a>
                                     </div>
                                 </div>
                                 <div class="team-member">
                                     <img src="{% static 'fillow/images/profile/minseokprofile.jpg' %}" alt="팀원 이름" class="team-member-photo">
                                     <div class="team-member-info">
                                         <p class="team-member-name">김민석</p>
-                                        <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="밤송이Dad" data-bs-content="세윤해줘">소개</a>
+                                        <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="기획,FE" data-bs-content="chatGPT는 진리다">소개</a>
+                                    </div>
+                                </div>
+                                <div class="team-member">
+                                    <img src="{% static 'fillow/images/profile/youngsilprofile.png' %}" alt="팀원 이름" class="team-member-photo">
+                                    <div class="team-member-info">
+                                        <p class="team-member-name">박영실</p>
+                                        <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="BE, AI" data-bs-content="Aivengers 모두 고생했어요!">소개</a>
+                                    </div>
+                                </div>
+                                <div class="team-member">
+                                    <img src="{% static 'fillow/images/profile/donghyunprofile.jpg' %}" alt="팀원 이름" class="team-member-photo">
+                                    <div class="team-member-info">
+                                        <p class="team-member-name">송동현</p>
+                                        <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="BE" data-bs-content="모두 취업 성공하길 기원합니다">소개</a>
+                                    </div>
+                                </div>
+                                <div class="team-member">
+                                    <img src="{% static 'fillow/images/profile/jaeyoonprofile.png' %}" alt="팀원 이름" class="team-member-photo">
+                                    <div class="team-member-info">
+                                        <p class="team-member-name">이재윤</p>
+                                        <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="기획,FE,AI 그리고 열띤 응원" data-bs-content="BTS 봉준호 손흥민 Aivengers let's go">소개</a>
+                                    </div>
+                                </div>
+                                <div class="team-member">
+                                    <img src="{% static 'fillow/images/profile/seongeopprofile.png' %}" alt="팀원 이름" class="team-member-photo">
+                                    <div class="team-member-info">
+                                        <p class="team-member-name">황성업</p>
+                                        <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="BE, FE(찍먹)" data-bs-content="한국인은 wrtn을 쓰자. 저 빼고 다들 취뽀하세요...">소개</a>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -257,15 +325,36 @@
             
         </div>
     </div>
-    <div id="about-section">
-        <div class="content-body default-height home">
-            <h2>회사 소개</h2>
-            <p>여기에 회사에 대한 정보를 적습니다...</p>
-            <!-- 추가적인 내용 -->
+</div>
+
+<div id =about-section class="landing-section">
+    <!-- 협재씨에 대한 소개 -->
+    <div class="feature card">
+        <img src="{% static 'fillow/images/profile/aboutdiv2.png' %}" alt="협재씨 소개" class="feature-image">
+        <div class="feature-description">
+            <h3>HyeopJaeSea란?</h3>
+            <p>협재씨는 이메일이 쌓여 녹조빛으로 변한 이메일 홍수 속에서 당신의 디지털 바다를 제주도 협재해변처럼 맑은 에메랄드빛으로 변화시켜줄 이메일 자동 분류 서비스입니다. 현대 직장인의 업무는 대부분 이메일을 통해 이루어지고, 이 과정에서 대량의 이메일을 처리하게 됩니다. 바쁜 업무 중에 어떤 이메일이 중요한지 판단하는 것은 매일 하는 일이지만 에너지를 소모합니다. 협재씨는 사용자의 데이터를 기반으로 AI가 업무 패턴을 분석하여, 중요한 이메일을 빠르고 정확하게 분류해드립니다. AI 모델을 기반으로 한 협재씨 서비스는 사용자가 상세히 입력한 업무 정보에 따라 더욱 정확한 분류를 제공합니다.</p>
+        </div>
+    </div>
+
+    <!-- 메인기능 1: 메일 자동 분류 시스템 -->
+    <div class="feature feature-reverse card">
+        <img src="{% static 'fillow/images/profile/aboutdiv2.png' %}" alt="메일 자동 분류 시스템" class="feature-image">
+        <div class="feature-description">
+            <h3>스마트한 AI 이메일 분류기</h3>
+            <p>협재씨의 AI 이메일 분류기는 정해진 카테고리에 따라 이메일을 자동으로 분류합니다. 하나 이상의 이메일 계정을 연동하면, AI 모델이 업무 우선순위에 맞춰 이메일을 분류해드립니다. 프로 협재씨를 사용하시면 가중치 설정과 추가적인 분류 카테고리를 직접 설정하실 수 있어, 더욱 맞춤화된 이메일 관리 경험을 제공합니다.</p>
+        </div>
+    </div>
+
+    <!-- 메인기능 2: 자동 스케쥴러 시스템 -->
+    <div class="feature card">
+        <img src="{% static 'fillow/images/profile/aboutdiv2.png' %}" alt="자동 스케쥴러 시스템" class="feature-image">
+        <div class="feature-description">
+            <h3>일정 관리, 이제는 자동으로</h3>
+            <p>이메일 분류 후 일정이 필요한 메일들은 자동으로 리스트업되어 스케쥴링을 간편하게 해드립니다. 언제 회신이 필요한지, 회의가 몇시인지, 내가 Action을 취해야할 게 무엇인지 협재씨와 함께라면 번거로운 일정 관리도 손쉽게! 이제 협재씨를 통해 효율적인 시간 관리와 생산적인 업무 환경을 경험해보세요.</p>
         </div>
     </div>
 </div>
-
 
 <!--**********************************
     Content body end
