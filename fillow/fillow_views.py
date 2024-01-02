@@ -1139,9 +1139,22 @@ class EmailListView_Trash(ListView):
         return super().render_to_response(context, **response_kwargs)
     
 class EmailDetailView(DetailView):
+
     model = Email
     #template_name = 'fillow/test.html'
     template_name = 'fillow/apps/email/email-read.html'  # 수정: template_name을 read.html로 변경
+    
+    def dispatch(self, request, *args, **kwargs):
+        # Get the email object
+        email = self.get_object()
+
+        # Check if the email belongs to the logged-in user
+        if email.user != self.request.user:
+            # If not, redirect to a different page (e.g., email list)
+            return redirect('fillow:email_list')  # Adjust the URL name as needed
+
+        # If the email belongs to the user, proceed with the normal dispatch
+        return super().dispatch(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
