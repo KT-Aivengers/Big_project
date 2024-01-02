@@ -187,10 +187,6 @@
 												{% endfor %}
 											</div>
 										</div>
-										<div class="card-footer border-0 pt-0">
-											<a href="javascript:void(0);" class="btn btn-outline-primary btn-rounded d-block">태그 설정</a>		
-											
-										</div>
 									</div>
 								</div>
 								<!-- 이메일 분류 현황 끝 -->
@@ -324,42 +320,43 @@
 		var options = {
         	series: count,
         	chart: {
-        	type: 'pie',
-			height:230,
-			chart: {
-				fontFamily: 'Noto Sans KR, sans-serif',
-				fontSize: '14px',
-		},
-        },
-		labels: labels,
+        		type: 'pie',
+				height:230,
+				chart: {
+					fontFamily: 'Noto Sans KR, sans-serif',
+					fontSize: '14px',
+				},
+        	},
+			labels: labels,
 			dataLabels:{
 				enabled: false
-		},
-		stroke: {
-        width: 0,
-        },
-		colors:['var(--primary)', '#26E023', '#61CFF1','#FFDA7C','#FF86B1'],
-		legend: {
-            position: 'bottom',
-			show: false
-        },
-        responsive: [{
-          	breakpoint: 1800,
-          	options: {
-           	chart: {
-			  	height:200
 			},
-        }
-        },
-		{
-          	breakpoint: 1800,
-         	options: {
-           	chart: {
-			  	height:200
+			stroke: {
+				width: 0,
 			},
-        }
-        }
-		]
+			colors:color = [
+				"#fc2e53",
+				"#ffbf00",
+				"#ffdc00",
+				"#09bd3c",
+				"#15c08c",
+				"#ffa7d7",
+				"#d653c1",
+				"#312a2a",
+				"#c8c8c8",
+			],
+			legend: {
+				position: 'bottom',
+				show: false
+			},
+			responsive: [{
+				breakpoint: 1800,
+				options: {
+					chart: {
+						height:200
+					},
+        		}
+        	}]
         };
 
         var chart = new ApexCharts(document.querySelector("#emailchart"), options);

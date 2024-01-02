@@ -18,16 +18,20 @@ from .models import AdditionalInform
 def get_most_4_category():
     # 이 부분은 DB에서 불러오기
     total = 60
-    labels = ["요청", "결재승인", "작업완료", "안내"]
-    count = [25, 10, 9, 6]
+    labels = ["결재승인", "휴가", "진행업무", "회의", "보고", "스크랩", "공지", "감사인사", "기타"]
+    count = [25, 10, 9, 6, 0, 1, 0, 0, 15]
     
     # 그래프 색상
     color = [
-        "var(--primary)",
-        "#26E023",
-        "#61CFF1",
-        "#FFDA7C",
-        "#FF86B1",
+        "#fc2e53",
+		"#ffbf00",
+		"#ffdc00",
+		"#09bd3c",
+		"#15c08c",
+		"#ffa7d7",
+		"#d653c1",
+		"#312a2a",
+		"#c8c8c8",
     ]
     
     sum_ = sum(count)
