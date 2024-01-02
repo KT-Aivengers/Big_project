@@ -187,3 +187,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# 비밀번호 초기화 이메일 설정
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Gmail SMTP 서버 호스트
+EMAIL_PORT = 587  # Gmail SMTP 포트
+EMAIL_USE_TLS = True  # TLS 보안 사용
+EMAIL_HOST_USER = 'kms160183@gmail.com'  # 발신자 Gmail 이메일
+EMAIL_HOST_PASSWORD = 'ygpd jexr ocyv rjnu'

@@ -57,13 +57,11 @@
 	 					    <div class="text-center mb-3">
 	 						    <a href="{% url 'fillow:index' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
 	 					    </div>
-	 					    <h4 class="text-center mb-4">비밀번호 초기화</h4>
-							<form method="post">
-								{% csrf_token %}
-								{{ form.as_p }}
-								<button type="submit" class="btn btn-primary btn-block">비밀번호 초기화 이메일 받기</button>
-							</form>
+	 					    <h4 class="text-center mb-4">이메일로 초기화 링크를 보냈습니다</h4>
 	 				    </div>
+						<div class="card-footer">
+							<button id="back" class="btn btn-primary btn-block">뒤로</button>
+						</div>
 	 			    </div>
 	 		    </div>
 	 	    </div>
@@ -88,6 +86,11 @@
 {% endfor %}
 
 {% block additional_js %}
+<script>
+	document.getElementById('back').addEventListener('click', function() {
+		window.location.href = "{% url 'fillow:page-login' %}";
+	});
+</script>
 {% endblock %}
 </body>
 </html>

@@ -28,47 +28,52 @@
 	<link rel="stylesheet" href="{% static cssurl %}">
 	{% endfor %}
 	{% block additional_css %}
-	<style>
-		[data-theme-version=dark] .logo-auth {
-			content: url("{% static 'fillow/images/logofull_dark.svg' %}")
-		}
-	
-		.logo-auth {
-			width: 20vh;
-		}
-	</style>
 	{% endblock %}
 	
+	<style>
+		.reg-form input[type="text"],
+    	.reg-form input[type="email"],
+    	.reg-form input[type="password"],
+    	.reg-form textarea {
+        margin-bottom: 10px;
+    }
+
+	[data-theme-version=dark] .logo-auth {
+		content: url("{% static 'fillow/images/logofull_dark.svg' %}")
+	}
+
+	.logo-auth {
+		width: 20vh;
+	}
+	</style>
 </head>
 
 <body>
 	<div class="fix-wrapper">
-	    <div class="container">
-	 	    <div class="row justify-content-center">
-	 	 	    <div class="col-lg-5 col-md-6">
-	 	 		    <div class="card mb-0 h-auto">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-5 col-md-6">
+					<div class="card mb-0 h-auto">
 						<div class="card-header">
 							<a class="nav-link bell dz-theme-mode" href="javascript:void(0);">
 								<i id="icon-light" class="fas fa-sun"></i>
 								<i id="icon-dark" class="fas fa-moon"></i>
 							</a>
 						</div>
-	 				    <div class="card-body">
-	 					    <div class="text-center mb-3">
-	 						    <a href="{% url 'fillow:index' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
-	 					    </div>
-	 					    <h4 class="text-center mb-4">비밀번호 초기화</h4>
-							<form method="post">
-								{% csrf_token %}
-								{{ form.as_p }}
-								<button type="submit" class="btn btn-primary btn-block">비밀번호 초기화 이메일 받기</button>
-							</form>
-	 				    </div>
-	 			    </div>
-	 		    </div>
-	 	    </div>
-	    </div>
-    </div>
+						<div class="card-body">
+							<div class="text-center mb-3">
+								<a href="{% url 'fillow:home' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
+							</div>
+                            <p>비밀번호가 성공적으로 변경되었습니다.</p>
+						</div>
+                        <div class="card-footer">
+							<button id="back" class="btn btn-primary btn-block">확인</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 <!--**********************************
@@ -88,6 +93,11 @@
 {% endfor %}
 
 {% block additional_js %}
+<script>
+	document.getElementById('back').addEventListener('click', function() {
+		window.location.href = "{% url 'fillow:page-login' %}";
+	});
+</script>
 {% endblock %}
 </body>
 </html>
