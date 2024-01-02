@@ -553,7 +553,8 @@ from fillow.msgToEml import load
 from .spam_detection import *
 from .gpt import *
 from .translation import *
-
+from datetime import datetime
+import re
 def upload_file(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
@@ -599,9 +600,17 @@ def upload_file(request):
             from_dept = gpt_result.get('부서', '')
             user_dept = user_additional_info.department
             dept_yn = True if from_dept == user_dept else False
-            
+            email_date_tuple = result.get('Date', '')
+            email_date_str = ''.join(map(str, email_date_tuple))
 
-            
+            # Remove all spaces from the date string
+            email_date_str = re.sub(r'\s+', '', email_date_str)
+
+            # Parse the date
+            email_date = datetime.strptime(email_date_str, '%a,%d%b%Y%H:%M:%S%z')
+
+# ...
+
             # text=translate(result['text_content'])
             # print("translate text",text)
             # detect_spam(text)
@@ -609,7 +618,8 @@ def upload_file(request):
             user=request.user,
             email_file_name=result.get('file_name', ''),
             email_subject=result.get('Subject', ''),
-            email_date=result.get('Date', ''),
+            
+            email_date=email_date,
             email_from=result.get('From', ''),
             email_to=result.get('To', ''),
             email_cc=result.get('Cc', ''),

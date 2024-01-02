@@ -140,7 +140,7 @@
                                                             <img class="me-3 rounded" width="70" height="70" alt="image" src="{% static 'fillow/images/avatar/1.jpg' %}">
                                                             <div class="media-body me-2">
                                                                 <h5 class="text-primary mb-0 mt-1">{{ email.email_from }}</h5>
-                                                                <p class="mb-0">{{ email.email_date }}</p>
+                                                                <p class="mb-0">{{ email.email_date|date:"Y M d D H:i" }}</p>
                                                             </div>
                                                         </div>
                                                         <div class="clearfix mb-3">
@@ -151,7 +151,7 @@
                                                     </div>
                                                     <hr>
                                                     <div class="media mb-2 mt-3">
-                                                        <div class="media-body"><span class="pull-end">{{ email.email_date }}</span>
+                                                        <div class="media-body"><span class="pull-end">{{ email.email_date|date:"Y M d D H:i" }}</span>
                                                             <h5 class="my-1 text-primary"> {{ email.email_subject }}</h5>
                                                             <p class="read-content-email">
                                                                 To: {{ email.email_to }}</p>
