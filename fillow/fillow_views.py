@@ -1084,19 +1084,48 @@ from django.views.generic import ListView, DetailView, DeleteView, UpdateView, C
 from django.urls import reverse_lazy
 from .models import Email
 from django.core.paginator import Paginator
-
 class EmailListView(ListView):
     model = Email
     template_name = 'fillow/apps/email/email-inbox.html'
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        
         queryset = queryset.filter(trash=False)
         queryset = queryset.filter(user=self.request.user).order_by('-email_date')
+        search_query = self.request.GET.get('search_query', '')
+        category_filter = self.request.GET.get('category', '')
+        internal_filter = self.request.GET.get('internal', '')
+        internal_filter_d = self.request.GET.get('internal_d', '')
+        
+        if search_query:
+            queryset = queryset.filter(Q(email_subject__icontains=search_query) | Q(email_from__icontains=search_query))
+        
+        
+        if category_filter:
+            queryset = queryset.filter(category=category_filter)
+                
+        if internal_filter in ['0', '1']:
+            internal_filter = int(internal_filter)
+            queryset = queryset.filter(company_yn=internal_filter)
+            
+        if internal_filter_d in ['0', '1']:
+            internal_filter_d = int(internal_filter_d)
+            queryset = queryset.filter(department_yn=internal_filter_d)
+        recipient_filter = self.request.GET.get('recipient', '')
+        if recipient_filter in ['to', 'cc']:
+            user_email = self.request.user.email
+            if recipient_filter == 'to':
+                queryset = queryset.filter(email_to=user_email)
+            elif recipient_filter == 'cc':
+                queryset = queryset.filter(email_cc__contains=user_email)
+
+
         self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
         page_number = self.request.GET.get('page')
         self.page_obj = self.paginator.get_page(page_number)
         return self.page_obj.object_list
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         unread_email_count = Email.objects.filter(
