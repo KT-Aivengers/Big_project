@@ -58,13 +58,15 @@ def get_most_4_category():
 def get_schedule(request):
     user = request.user
     # DB에서 일정 불러오기
-    emails = Email.objects.filter(user=user, reply_req_yn=True)
+    emails = Email.objects.filter(user_id=request.user.id, reply_req_yn=True)
 
     schedule_list = [
         {
-            'title': email.email_subject,
+            'pk':email.id,
+            'title': email.category + " / " + email.email_from,
             'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
             'end': (datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
+            'category': email.category,
         } for email in emails
     ]
     
