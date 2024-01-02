@@ -66,7 +66,7 @@ with open('answers.txt', 'r', encoding='utf-8') as file:
 examples=[]
 for i in range(len(texts)):
     examples.append({"email":texts[i],"answer":answers[i]})
-category="결재승인,휴가,프로젝트/작업,회의,보고,스크랩,공지,감사인사,기타"
+category="결재승인,휴가,진행업무,회의,보고,스크랩,공지,감사인사,기타"
 
 example_prompt = ChatPromptTemplate.from_messages(
     [
