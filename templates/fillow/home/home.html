@@ -2,10 +2,93 @@
 {% load static %}
         
 {% block additional_css %}
+<script>
+    function scrollToAboutSection() {
+        document.getElementById('about-section').scrollIntoView({
+            behavior: 'smooth'
+        });
+    }
+</script>
+    
+
 <style>
+    .popover-test {
+        margin-top: 3%%; /* 위쪽 마진 조정 */
+        background-color: #51f5ae; /* 에메랄드 색상 코드 */
+        border-color: #51f5ae; /* 버튼 테두리 색상도 동일하게 조정 */
+    }
+    
+    .popover-test:hover {
+        background-color: #41f5ae; /* 호버 시 색상 변경 (더 어두운 에메랄드 색) */
+        border-color: #41f5ae;
+    }
+    .team-member {
+        display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+        margin-bottom: 15px;
+        margin-left : 10%; /* 각 팀원 간격 조절 */
+    }
+    
+    .team-member-photo {
+        border-radius: 20%; /* 원형 이미지 */
+        width: 60px; /* 이미지 크기 조절 */
+        height: 60px;
+        margin-right : 10%;
+    }
+    
+    .team-member-info {
+        text-align: left;
+        margin-left : 10%;
+        flex-grow: 2;
+    }
+    
+    .team-member-name {
+        margin-bottom : 0%;
+        font-weight: bold;
+    }
+    
+    .team-member-role {
+        color: #666;
+        font-size: 0.9em;
+    }
+    
     .btn-margin-adjust {
         margin-right: 2rem;
     }
+
+    .col-md-6 {
+        display: flex;
+        justify-content: center; /* 가운데 정렬 */
+        flex-direction: column;/* 가운데 정렬 */
+        max-height: 100%;
+        max-width: 100% ;
+    }
+
+    .landing-wording-container {
+        display: flex;
+        justify-content: center;
+        text-align: left;
+    }
+    
+    /* 기존 .landing-wording 스타일 유지 */
+    .landing-wording {
+        /* 기존 스타일... */
+        text-align: left;
+    }
+    
+    /* 버튼 컨테이너 스타일 */
+    .buttons-container {
+
+        justify-content: center;
+    
+    }
+
+    .small-btn {
+        padding: 0.8em 1.5em;
+        font-size: 10px;
+    }
+    
 
     .home {
         padding-top: 0.5rem !important;
@@ -15,10 +98,11 @@
         background-image: url("{% static 'fillow/images/background.png'%}");
         background-size: cover;
         background-position: center top;
-        height: 85vh;
+        height: 80vh;
         color: black;
         text-align: center;
         animation: moveBackground 30s ease-in-out infinite;
+        margin-top: 3rem !important;
     }
 
     [data-theme-version=dark] .background {
@@ -56,6 +140,13 @@
         color: #007bff; /* 강조할 텍스트의 색상을 변경합니다. */
         font-weight: bold; /* 글씨를 두껍게 합니다. */
     }
+
+    #about-section {
+        padding: 5em;
+        background-color: #007bff;
+        /* 추가적인 스타일링 */
+    }
+    
 
     
     /* 중간 크기의 화면 (태블릿)에 대한 스타일 */
@@ -96,29 +187,81 @@
             <div>
                 <img id="logo" src="{% static 'fillow/images/logofull.svg' %}" alt="HyeopjaeSea" width="200" height="200">
                 <div>
-                    <button type="button" class="btn btn-rounded btn-primary"><span
+                    {% comment %} <button type="button" class="btn btn-rounded btn-primary"><span
                         class="btn-icon-start text-primary"><i class="fa-solid fa-house"></i>
-                    </span>Home</button>
-                    <button type="button" class="btn btn-rounded btn-info"><span
+                    </span>Home</button> {% endcomment %}
+                    <button type="button" class="btn btn-rounded btn-info btn-margin-adjust small-btn" onclick="scrollToAboutSection()" ><span
                         class="btn-icon-start text-info"><i class="fa-solid fa-circle-info"></i>
                     </span>About</button>
-                    <button type="button" class="btn btn-rounded btn-danger"><span
+                    <button type="button" class="btn btn-rounded btn-danger small-btn" data-bs-toggle="modal" data-bs-target="#contactmodal" ><span
                         class="btn-icon-start text-danger"><i class="fa-solid fa-envelope"></i>
                     </span>Contact</button>
+                    <!--Contact 모달 추가-->
+                    <div class="modal fade" id="contactmodal">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Aivengers</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <h5>연락처</h5>
+                                    <p><a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="이메일주소" data-bs-content="cjaylee823@gmail.com">E-mail</a>            
+                                    <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="전화번호" data-bs-content="02-1234-1234">Tel</a></p>              
+                                
+                                                          
+                                </div>
+                                <hr>  
+                                <p><h3>Aivengers 팀원소개</h3></p>
+                                <h5>KT Aivle School 4기 AI트랙 18조</h5>
+                                <br>
+                                <div class="team-member">
+                                
+                                    <img src="{% static 'fillow/images/profile/seyoonprofile.png' %}" alt="팀원 이름" class="team-member-photo">
+                                    <div class="team-member-info">
+                                        <p class="team-member-name">김세윤</p>
+                                        <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="팀장" data-bs-content="세윤해줘">소개</a>
+                                    </div>
+                                </div>
+                                <div class="team-member">
+                                    <img src="{% static 'fillow/images/profile/minseokprofile.jpg' %}" alt="팀원 이름" class="team-member-photo">
+                                    <div class="team-member-info">
+                                        <p class="team-member-name">김민석</p>
+                                        <a href="#" role="button" data-container="body" data-bs-toggle="popover" class="btn btn-sm btn-secondary popover-test" title="밤송이Dad" data-bs-content="세윤해줘">소개</a>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">닫기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>                
             </div>
-            <div class="col-md-6 text-left">
-                <div class="landing-wording text-left">
-                    <h3 class="text-left">휴가 갔다오면 쌓여 있는 이메일..!!!
-                        <br> 생각만해도 머리아프다 😭</h3>                    
-                    <h4>쌓여있는 이메일을 AI기술을 통해 분류해주는 <strong>협재씨</strong>서비스를 사용해보세요!<br>
-                        사용자 데이터기반으로 답장이 필요하거나 중요도 높은 이메일을 분류해주어<br>
-                        여러분이 정말로 중요한 일에만 집중할 수 있도록 도와드리겠습니다!<br><br>자 그럼, Mail 쏟아지는 이메일 홍수 속에서 <br> 중요한 이메일만 남은 에메랄드 빛 <strong>HyeopJaeSea</strong>로 가볼까요?</h4>
+            <div class="col-md-6">
+                <div class="landing-wording-container">
+                    <div class="landing-wording">
+                        <h3 class="text-left">휴가 갔다오면 쌓여 있는 이메일..!!!
+                            <br> 생각만해도 머리아프다 😭</h3>                    
+                        <h4>쌓여있는 이메일을 AI기술을 통해 분류해주는 <strong>협재씨</strong>서비스를 사용해보세요!<br>
+                            사용자 데이터기반으로 답장이 필요하거나 중요도 높은 이메일을 분류해주어<br>
+                            여러분이 정말로 중요한 일에만 집중할 수 있도록 도와드리겠습니다!<br><br>자 그럼, Mail 쏟아지는 이메일 홍수 속에서 <br> 중요한 이메일만 남은 에메랄드 빛 <strong>HyeopJaeSea</strong>로 가볼까요?</h4>
+                    </div>
                 </div>
-                <button type="button"  class="btn btn-primary btn-margin-adjust" onclick="location.href='{% url 'fillow:page-login' %}'" >로그인</button>
-                <button type="button" class="btn btn-warning" onclick="location.href='{% url 'fillow:page-register' %}'">회원가입</button>
+                <div class="buttons-container">
+                    <button type="button" class="btn btn-primary btn-margin-adjust" onclick="location.href='{% url 'fillow:page-login' %}'" >로그인</button>
+                    <button type="button" class="btn btn-warning" onclick="location.href='{% url 'fillow:page-register' %}'">회원가입</button>
+                </div>
             </div>
             
+        </div>
+    </div>
+    <div id="about-section">
+        <div class="content-body default-height home">
+            <h2>회사 소개</h2>
+            <p>여기에 회사에 대한 정보를 적습니다...</p>
+            <!-- 추가적인 내용 -->
         </div>
     </div>
 </div>
