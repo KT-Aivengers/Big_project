@@ -67,6 +67,9 @@
 							<h4 class="text-center mb-4">회원가입</h4>
 							<form action="" method="POST">
 								{% csrf_token %}
+								{% if msg %}
+									<p style="color:red">{{ msg }}</p>
+								{% endif %}
 								{{ user_form }}
 								{{ additional_form }}
 								<br>

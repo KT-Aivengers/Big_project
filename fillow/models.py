@@ -17,7 +17,7 @@ class AdditionalInform(models.Model):
     introduce = models.CharField(max_length=500)
     image = models.ImageField(upload_to="profile/")
     USERNAME_FIELD = 'email'
-    
+    company = models.CharField(max_length=10)
 class Document(models.Model):
     uploaded_file = models.FileField(upload_to='documents/')
     
@@ -33,9 +33,12 @@ class Email(models.Model):
     email_text_content = models.CharField(max_length=10000)
     email_date = models.CharField(max_length=100)
     category = models.CharField(max_length=100)
+    from_company = models.CharField(max_length=100)
+    from_dept = models.CharField(max_length=100)
+    from_name = models.CharField(max_length=100)
     reply_req_yn = models.BooleanField(default=False)
-    reply_start_date = models.DateTimeField(null=True)
-    reply_end_date = models.DateTimeField(null=True)
+    reply_start_date = models.CharField(max_length=100)
+    reply_end_date = models.CharField(max_length=100)
     company_yn = models.BooleanField(default=False)
     department_yn = models.BooleanField(default=False)
     reply_yn = models.BooleanField(default=False)

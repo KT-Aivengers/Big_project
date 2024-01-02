@@ -10,7 +10,17 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 
 class AdditionalInformForm(forms.ModelForm):
-    department = forms.CharField(label = "부서", widget=forms.TextInput(attrs={"class":"form-control"}))
+    
+    DEPARTMENT_CHOICES = [
+        ('개발부', '개발부'),
+        ('영업부', '영업부'),
+        ('마케팅부', '마케팅부'),
+        ('R&D', 'R&D'),
+        ('경영지원부', '경영지원부'),
+    ]
+    
+    company = forms.CharField(label = "회사", widget=forms.TextInput(attrs={"class":"form-control"}))
+    department = forms.ChoiceField(choices=DEPARTMENT_CHOICES, label="부서", widget=forms.Select(attrs={"class":"form-control dropdown-toggle"}))
     phone = forms.CharField(
         label="전화번호",
         max_length=16,
@@ -25,7 +35,7 @@ class AdditionalInformForm(forms.ModelForm):
 
     class Meta:
         model = AdditionalInform
-        fields = ['department', 'phone']
+        fields = ['company','department', 'phone']
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
