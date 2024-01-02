@@ -37,21 +37,35 @@
     	.reg-form textarea {
         margin-bottom: 10px;
     }
+
+	[data-theme-version=dark] .logo-auth {
+		content: url("{% static 'fillow/images/logofull_dark.svg' %}")
+	}
+
+	.logo-auth {
+		width: 20vh;
+	}
 	</style>
 </head>
 
 <body>
 	<div class="fix-wrapper">
-		 <div class="container">
-			 <div class="row justify-content-center">
-				 <div class="col-lg-5 col-md-6">
-					 <div class="card mb-0 h-auto">
-						 <div class="card-body">
-							 <div class="text-center mb-3">
-								 <a href="{% url 'fillow:home' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
-							 </div>
-							 <h4 class="text-center mb-4">회원가입</h4>
-							 <form action="" method="POST">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-5 col-md-6">
+					<div class="card mb-0 h-auto">
+						<div class="card-header">
+							<a class="nav-link bell dz-theme-mode" href="javascript:void(0);">
+								<i id="icon-light" class="fas fa-sun"></i>
+								<i id="icon-dark" class="fas fa-moon"></i>
+							</a>
+						</div>
+						<div class="card-body">
+							<div class="text-center mb-3">
+								<a href="{% url 'fillow:home' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
+							</div>
+							<h4 class="text-center mb-4">회원가입</h4>
+							<form action="" method="POST">
 								{% csrf_token %}
 								{% if msg %}
 									<p style="color:red">{{ msg }}</p>
@@ -59,24 +73,8 @@
 								{{ user_form }}
 								{{ additional_form }}
 								<br>
-								{% comment %} <div class="form-group mb-4">
-									<label class="form-label" for="username">Username</label>
-									<input type="text" class="form-control" placeholder="Enter username" id="username">
-								</div>
-								<div class="form-group mb-4">
-									<label class="form-label" for="email">Email</label>
-									<input type="email" class="form-control" placeholder="hello@example.com" id="email">
-								</div>
-								<div class="mb-sm-4 mb-3 position-relative">
-									<label class="form-label" for="dlab-password">Password</label>
-									<input type="password" id="dlab-password" class="form-control" value="123456">
-									<span class="show-pass eye">
-										<i class="fa fa-eye-slash"></i>
-										<i class="fa fa-eye"></i>
-									</span>
-								</div> {% endcomment %}
 								<div class="text-center">
-									<button type="submit" class="btn btn-primary btn-block">Sign up</button>
+									<button type="submit" class="btn btn-primary btn-block">회원가입</button>
 								</div>
 							</form>
 							<div class="new-account mt-3">

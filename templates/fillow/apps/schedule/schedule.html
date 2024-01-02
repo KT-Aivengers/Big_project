@@ -24,35 +24,52 @@
     }
 
     .감사인사 {
-        background-color: #15c08c !important;
+        background-color: #312a2a !important;
     }
 
     .결재승인 {
-        background-color: #ffa7d7 !important;
-    }
-
-    .공지 {
-        background-color: #09bd3c !important;
-    }
-
-    .보고 {
         background-color: #fc2e53 !important;
     }
 
-    .스크랩 {
-        background-color: #ffbf00 !important;
-    }
-
-    .진행업무 {
+    .공지 {
         background-color: #d653c1 !important;
     }
 
+    .보고 {
+        background-color: #15c08c !important;
+    }
+
+    .스크랩 {
+        background-color: #ffa7d7 !important;
+    }
+
+    .진행업무 {
+        background-color: #ffdc00 !important;
+    }
+
+    .회의 {
+        background-color: #09bd3c !important;
+    }
+
     .휴가 {
-        background-color: #312a2a !important;
+        background-color: #ffbf00 !important;
     }
 
     .기타 {
         background-color: #c8c8c8 !important;
+    }
+
+    [data-theme-version=dark] .swal2-title {
+        color: #fff;
+    }
+
+    .swal2-input {
+        font-size: 14px;
+        width: 350px;
+    }
+
+    [data-theme-version=dark] .end-date {
+        background-color: #15c08c !important;
     }
 
 </style>
@@ -152,7 +169,7 @@
     // 일정에 변경점이 있는지 저장
     var changed = false;
 
-    // 날짜 데이터 파싱
+    // 일정 데이터 파싱
     function dateParsing(schedule) {
         var pk = schedule.extendedProps.pk;
         var title = schedule.title;
@@ -182,7 +199,7 @@
         }
     }
 
-    // 이동된 일정 삭제하기
+    // 이동된 일정 삭제하기(pk값)
     function removeAI(pk) {
         notInCalendar = notInCalendar.filter(function(schedule) {
             return schedule['pk'] != pk;
@@ -288,19 +305,21 @@
                 // extendedProps에서 값을 가져와서 색상 설정
                 let cat = info.event.extendedProps.category
                 if (cat === '감사인사') {
-                    color = '#15c08c';
-                } else if (cat === '결재승인') {
-                    color = '#ffa7d7';
-                } else if (cat === '공지') {
-                    color = '#09bd3c';
-                } else if (cat === '보고') {
-                    color = '#fc2e53';
-                } else if (cat === '스크랩') {
-                    color = '#ffbf00';
-                } else if (cat === '진행업무') {
-                    color = '#d653c1';
-                } else if (cat === '휴가') {
                     color = '#312a2a';
+                } else if (cat === '결재승인') {
+                    color = '#fc2e53';
+                } else if (cat === '공지') {
+                    color = '#d653c1';
+                } else if (cat === '보고') {
+                    color = '#15c08c';
+                } else if (cat === '스크랩') {
+                    color = '#ffa7d7';
+                } else if (cat === '진행업무') {
+                    color = '#ffdc00';
+                } else if (cat === '회의') {
+                    color = '#09bd3c';
+                } else if (cat === '휴가') {
+                    color = '#ffbf00';
                 } else if (cat === '기타') {
                     color = '#c8c8c8';
                 }
@@ -385,7 +404,7 @@
 
                 Swal.fire({
                     text: "이 일정에 어떤 작업을 하시겠습니까?",
-                    icon: "warning",
+                    icon: "info",
                     showCloseButton: true,
                     showDenyButton: true,
                     showCancelButton: cancelButton,
@@ -397,19 +416,42 @@
                     cancelButtonColor: '#15c08c',
                 }).then(function (result) {
                     if (result.isConfirmed) {
-                        info.event.remove();
+                        Swal.fire({
+                            text: '해당 일정이 삭제됩니다',
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "네",
+                            cancelButtonText: "아니오",
+                            confirmButtonColor: '#15c08c',
+                            cancelButtonColor: '#fc2e53',
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                info.event.remove();
+                            }
+                        });
                     } else if (result.isDenied) {
                         Swal.fire({
-                            title: '일정 수정하기',
                             html:
                                 `
+                                <h3>일정 수정하기</h3>
                                 <input id="title" class="swal2-input" value="${defaultTitled}">
                                 <input id="date-range" class="swal2-input">
                                 `,
                             showCancelButton: true,
                             confirmButtonText: '수정',
                             cancelButtonText: '취소',
-                            didOpen: () => {
+                            confirmButtonColor: '#15c08c',
+                            cancelButtonColor: '#fc2e53',
+
+                            preConfirm: function () {
+                                var title = document.getElementById('title').value;
+                                if (!title) {
+                                    Swal.showValidationMessage('일정 제목을 입력해주세요.');
+                                }
+                                return title;
+                            },
+                            
+                            didOpen : function() {
                                 $('#date-range').daterangepicker({
                                     opens: 'left',
                                     startDate: defaultStart,
@@ -440,11 +482,28 @@
                                 }
                                 info.event.setStart(changedStart);
                                 info.event.setEnd(changedEnd);
-                                Swal.fire('성공적으로 수정하였습니다', '', 'success');
+                                Swal.fire({
+                                    text: '성공적으로 수정하였습니다',
+                                    icon: 'success',
+                                    confirmButtonText: "확인",
+                                    confirmButtonColor: '#15c08c',  
+                                });
                             }
                         });
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        window.location.href = '{% url "fillow:email_list" %}' + `${info.event.extendedProps.pk}`;
+                        Swal.fire({
+                            text: '해당 이메일 페이지로 이동합니다',
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "네",
+                            cancelButtonText: "아니오",
+                            confirmButtonColor: '#15c08c',
+                            cancelButtonColor: '#fc2e53',
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                window.location.href = '{% url "fillow:email_list" %}' + `${info.event.extendedProps.pk}`;
+                            }
+                        });
                     }
                 });
             },
