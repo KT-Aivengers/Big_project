@@ -68,7 +68,7 @@
                                 {% csrf_token %}
                                 {% if messages %}
                                     {% for message_list in messages %}
-                                        <p>{{ message_list }}</p>                                    
+                                        <p style="color:red">{{ message_list }}</p>                                    
                                     {% endfor %}
                                 {% endif %}
                                 <p>
