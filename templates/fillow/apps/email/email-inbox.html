@@ -38,26 +38,68 @@
 												class="fa fa-star font-18 align-middle me-2"></i>중요<span
 												class="badge badge-danger text-white badge-sm float-end">47</span>
 										</a>
-										<a href="javascript:void()" class="list-group-item"><i
-												class="mdi mdi-file-document-box font-18 align-middle me-2"></i>임시 보관함</a><a href="javascript:void(0);" class="list-group-item"><i
+										<a href="javascript:void(0);" class="list-group-item"><i
 												class="fa fa-trash font-18 align-middle me-2"></i>휴지통</a>
 									</div>
 									<div class="mail-list rounded overflow-hidden">
 										<div class="intro-title d-flex justify-content-between mt-0">
 											<h5>카테고리</h5>
 										</div>
-										<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
-											Work </a>
-										<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-primary"><i
+												결재승인 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-primary"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
-											Private </a>
-										<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-success"><i
+												휴가 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
-											Support </a>
-										<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-dpink"><i
+												진행업무 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-primary"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
-											Social </a>
+												회의 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												보고 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-primary"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												스크랩 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												공지 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-primary"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												감사인사 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12">
+												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												기타 </a>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
