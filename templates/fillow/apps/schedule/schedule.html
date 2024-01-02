@@ -24,35 +24,35 @@
     }
 
     .감사인사 {
-        background-color: #15c08c !important;
+        background-color: #312a2a !important;
     }
 
     .결재승인 {
-        background-color: #ffa7d7 !important;
-    }
-
-    .공지 {
-        background-color: #09bd3c !important;
-    }
-
-    .보고 {
         background-color: #fc2e53 !important;
     }
 
-    .스크랩 {
-        background-color: #ffbf00 !important;
-    }
-
-    .진행업무 {
+    .공지 {
         background-color: #d653c1 !important;
     }
 
-    .회의 {
+    .보고 {
+        background-color: #15c08c !important;
+    }
+
+    .스크랩 {
+        background-color: #ffa7d7 !important;
+    }
+
+    .진행업무 {
         background-color: #ffdc00 !important;
     }
 
+    .회의 {
+        background-color: #09bd3c !important;
+    }
+
     .휴가 {
-        background-color: #312a2a !important;
+        background-color: #ffbf00 !important;
     }
 
     .기타 {
@@ -305,28 +305,27 @@
                 // extendedProps에서 값을 가져와서 색상 설정
                 let cat = info.event.extendedProps.category
                 if (cat === '감사인사') {
-                    color = '#15c08c';
-                } else if (cat === '결재승인') {
-                    color = '#ffa7d7';
-                } else if (cat === '공지') {
-                    color = '#09bd3c';
-                } else if (cat === '보고') {
-                    color = '#fc2e53';
-                } else if (cat === '스크랩') {
-                    color = '#ffbf00';
-                } else if (cat === '진행업무') {
-                    color = '#d653c1';
-                } else if (cat === '회의') {
-                    color = '#ffdc00';
-                } else if (cat === '휴가') {
                     color = '#312a2a';
+                } else if (cat === '결재승인') {
+                    color = '#fc2e53';
+                } else if (cat === '공지') {
+                    color = '#d653c1';
+                } else if (cat === '보고') {
+                    color = '#15c08c';
+                } else if (cat === '스크랩') {
+                    color = '#ffa7d7';
+                } else if (cat === '진행업무') {
+                    color = '#ffdc00';
+                } else if (cat === '회의') {
+                    color = '#09bd3c';
+                } else if (cat === '휴가') {
+                    color = '#ffbf00';
                 } else if (cat === '기타') {
                     color = '#c8c8c8';
                 }
 
                 info.backgroundColor = color;
                 info.boxShadow = color;
-                info.fon
             },
 
             // 툴팁 설정

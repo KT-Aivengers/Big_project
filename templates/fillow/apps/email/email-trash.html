@@ -31,15 +31,18 @@
 										</div>
 									</div>
 									<div class="mail-list rounded mt-4">
-										<a href="{% url 'fillow:email-inbox' %}" class="list-group-item active"><i
-												class="fa fa-inbox font-18 align-middle me-2"></i>받은 이메일<span
-												class="badge badge-secondary badge-sm float-end">198</span></a>
-										<a href="javascript:void()" class="list-group-item"><i
-												class="fa fa-star font-18 align-middle me-2"></i>중요<span
-												class="badge badge-danger text-white badge-sm float-end">47</span>
-										</a>
-										<a href="javascript:void()" class="list-group-item"><i
-												class="mdi mdi-file-document-box font-18 align-middle me-2"></i>임시 보관함</a><a href="javascript:void(0);" class="list-group-item"><i
+										{% if unread_email_count > 0 %}
+											<a href="{% url 'fillow:email_list' %}" class="list-group-item">
+												<i class="fa fa-inbox font-18 align-middle me-2"></i>받은 이메일<span
+												class="badge badge-danger text-white badge-sm float-end">{{ unread_email_count }}</span>
+											</a>
+										{% else %}
+											<a href="{% url 'fillow:email_list' %}" class="list-group-item">
+												<i class="fa fa-inbox font-18 align-middle me-2"></i>받은 이메일
+											</a>
+										{% endif %}
+
+                                        <a href="{% url 'fillow:email-list-trash' %}" class="list-group-item active"><i
 												class="fa fa-trash font-18 align-middle me-2"></i>휴지통</a>
 									</div>
 									<div class="mail-list rounded overflow-hidden">

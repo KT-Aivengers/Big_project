@@ -18,16 +18,20 @@ from .models import AdditionalInform
 def get_most_4_category():
     # 이 부분은 DB에서 불러오기
     total = 60
-    labels = ["요청", "결재승인", "작업완료", "안내"]
-    count = [25, 10, 9, 6]
+    labels = ["결재승인", "휴가", "진행업무", "회의", "보고", "스크랩", "공지", "감사인사", "기타"]
+    count = [25, 10, 9, 6, 0, 1, 0, 0, 15]
     
     # 그래프 색상
     color = [
-        "var(--primary)",
-        "#26E023",
-        "#61CFF1",
-        "#FFDA7C",
-        "#FF86B1",
+        "#fc2e53",
+		"#ffbf00",
+		"#ffdc00",
+		"#09bd3c",
+		"#15c08c",
+		"#ffa7d7",
+		"#d653c1",
+		"#312a2a",
+		"#c8c8c8",
     ]
     
     sum_ = sum(count)
@@ -123,104 +127,6 @@ def fillow_additionalinform(request):
     return render(request, 'fillow/pages/page-additionalinform.html', {'form': form})
 
 
-def index_2(request):
-    context={
-        "page_title":"메인"
-    }
-    return render(request,'fillow/index-2.html',context)
-
-
-def project_page(request):
-    context={
-        "page_title":"Project"
-    }
-    return render(request,'fillow/project-page.html',context)
-
-
-def contacts(request):
-    context={
-        "page_title":"Contacts"
-    }
-    return render(request,'fillow/contacts.html',context)
-
-
-def kanban(request):
-    context={
-        "page_title":"Kanban"
-    }
-    return render(request,'fillow/kanban.html',context)
-
-
-def calendar_page(request):
-    context={
-        "page_title":"일정 보기"
-    }
-    return render(request,'fillow/calendar-page.html',context)
-
-
-def message(request):
-    context={
-        "page_title":"Message"
-    }
-    return render(request,'fillow/message.html',context)
-
-
-def content(request):
-    context={
-        "page_title":"Content"
-    }
-    return render(request,'fillow/cms/content.html',context)
-
-
-def add_content(request):
-    context={
-        "page_title":"Add Content"
-    }
-    return render(request,'fillow/cms/add-content.html',context)
-
-
-def menu(request):
-    context={
-        "page_title":"Menu"
-    }
-    return render(request,'fillow/cms/menu.html',context)
-
-
-def email_template(request):
-    context={
-        "page_title":"Email Template"
-    }
-    return render(request,'fillow/cms/email-template.html',context)
-
-
-def add_email(request):
-    context={
-        "page_title":"Add Email"
-    }
-    return render(request,'fillow/cms/add-email.html',context)
-
-
-def blog(request):
-    context={
-        "page_title":"Blog"
-    }
-    return render(request,'fillow/cms/blog.html',context)
-
-
-def add_blog(request):
-    context={
-        "page_title":"Add Blog"
-    }
-    return render(request,'fillow/cms/add-blog.html',context)
-
-
-def blog_category(request):
-    context={
-        "page_title":"Blog Category"
-    }
-    return render(request,'fillow/cms/blog-category.html',context)
-
-
 from django.core.files.storage import FileSystemStorage
 
 def app_profile(request):
@@ -265,20 +171,6 @@ def app_profile(request):
     }
     
     return render(request,'fillow/apps/app-profile.html',context)
-
-
-def edit_profile(request):
-    context={
-        "page_title":"Edit Profile"
-    }
-    return render(request,'fillow/apps/edit-profile.html',context)
-
-
-def post_details(request):
-    context={
-        "page_title":"Post Details"
-    }
-    return render(request,'fillow/apps/post-details.html',context)
 
 
 def email_compose(request):
@@ -596,330 +488,6 @@ def schedule(request):
     return render(request,'fillow/apps/schedule/schedule.html',context)
 
 
-
-def app_calender(request):
-    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
-    if not request.user.is_authenticated:
-        return redirect("fillow:home")
-    context={
-        "page_title":"일정 수정하기",
-        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
-        "masking_name":request.user.first_name[1:],
-    }
-    return render(request,'fillow/apps/app-calendar.html',context)
-
-
-def ecom_product_grid(request):
-    context={
-        "page_title":"Product Grid"
-    }
-    return render(request,'fillow/apps/shop/ecom-product-grid.html',context)
-
-
-def ecom_product_list(request):
-    context={
-        "page_title":"Product List"
-    }
-    return render(request,'fillow/apps/shop/ecom-product-list.html',context)
-
-
-def ecom_product_detail(request):
-    context={
-        "page_title":"Product Detail"
-    }
-    return render(request,'fillow/apps/shop/ecom-product-detail.html',context)
-
-
-def ecom_product_order(request):
-    context={
-        "page_title":"Product Order"
-    }
-    return render(request,'fillow/apps/shop/ecom-product-order.html',context)
-
-
-def ecom_checkout(request):
-    context={
-        "page_title":"Checkout"
-    }
-    return render(request,'fillow/apps/shop/ecom-checkout.html',context)
-
-
-def ecom_invoice(request):
-    context={
-        "page_title":"Invoice"
-    }
-    return render(request,'fillow/apps/shop/ecom-invoice.html',context)
-
-
-def ecom_customers(request):
-    context={
-        "page_title":"Customers"
-    }
-    return render(request,'fillow/apps/shop/ecom-customers.html',context)
-
-
-
-def chart_flot(request):
-    context={
-        "page_title":"Chart Flot"
-    }
-    return render(request,'fillow/charts/chart-flot.html',context)
-
-
-def chart_morris(request):
-    context={
-        "page_title":"Chart Morris"
-    }
-    return render(request,'fillow/charts/chart-morris.html',context)
-
-
-def chart_chartjs(request):
-    context={
-        "page_title":"Chart Chartjs"
-    }
-    return render(request,'fillow/charts/chart-chartjs.html',context)
-
-
-def chart_chartist(request):
-    context={
-        "page_title":"Chart Chartist"
-    }
-    return render(request,'fillow/charts/chart-chartist.html',context)
-
-
-def chart_sparkline(request):
-    context={
-        "page_title":"Chart Sparkline"
-    }
-    return render(request,'fillow/charts/chart-sparkline.html',context)
-
-
-def chart_peity(request):
-    context={
-        "page_title":"Chart Peity"
-    }
-    return render(request,'fillow/charts/chart-peity.html',context)
-
-
-
-def ui_accordion(request):
-    context={
-        "page_title":"Accordion"
-    }
-    return render(request,'fillow/bootstrap/ui-accordion.html',context)
-
-
-def ui_alert(request):
-    context={
-        "page_title":"Alert"
-    }
-    return render(request,'fillow/bootstrap/ui-alert.html',context)
-
-
-def ui_badge(request):
-    context={
-        "page_title":"Badge"
-    }
-    return render(request,'fillow/bootstrap/ui-badge.html',context)
-
-
-def ui_button(request):
-    context={
-        "page_title":"Button"
-    }
-    return render(request,'fillow/bootstrap/ui-button.html',context)
-
-
-def ui_modal(request):
-    context={
-        "page_title":"Modal"
-    }
-    return render(request,'fillow/bootstrap/ui-modal.html',context)
-
-
-def ui_button_group(request):
-    context={
-        "page_title":"Button Group"
-    }
-    return render(request,'fillow/bootstrap/ui-button-group.html',context)
-
-
-def ui_list_group(request):
-    context={
-        "page_title":"List Group"
-    }
-    return render(request,'fillow/bootstrap/ui-list-group.html',context)
-
-
-def ui_card(request):
-    context={
-        "page_title":"Card"
-    }
-    return render(request,'fillow/bootstrap/ui-card.html',context)
-
-
-def ui_carousel(request):
-    context={
-        "page_title":"Carousel"
-    }
-    return render(request,'fillow/bootstrap/ui-carousel.html',context)
-
-
-def ui_dropdown(request):
-    context={
-        "page_title":"Dropdown"
-    }
-    return render(request,'fillow/bootstrap/ui-dropdown.html',context)
-
-
-def ui_popover(request):
-    context={
-        "page_title":"Popover"
-    }
-    return render(request,'fillow/bootstrap/ui-popover.html',context)
-
-
-def ui_progressbar(request):
-    context={
-        "page_title":"Progressbar"
-    }
-    return render(request,'fillow/bootstrap/ui-progressbar.html',context)
-
-
-def ui_tab(request):
-    context={
-        "page_title":"Tab"
-    }
-    return render(request,'fillow/bootstrap/ui-tab.html',context)
-
-
-def ui_typography(request):
-    context={
-        "page_title":"Typography"
-    }
-    return render(request,'fillow/bootstrap/ui-typography.html',context)
-
-
-def ui_pagination(request):
-    context={
-        "page_title":"Pagination"
-    }
-    return render(request,'fillow/bootstrap/ui-pagination.html',context)
-
-
-def ui_grid(request):
-    context={
-        "page_title":"Grid"
-    }
-    return render(request,'fillow/bootstrap/ui-grid.html',context)
-
-
-
-
-def uc_select2(request):
-    context={
-        "page_title":"Select"
-    }
-    return render(request,'fillow/plugins/uc-select2.html',context)
-
-
-def uc_nestable(request):
-    context={
-        "page_title":"Nestable"
-    }
-    return render(request,'fillow/plugins/uc-nestable.html',context)
-
-
-def uc_noui_slider(request):
-    context={
-        "page_title":"UI Slider"
-    }
-    return render(request,'fillow/plugins/uc-noui-slider.html',context)
-
-
-def uc_sweetalert(request):
-    context={
-        "page_title":"Sweet Alert"
-    }
-    return render(request,'fillow/plugins/uc-sweetalert.html',context)
-
-
-def uc_toastr(request):
-    context={
-        "page_title":"Toastr"
-    }
-    return render(request,'fillow/plugins/uc-toastr.html',context)
-
-
-def map_jqvmap(request):
-    context={
-        "page_title":"Jqvmap"
-    }
-    return render(request,'fillow/plugins/map-jqvmap.html',context)
-
-
-def uc_lightgallery(request):
-    context={
-        "page_title":"LightGallery"
-    }
-    return render(request,'fillow/plugins/uc-lightgallery.html',context)
-
-
-def widget_basic(request):
-    context={
-        "page_title":"Widget"
-    }
-    return render(request,'fillow/widget-basic.html',context)
-
-def form_element(request):
-    context={
-        "page_title":"Form Element"
-    }
-    return render(request,'fillow/forms/form-element.html',context)
-
-
-def form_wizard(request):
-    context={
-        "page_title":"Form Wizard"
-    }
-    return render(request,'fillow/forms/form-wizard.html',context)
-
-
-def form_editor(request):
-    context={
-        "page_title":"CkEditor"
-    }
-    return render(request,'fillow/forms/form-editor.html',context)
-
-
-def form_pickers(request):
-    context={
-        "page_title":"Pickers"
-    }
-    return render(request,'fillow/forms/form-pickers.html',context)
-
-
-def form_validation(request):
-    context={
-        "page_title":"Form Validation"
-    }
-    return render(request,'fillow/forms/form-validation.html',context)
-
-
-def table_bootstrap_basic(request):
-    context={
-        "page_title":"Table Bootstrap"
-    }
-    return render(request,'fillow/table/table-bootstrap-basic.html',context)
-
-
-def table_datatable_basic(request):
-    context={
-        "page_title":"Table Datatable"
-    }
-    return render(request,'fillow/table/table-datatable-basic.html',context)
-
-
 from django.shortcuts import redirect
 from .forms import UserForm, LoginForm, EmailComposeTplForm, DocumentForm
 from django.contrib.auth.models import User
@@ -958,15 +526,6 @@ def page_register(request):
 
 def page_forgot_password(request):
     return render(request,'fillow/pages/page-forgot-password.html')
-
-def page_lock_screen(request):
-    return render(request,'fillow/pages/page-lock-screen.html')
-
-def page_empty(request):
-    context={
-        "page_title":"Empty Page"
-    }
-    return render(request,'fillow/pages/page-empty.html',context)
 
 def page_error_400(request):
     return render(request,'400.html')
@@ -1084,19 +643,55 @@ from django.views.generic import ListView, DetailView, DeleteView, UpdateView, C
 from django.urls import reverse_lazy
 from .models import Email
 from django.core.paginator import Paginator
-
 class EmailListView(ListView):
     model = Email
     template_name = 'fillow/apps/email/email-inbox.html'
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        
         queryset = queryset.filter(trash=False)
         queryset = queryset.filter(user=self.request.user).order_by('-email_date')
+        search_query = self.request.GET.get('search_query', '')
+        category_filter = self.request.GET.get('category', '')
+        internal_filter = self.request.GET.get('internal', '')
+        internal_filter_d = self.request.GET.get('internal_d', '')
+        
+        if search_query:
+            queryset = queryset.filter(Q(email_subject__icontains=search_query) | Q(email_from__icontains=search_query))
+        
+        
+        if category_filter:
+            queryset = queryset.filter(category=category_filter)
+                
+        if internal_filter in ['0', '1']:
+            internal_filter = int(internal_filter)
+            queryset = queryset.filter(company_yn=internal_filter)
+            
+        if internal_filter_d in ['0', '1']:
+            internal_filter_d = int(internal_filter_d)
+            queryset = queryset.filter(department_yn=internal_filter_d)
+        recipient_filter = self.request.GET.get('recipient', '')
+        if recipient_filter in ['to', 'cc']:
+            user_email = self.request.user.email
+            if recipient_filter == 'to':
+                queryset = queryset.filter(email_to=user_email)
+            elif recipient_filter == 'cc':
+                queryset = queryset.filter(email_cc__contains=user_email)
+
+
         self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
         page_number = self.request.GET.get('page')
         self.page_obj = self.paginator.get_page(page_number)
         return self.page_obj.object_list
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        unread_email_count = Email.objects.filter(
+            user=self.request.user, read=False
+        ).count()
+        context['unread_email_count'] = unread_email_count
+        return context
 
     def render_to_response(self, context, **response_kwargs):
         context.update({
@@ -1117,7 +712,13 @@ class EmailListView_Trash(ListView):
         page_number = self.request.GET.get('page')
         self.page_obj = self.paginator.get_page(page_number)
         return self.page_obj.object_list
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        unread_email_count = Email.objects.filter(
+            user=self.request.user, read=False
+        ).count()
+        context['unread_email_count'] = unread_email_count
+        return context
     def render_to_response(self, context, **response_kwargs):
         context.update({
             'paginator': self.paginator,
@@ -1126,14 +727,31 @@ class EmailListView_Trash(ListView):
         return super().render_to_response(context, **response_kwargs)
     
 class EmailDetailView(DetailView):
+
     model = Email
     #template_name = 'fillow/test.html'
     template_name = 'fillow/apps/email/email-read.html'  # 수정: template_name을 read.html로 변경
+    
+    def dispatch(self, request, *args, **kwargs):
+        # Get the email object
+        email = self.get_object()
 
+        # Check if the email belongs to the logged-in user
+        if email.user != self.request.user:
+            # If not, redirect to a different page (e.g., email list)
+            return redirect('fillow:email_list')  # Adjust the URL name as needed
+
+        # If the email belongs to the user, proceed with the normal dispatch
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # context['attachments'] = self.object.email_attachments  # 첨부파일 추가
+        if not self.object.read:
+            self.object.read = True
+            self.object.save()
         return context
+
 
 def email_trash(request, pk):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
@@ -1148,6 +766,7 @@ def email_trash(request, pk):
         return redirect("fillow:email-list-trash")
 
     return redirect("fillow:email-list-trash")
+
 
 class EmailUpdateView(UpdateView):
     model = Email
