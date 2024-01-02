@@ -2,6 +2,47 @@
 {% load static %}
 
 {% block additional_css %}
+<style>
+	.category {
+		color: #fff !important;
+	}
+
+	#cat1 {
+		background-color: #ffa7d7;
+	}
+
+	#cat2 {
+		background-color: #312a2a;
+	}
+
+	#cat3 {
+		background-color: #d653c1;
+	}
+
+	#cat4 {
+		background-color: #ffdc00;
+	}
+
+	#cat5 {
+		background-color: #fc2e53;
+	}
+
+	#cat6 {
+		background-color: #ffbf00;
+	}
+
+	#cat7 {
+		background-color: #09bd3c;
+	}
+
+	#cat8 {
+		background-color: #15c08c;
+	}
+
+	#cat9 {
+		background-color: #c8c8c8;
+	}
+</style>
 {% endblock %}
 {% block content %}
 
@@ -47,55 +88,55 @@
 										</div>
 										<div class="row">
 											<div class="col-lg-6">
-												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
+												<a href="{% url 'fillow:email-inbox' %}" id="cat1" class="list-group-item category"><span class="icon-warning"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
 												결재승인 </a>
 											</div>
 											<div class="col-lg-6">
-												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-primary"><i
+												<a href="{% url 'fillow:email-inbox' %}" id="cat2" class="list-group-item category"><span class="icon-primary"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
 												휴가 </a>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-lg-6">
-												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
+												<a href="{% url 'fillow:email-inbox' %}" id="cat3"  class="list-group-item category"><span class="icon-warning"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
 												진행업무 </a>
 											</div>
 											<div class="col-lg-6">
-												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-primary"><i
+												<a href="{% url 'fillow:email-inbox' %}" id="cat4"  class="list-group-item category"><span class="icon-primary"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
 												회의 </a>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-lg-6">
-												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
+												<a href="{% url 'fillow:email-inbox' %}" id="cat5"  class="list-group-item category"><span class="icon-warning"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
 												보고 </a>
 											</div>
 											<div class="col-lg-6">
-												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-primary"><i
+												<a href="{% url 'fillow:email-inbox' %}" id="cat6"  class="list-group-item category"><span class="icon-primary"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
 												스크랩 </a>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-lg-6">
-												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
+												<a href="{% url 'fillow:email-inbox' %}" id="cat7"  class="list-group-item category"><span class="icon-warning"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
 												공지 </a>
 											</div>
 											<div class="col-lg-6">
-												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-primary"><i
+												<a href="{% url 'fillow:email-inbox' %}" id="cat8"  class="list-group-item category"><span class="icon-primary"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
 												감사인사 </a>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-lg-12">
-												<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
+												<a href="{% url 'fillow:email-inbox' %}" id="cat9"  class="list-group-item category"><span class="icon-warning"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
 												기타 </a>
 											</div>
