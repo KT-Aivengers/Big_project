@@ -524,8 +524,71 @@ def page_register(request):
         additional_form = AdditionalInformForm()
     return render(request, 'fillow/pages/page-register.html', {'user_form': user_form, 'additional_form': additional_form})
 
+from .forms import CustomPasswordResetForm
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.contrib import messages
+
+
+def page_reset_done(request):
+    return render(request, 'fillow/pages/page-reset-done.html')
+
+
 def page_forgot_password(request):
-    return render(request,'fillow/pages/page-forgot-password.html')
+    if request.method == "POST":
+        form = CustomPasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            user = User.objects.get(email=email)
+            
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            
+            reset_link = f'http://127.0.0.1:8000/reset/{uid}/{token}'
+            
+            send_mail(
+                '비밀번호 재설정',
+                f'비밀번호를 재설정하려면 다음 링크를 클릭하세요: {reset_link}',
+                'from@example.com',
+                [email],
+                fail_silently=False,
+            )
+            
+            return redirect('fillow:page-reset-done')
+    else:
+        form = CustomPasswordResetForm()
+    return render(request,'fillow/pages/page-forgot-password.html', {'form': form})
+
+
+def page_reset_confirm(request, uidb64, token):
+    if request.method == 'POST':
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+        
+        if default_token_generator.check_token(user, token):
+            password = request.POST['password']
+            password_confirm = request.POST['password_confirm']
+            
+            try:
+                validate_password(password)
+                
+                if password != password_confirm:
+                    raise ValidationError('비밀번호가 일치하지 않습니다.')
+            except ValidationError as e:
+                return render(request, 'fillow/pages/page-reset-confirm.html', {'messages': e})
+            user.set_password(password)
+            user.save()
+            
+            return redirect('fillow:page-reset-complete')
+    return render(request, 'fillow/pages/page-reset-confirm.html')
+
+
+def page_reset_complete(request):
+    return render(request, 'fillow/pages/page-reset-complete.html')
 
 def page_error_400(request):
     return render(request,'400.html')

@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UsernameField
 from django import forms
 from .models import Document, Email, AdditionalInform, Qna, EmailCompose, EmailComposeTpl
 from django.core.validators import RegexValidator
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.utils.text import capfirst
 from django.contrib.auth import authenticate, get_user_model, password_validation
 from django.contrib.auth.models import User
@@ -145,3 +145,11 @@ class QnaSearchForm(forms.Form):
                                  choices=STATUS_CHOICES,
                              ),
                             )
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(label="이메일", widget=forms.TextInput(attrs={"class":"form-control"}))
+
+
+class CustomSetPasswordForm(SetPasswordForm):
+    new_password2 = forms.CharField(label="새로운 비밀번호 확인", widget=forms.PasswordInput)
