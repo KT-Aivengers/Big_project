@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import views
 from .models import AdditionalInform
-from .gpt import process_file
+# from .gpt import process_file
 
 # 분류된 이메일 현황 받기
 def get_most_4_category():
@@ -393,6 +393,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.urls import reverse
 from .forms import QnaSearchForm
+from datetime import datetime
 
 def qna(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
@@ -432,7 +433,7 @@ def qna(request):
         else:
             prev_title = request.GET.get('title')
             prev_status = request.GET.get('status')
-            print(prev_title, prev_status)
+            # print(prev_title, prev_status)
             
             if not prev_title and not prev_status:
                 # 제목, 상태에 아무 것도 없을 때 or 처음 QnA 사이트 들어왔을 때
@@ -518,6 +519,10 @@ def qna_details(request, id):
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
+    if request.method == "POST":
+        qna.delete()
+        return redirect("fillow:qna")
+    
     
     return render(request, 'fillow/apps/cs/qna_details.html',context)
 
@@ -546,9 +551,6 @@ def qna_details2(request, id):
             qna.edit_date = datetime.now()
             qna.save()
             return redirect("fillow:qna-details", id=id)
-        elif action=="delete":
-            qna.delete()
-            return redirect("fillow:qna")
         else:
             qna.answer = request.POST.get("answer")
             qna.edit_date = datetime.now()
@@ -1029,6 +1031,18 @@ def upload_file(request):
             reply_req_yn = gpt_result.get('회신요청여부','')
             reply_req_yn = True if reply_req_yn == 'Y' else False
             
+            user_additional_info = AdditionalInform.objects.filter(user=request.user).last()
+
+            from_company = gpt_result.get('회사', '')
+            user_company = user_additional_info.company
+            company_yn = True if from_company == user_company else False
+            
+            from_dept = gpt_result.get('부서', '')
+            user_dept = user_additional_info.department
+            dept_yn = True if from_dept == user_dept else False
+            
+
+            
             # text=translate(result['text_content'])
             # print("translate text",text)
             # detect_spam(text)
@@ -1042,12 +1056,14 @@ def upload_file(request):
             email_cc=result.get('Cc', ''),
             email_text_content=result.get('text_content', ''),
             category = gpt_result.get('카테고리',''),
-            from_company = gpt_result.get('회사',''),
-            from_dept = gpt_result.get('부서',''),
+            from_company = from_company,
+            from_dept = from_dept,
             from_name = gpt_result.get('이름',''),
             reply_req_yn = reply_req_yn,
             reply_start_date = result.get('Date',''),
             reply_end_date = gpt_result.get('회신마감일자',''),
+            company_yn = company_yn,
+            department_yn = dept_yn,
             )
 
             email_instance.save()

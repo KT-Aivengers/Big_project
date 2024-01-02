@@ -24,6 +24,10 @@
                     {% if not qna.answer %}
                         <div class="col-12">
                             <a href='{% url "fillow:qna-details2" qna.id %}' style="color:white" class="btn btn-primary mb-2">수정하기</a>
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <button class="btn btn-danger light btn-sl-sm" type="submit" name="btn-act" value="delete">삭제하기</button>
+                            </form>
                         </div>
                     {% else %}
                     {% endif %}
