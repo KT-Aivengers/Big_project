@@ -53,12 +53,15 @@ def get_most_4_category():
         }
     }
     return result
-
+from django.db.models import Q
 # 일정 불러오기
 def get_schedule(request):
     user = request.user
     # DB에서 일정 불러오기
-    emails = Email.objects.filter(user_id=request.user.id, reply_req_yn=True)
+    emails = Email.objects.filter(
+    Q(user_id=request.user.id) & 
+    (Q(reply_req_yn=True) | ~Q(meeting_date="없음"))
+)
 
     schedule_list = [
     {
@@ -67,17 +70,17 @@ def get_schedule(request):
         'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
         'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
         'category': email.category,
-    } for email in emails
+    } for email in emails if email.reply_req_yn==True
 ] + [
     {
         'pk': email.id,
         'title': "회의 / " + email.from_name,
         'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-        'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d'),
+        'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
         'category': '회의',
     } for email in emails if email.meeting_date != "없음"
 ]
-    
+    print(schedule_list)
     
     
     return schedule_list
@@ -617,12 +620,25 @@ def upload_file(request):
             dept_yn = True if from_dept == user_dept else False
             email_date_tuple = result.get('Date', '')
             email_date_str = ''.join(map(str, email_date_tuple))
-
+            
             # Remove all spaces from the date string
             email_date_str = re.sub(r'\s+', '', email_date_str)
 
             # Parse the date
             email_date = datetime.strptime(email_date_str, '%a,%d%b%Y%H:%M:%S%z')
+            
+            meeting_date=gpt_result.get('회의날짜', '')
+            current_year = datetime.now().year
+            current_month = datetime.now().month
+            month_match = re.search(r'(\d+)월', meeting_date)
+            if month_match:
+                meeting_month = int(month_match.group(1))
+                # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
+                if meeting_month < current_month:
+                    meeting_date = f"{current_year + 1}년 {meeting_date}"
+                else:
+                    # 그렇지 않으면 현재 연도를 사용합니다.
+                    meeting_date = f"{current_year}년 {meeting_date}"
 
 # ...
 
@@ -648,6 +664,7 @@ def upload_file(request):
             reply_end_date = gpt_result.get('회신마감일자',''),
             company_yn = company_yn,
             department_yn = dept_yn,
+            meeting_date=meeting_date,
             )
 
             email_instance.save()
