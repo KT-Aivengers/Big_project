@@ -29,6 +29,7 @@ urlpatterns = [
     path('page-logout/', auth_views.LogoutView.as_view(template_name="fillow/home/home.html"), name='page-logout'),
     # path('page-login/',fillow_views.page_login,name="page-login"),
     path('page-register/',fillow_views.page_register,name="page-register"),
+    path('page-register-complete', fillow_views.page_register_complete, name="page-register-complete"),
     path('page-forgot-password/',fillow_views.page_forgot_password,name="page-forgot-password"),
     path('page-reset-done/', fillow_views.page_reset_done, name="page-reset-done"),
     path('reset/<uidb64>/<token>/', fillow_views.page_reset_confirm, name='page-reset-confirm'),

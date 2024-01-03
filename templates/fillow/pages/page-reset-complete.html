@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
 
 <head>
 	{% load static custom_tags %}
@@ -28,8 +28,6 @@
 	<link rel="stylesheet" href="{% static cssurl %}">
 	{% endfor %}
 	{% block additional_css %}
-	{% endblock %}
-	
 	<style>
 		.reg-form input[type="text"],
     	.reg-form input[type="email"],
@@ -46,6 +44,7 @@
 		width: 20vh;
 	}
 	</style>
+	{% endblock %}
 </head>
 
 <body>
