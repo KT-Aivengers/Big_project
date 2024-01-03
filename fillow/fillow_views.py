@@ -34,12 +34,6 @@ def get_most_4_category():
 		"#c8c8c8",
     ]
     
-    sum_ = sum(count)
-    
-    if sum_ < total:
-        labels.append("기타")
-        count.append(total - sum_)
-    
     zip_ = zip(labels, count, color)
     
     result = {
@@ -433,10 +427,12 @@ def get_schedule(request):
     # DB에서 일정 불러오기
     json_raw = request.user.additionalinform.schedule
     
-    # json 파싱
-    schedule_list = json.loads(json_raw.replace("\'", "\""))
+    if json_raw:
+        # json 파싱
+        schedule_list = json.loads(json_raw.replace("\'", "\""))
     
-    return schedule_list
+        return schedule_list
+    return None
 
 
 # DB에 변경된 일정 반영하기
@@ -483,7 +479,11 @@ def schedule(request):
     
     schedule_list = get_schedule(request)
     
-    in_calendar, not_in_calendar = sep_schedule(schedule_list)
+    if schedule_list:
+        in_calendar, not_in_calendar = sep_schedule(schedule_list)
+    else:
+        in_calendar = []
+        not_in_calendar = []
     
     context['in_calendar'] = in_calendar
     context['not_in_calendar'] = not_in_calendar
