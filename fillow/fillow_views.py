@@ -131,7 +131,7 @@ def app_profile(request):
             inform.image = img
             inform.save()
             
-          
+        
         return redirect("fillow:app-profile")
     
     
@@ -548,7 +548,10 @@ def page_forgot_password(request):
         form = CustomPasswordResetForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
-            user = User.objects.get(email=email)
+            try:
+                user = User.objects.get(email=email)
+            except:
+                return render(request,'fillow/pages/page-forgot-password.html', {'form': form, 'error': '해당 이메일로 가입된 계정이 없습니다.'})
             
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
