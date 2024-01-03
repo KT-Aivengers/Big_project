@@ -19,10 +19,18 @@ class AdditionalInformForm(forms.ModelForm):
         ('경영지원부', '경영지원부'),
     ]
     
-    company = forms.CharField(label = "회사", widget=forms.TextInput(attrs={"class":"form-control"}))
-    department = forms.ChoiceField(choices=DEPARTMENT_CHOICES, label="부서", widget=forms.Select(attrs={"class":"form-control dropdown-toggle"}))
+    company = forms.CharField(
+        label = "회사",
+        label_suffix="",
+        widget=forms.TextInput(attrs={"class":"form-control mb-2"}))
+    department = forms.ChoiceField(
+        choices=DEPARTMENT_CHOICES, 
+        label="부서",
+        label_suffix="", 
+        widget=forms.Select(attrs={"class":"form-control dropdown-toggle mb-2"}))
     phone = forms.CharField(
         label="전화번호",
+        label_suffix="",
         max_length=16,
         validators=[
             RegexValidator(
@@ -59,21 +67,38 @@ class LoginForm(AuthenticationForm):
 
 
 class UserForm(UserCreationForm):
-    username = forms.CharField(label = "아이디", widget=forms.TextInput(attrs={"class":"form-control"}))
+    username = forms.CharField(
+        label = "아이디", 
+        label_suffix="",
+        widget=forms.TextInput(attrs={"class":"form-control mb-2"})
+        )
     password1 = forms.CharField(
         label=("비밀번호"),
+        label_suffix="",
         strip=False,
-        widget=forms.PasswordInput(attrs={"autocomplete": "new-password", "class":"form-control"}),
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password", "class":"form-control mb-2"}),
     )
     password2 = forms.CharField(
         label=("비밀번호 확인"),
-        widget=forms.PasswordInput(attrs={"autocomplete": "new-password", "class":"form-control"}),
+        label_suffix="",
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password", "class":"form-control mb-2"}),
         strip=False,
     )
-    email = forms.EmailField(label = "이메일", widget=forms.EmailInput(attrs={"class":"form-control"}))
-    first_name = forms.CharField(label = "이름", widget=forms.TextInput(attrs={"class":"form-control"}))
-    last_name = forms.CharField(label = "성", widget=forms.TextInput(attrs={"class":"form-control"}))
-
+    email = forms.EmailField(
+        label = "이메일",
+        label_suffix="",
+        widget=forms.EmailInput(attrs={"class":"form-control mb-2"})
+        )
+    first_name = forms.CharField(
+        label = "이름",
+        label_suffix="", 
+        widget=forms.TextInput(attrs={"class":"form-control mb-2"})
+        )
+    last_name = forms.CharField(
+        label = "성", label_suffix="",
+        widget=forms.TextInput(attrs={"class":"form-control mb-2"})
+        )
+    
     class Meta:
         model = User
         fields = ["username", "last_name", "first_name", "password1", "password2", "email"]

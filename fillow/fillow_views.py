@@ -515,14 +515,16 @@ def page_register(request):
             additional_inform = additional_form.save(commit=False)
             additional_inform.user = user
             additional_inform.save()
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
-
-            return redirect("fillow:index")
+            return redirect("fillow:page-register-complete")
     else:
         user_form = UserForm()
         additional_form = AdditionalInformForm()
     return render(request, 'fillow/pages/page-register.html', {'user_form': user_form, 'additional_form': additional_form})
+
+
+def page_register_complete(request):
+    return render(request, 'fillow/pages/page-register-complete.html')
 
 from .forms import CustomPasswordResetForm
 from django.core.mail import send_mail
@@ -579,7 +581,7 @@ def page_reset_confirm(request, uidb64, token):
                 if password != password_confirm:
                     raise ValidationError('비밀번호가 일치하지 않습니다.')
             except ValidationError as e:
-                return render(request, 'fillow/pages/page-reset-confirm.html', {'messages': e})
+                return render(request, 'fillow/pages/page-reset-confirm.html', {'msg': e})
             user.set_password(password)
             user.save()
             
