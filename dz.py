@@ -114,6 +114,7 @@ dz_array = {
                             f"{folder_name}/vendor/fullcalendar/js/main.min.js",
                             f"{folder_name}/vendor/sweetalert2/sweetalert2.min.js",
                             f"{folder_name}/vendor/bootstrap-daterangepicker/daterangepicker.js",
+                            f"{folder_name}/js/plugins-init/schedule.js",
                         ],
                     },
                 }
