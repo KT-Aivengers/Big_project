@@ -61,14 +61,23 @@ def get_schedule(request):
     emails = Email.objects.filter(user_id=request.user.id, reply_req_yn=True)
 
     schedule_list = [
-        {
-            'pk':email.id,
-            'title': email.category + " / " + email.email_from,
-            'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
-            'end': (datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
-            'category': email.category,
-        } for email in emails
-    ]
+    {
+        'pk': email.id,
+        'title': email.category + " / " + email.from_name,
+        'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
+        'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+        'category': email.category,
+    } for email in emails
+] + [
+    {
+        'pk': email.id,
+        'title': "회의 / " + email.from_name,
+        'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+        'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d'),
+        'category': '회의',
+    } for email in emails if email.meeting_date != "없음"
+]
+    
     
     
     return schedule_list

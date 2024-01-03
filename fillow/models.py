@@ -43,6 +43,7 @@ class Email(models.Model):
     department_yn = models.BooleanField(default=False)
     reply_yn = models.BooleanField(default=False)
     reply_date = models.CharField(max_length=100, null=True)
+    meeting_date = models.TextField(null=True)
     read = models.BooleanField(default=False)
     trash = models.BooleanField(default=False) 
     
