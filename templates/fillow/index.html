@@ -4,7 +4,7 @@
 {% block additional_css %}
 {% endblock %}
 		
-{% block content %}
+{% block content %}	
 <!--**********************************
 	Content body start
 ***********************************-->
@@ -296,7 +296,22 @@
 								</div>
 								<!-- 이메일 분류 현황 끝 -->
 								<!-- 이메일 분류 현황 -->
-								<div class="col-xl-6 col-xxl-12 col-sm-6">
+							
+								<div class="col-12">
+									<div class="row">
+										<div class="col-xl-6 col-lg-12 col-sm-12">
+											<div class="card">
+												<div class="card-header">
+													<h4 class="card-title">최근1주일 Action내용</h4>
+												</div>
+												<div class="card-body">
+													<div id="barChart1"></div>
+												</div>
+											</div>
+										</div><div class="col-xl-6 col-xxl-12 col-sm-6">
+										</div>
+									</div>
+								</div>
 									<div class="card">
 										<div class="card-header border-0 pb-0">
 											<div>
@@ -513,6 +528,48 @@
         var chart = new ApexCharts(document.querySelector("#emailchart"), options);
         chart.render();
     
+	}
+
+	var barChart1 = function(){
+		if(jQuery('#barChart_1').length > 0 ){
+			const barChart_1 = document.getElementById("barChart_1").getContext('2d');
+    
+			barChart_1.height = 100;
+
+			new Chart(barChart_1, {
+				type: 'bar',
+				data: {
+					defaultFontFamily: 'Poppins',
+					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+					datasets: [
+						{
+							label: "My First dataset",
+							data: [65, 59, 80, 81, 56, 55, 40],
+							borderColor: 'rgba(136,108,192, 1)',
+							borderWidth: "0",
+							barPercentage: 0.5,
+							backgroundColor: 'rgba(136,108,192, 1)'
+						}
+					]
+				},
+				options: {
+					plugins:{
+						legend: false, 
+					},
+					scales: {
+						y: {
+							ticks: {
+								beginAtZero: true
+							}
+						},
+						x: {
+							// Change here
+							
+						}
+					}
+				}
+			});
+		}
 	}
 </script>
 {% endblock %}
