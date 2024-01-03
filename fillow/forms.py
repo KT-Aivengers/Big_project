@@ -173,8 +173,16 @@ class QnaSearchForm(forms.Form):
 
 
 class CustomPasswordResetForm(PasswordResetForm):
-    email = forms.EmailField(label="이메일", widget=forms.TextInput(attrs={"class":"form-control"}))
+    email = forms.EmailField(
+        label="이메일",
+        label_suffix="",
+        widget=forms.TextInput(attrs={"class":"form-control mb-3 mt-3"})
+        )
 
 
 class CustomSetPasswordForm(SetPasswordForm):
-    new_password2 = forms.CharField(label="새로운 비밀번호 확인", widget=forms.PasswordInput)
+    new_password2 = forms.CharField(
+        label="새로운 비밀번호 확인",
+        label_suffix="",
+        widget=forms.PasswordInput
+        )

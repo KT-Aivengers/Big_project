@@ -14,7 +14,7 @@ class AdditionalInform(models.Model):
                 message="010-****-****의 형태로 입력해주세요."
             ),
         ],)
-    introduce = models.CharField(max_length=500)
+    introduce = models.CharField(default='안녕하세요', max_length=500)
     image = models.ImageField(upload_to="profile/")
     USERNAME_FIELD = 'email'
     company = models.CharField(max_length=10)
