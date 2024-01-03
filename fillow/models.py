@@ -18,7 +18,7 @@ class AdditionalInform(models.Model):
     image = models.ImageField(upload_to="profile/")
     USERNAME_FIELD = 'email'
     company = models.CharField(max_length=10)
-    schedule = models.TextField()
+    schedule = models.TextField(default='[]')
     
     
 class Document(models.Model):

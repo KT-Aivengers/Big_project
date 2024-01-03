@@ -427,12 +427,11 @@ def get_schedule(request):
     # DB에서 일정 불러오기
     json_raw = request.user.additionalinform.schedule
     
-    if json_raw:
-        # json 파싱
-        schedule_list = json.loads(json_raw.replace("\'", "\""))
+    # json 파싱
+    schedule_list = json.loads(json_raw.replace("\'", "\""))
     
-        return schedule_list
-    return None
+    return schedule_list
+
 
 
 # DB에 변경된 일정 반영하기
@@ -479,11 +478,7 @@ def schedule(request):
     
     schedule_list = get_schedule(request)
     
-    if schedule_list:
-        in_calendar, not_in_calendar = sep_schedule(schedule_list)
-    else:
-        in_calendar = []
-        not_in_calendar = []
+    in_calendar, not_in_calendar = sep_schedule(schedule_list)
     
     context['in_calendar'] = in_calendar
     context['not_in_calendar'] = not_in_calendar
@@ -574,24 +569,26 @@ def page_forgot_password(request):
 
 def page_reset_confirm(request, uidb64, token):
     if request.method == 'POST':
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
         
-        if default_token_generator.check_token(user, token):
-            password = request.POST['password']
-            password_confirm = request.POST['password_confirm']
-            
-            try:
-                validate_password(password)
+            if default_token_generator.check_token(user, token):
+                password = request.POST['password']
+                password_confirm = request.POST['password_confirm']
                 
+                validate_password(password)
+                    
                 if password != password_confirm:
                     raise ValidationError('비밀번호가 일치하지 않습니다.')
-            except ValidationError as e:
-                return render(request, 'fillow/pages/page-reset-confirm.html', {'msg': e})
-            user.set_password(password)
-            user.save()
-            
-            return redirect('fillow:page-reset-complete')
+                user.set_password(password)
+                user.save()
+                
+                return redirect('fillow:page-reset-complete')
+        except ValidationError as e:
+            return render(request, 'fillow/pages/page-reset-confirm.html', {'msg': e})
+        except ValueError:
+            return render(request, 'fillow/pages/page-reset-confirm.html', {'msg': ['잘못된 접근입니다']})
     return render(request, 'fillow/pages/page-reset-confirm.html')
 
 
