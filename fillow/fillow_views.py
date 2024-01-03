@@ -574,13 +574,19 @@ def upload_file(request):
             recent_document = Document.objects.latest('id')
             file_path = recent_document.uploaded_file.path
             
-            # eml_name = os.path.basename(file_path).split('.msg')[0] + '.eml'
-            eml_name = file_path.split('.msg')[0] + '.eml'
-            print(eml_name)
+
+            file_extension = uploaded_file.name.split('.')[-1].lower()
+            if file_extension == 'msg':
+                eml_name = file_path.split('.msg')[0] + '.eml'
             
-            with open(eml_name , "wb") as f:
-                contents = load(uploaded_file)
-                f.write(contents.as_bytes())        
+                with open(eml_name , "wb") as f:
+                    contents = load(uploaded_file)
+                    f.write(contents.as_bytes())        
+            else :
+                eml_name = file_path
+            
+            print(eml_name)
+                 
                     
             headers = ['file_name','Subject','Date','From','To','Cc','text_content']
             result = emlExtracter.prcessing_dir(headers, eml_name)
