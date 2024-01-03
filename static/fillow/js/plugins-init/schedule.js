@@ -79,10 +79,10 @@ function fullCalender() {
             headers: {
                 'X-CSRFToken': csrftoken
             },
+            success: function(data) {
+                location.reload();
+            },
         });
-
-        // DB에 저장된 뒤 새로고침
-        location.reload();
     });
 
     // 내용 변경 여부 확인하기

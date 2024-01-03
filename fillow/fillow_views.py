@@ -54,31 +54,6 @@ def get_most_4_category():
     }
     return result
 
-# 일정 불러오기
-def get_schedule(request):
-    
-    # DB에서 일정 불러오기
-    
-    emails = Email.objects.filter(user_id=request.user.id, reply_req_yn=True)
-    schedule_list = [
-    {
-        'pk':email.id,
-        'title': email.category + " / " + email.email_from,
-        'start': email.reply_start_date.strftime('%Y-%m-%d'),
-        'end': (email.reply_end_date + datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
-        'category': email.category,
-    } for email in emails
-    ]
-    
-    
-    return schedule_list
-
-
-# DB에 올리는 코드 여기에 작성
-def save_schedule(schedule_json):
-    print(schedule_json)
-    return
-
 
 def home(request):
     context={
@@ -452,36 +427,64 @@ def qna_details2(request, id):
     return render(request, 'fillow/apps/cs/qna_details2.html',context)
 
 
+# 일정 불러오기
+def get_schedule(request):
+    
+    # DB에서 일정 불러오기
+    json_raw = request.user.additionalinform.schedule
+    
+    # json 파싱
+    schedule_list = json.loads(json_raw.replace("\'", "\""))
+    
+    return schedule_list
+
+
+# DB에 변경된 일정 반영하기
+def save_schedule(schedule_json, user):
+    inform = user.additionalinform
+    inform.schedule = json.dumps(schedule_json['schedule'])
+    inform.save()
+    return
+
+# 배정, 비배정 일정 분리하기
+def sep_schedule(schedule_list):
+    # 달력에 배정 된 일정
+    in_calendar = []
+    # 배정되지 않은 일정
+    not_in_calendar = []
+    
+    # 받아온 일정 리스트에서 end 속성이 없는(배정이 되지 않은) 일정 분리
+    for schedule in schedule_list:
+        if (schedule.get('end')):
+            in_calendar.append(schedule)
+        else:
+            not_in_calendar.append(schedule)
+    
+    return in_calendar[:], not_in_calendar[:]
+
+
 def schedule(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
-    if request.method == "POST":
-        # JSON으로 수정된 일정 데이터 받아옴
-        received_data = json.loads(request.body.decode('utf-8'))
-        
-        # DB에 변경사항 올리는 함수
-        save_schedule(received_data)
-
+    
     context={
         "page_title":"일정 관리",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
     
-    schedule_list = get_schedule(request)
-    # 달력에 배정 된 일정
-    in_calendar = []
-    # 배정되지 않은 일정
-    not_in_calendar = []
-    
-    # 받아온 일정 리스트에서 start 속성이 없는(배정이 되지 않은) 일정 분리
-    for schedule in schedule_list:
-        if (schedule.get('end')):
-            in_calendar.append(schedule)
-        else:
-            not_in_calendar.append(schedule)
+    if request.method == "POST":
+        # JSON으로 수정된 일정 데이터 받아옴
+        received_data = json.loads(request.body.decode('utf-8'))
         
+        # DB에 변경사항 올리는 함수
+        save_schedule(received_data, request.user)
+    
+    schedule_list = get_schedule(request)
+    
+    in_calendar, not_in_calendar = sep_schedule(schedule_list)
+    
     context['in_calendar'] = in_calendar
     context['not_in_calendar'] = not_in_calendar
     
