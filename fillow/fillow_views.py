@@ -256,7 +256,17 @@ def app_profile(request):
                 user.save()
                 update_session_auth_hash(request, user)
             except ValidationError as e:
-                return render(request, 'fillow/apps/profile/profile.html', {'msg': e})
+                context={
+                    "page_title":"프로필",
+                    "company":inform.company,
+                    "dept":inform.department,
+                    "phone":inform.phone,
+                    "introduce":inform.introduce,
+                    "img":inform.image,
+                    "masking_name":request.user.first_name[1:],
+                    "msg": e,
+                }
+                return render(request, 'fillow/apps/profile/profile.html', context)
             
         elif request.FILES['image']:
             img = request.FILES['image']
@@ -659,12 +669,33 @@ def page_register(request):
             additional_inform.user = user
             additional_inform.phone = additional_form.cleaned_data['phone']
             additional_inform.save()
+        else:
+            context={
+                'user_form': user_form, 
+                'additional_form': additional_form,
+                'errors': user_form.errors,
+            }
+            return render(request, "fillow/pages/page-register.html", context)
 
-            return redirect("fillow:page-register-complete")
+        return redirect("fillow:page-register-complete")
     else:
         user_form = UserForm()
         additional_form = AdditionalInformForm()
     return render(request, 'fillow/pages/page-register.html', {'user_form': user_form, 'additional_form': additional_form})
+
+
+from django.http import JsonResponse
+
+
+def check_username(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        username = data.get('username').strip()
+        user_exists = User.objects.filter(username=username).exists()
+
+        return JsonResponse({'available': not user_exists})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
 def page_register_complete(request):
