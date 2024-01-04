@@ -568,6 +568,7 @@ def page_register(request):
             user = user_form.save()
             additional_inform = additional_form.save(commit=False)
             additional_inform.user = user
+            additional_inform.phone = additional_form.cleaned_data['phone']
             additional_inform.save()
 
             return redirect("fillow:page-register-complete")
