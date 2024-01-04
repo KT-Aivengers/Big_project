@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from fillow.forms import DocumentForm
 from .models import Qna, EmailCompose, EmailComposeTpl, AdditionalInform, Email
-import datetime
+from datetime import datetime, timedelta
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from .forms import UserForm, LoginForm, EmailComposeTplForm, EmailComposeForm
@@ -53,6 +53,48 @@ def get_most_category():
         }
     }
     return result
+from django.db.models import Q
+# 일정 불러오기
+def get_schedule(request):
+#     user = request.user
+#     # DB에서 일정 불러오기
+#     emails = Email.objects.filter(
+#     Q(user_id=request.user.id) & 
+#     (Q(reply_req_yn=True) | ~Q(meeting_date="없음"))
+# )
+
+#     schedule_list = [
+#     {
+#         'pk': email.id,
+#         'title': email.category + " / " + email.from_name,
+#         'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
+#         'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+#         'category': email.category,
+#     } for email in emails if email.reply_req_yn==True
+# ] + [
+#     {
+#         'pk': email.id,
+#         'title': "회의 / " + email.from_name,
+#         'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+#         'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
+#         'category': '회의',
+#     } for email in emails if email.meeting_date != "없음"
+# ] 
+    # DB에서 일정 불러오기
+    json_raw = request.user.additionalinform.schedule
+   
+    # json 파싱
+    schedule_list = json.loads(json_raw.replace("\'", "\""))
+   
+    return schedule_list
+
+
+# DB에 변경된 일정 반영하기
+def save_schedule(schedule_json, user):
+    inform = user.additionalinform
+    inform.schedule = json.dumps(schedule_json['schedule'])
+    inform.save()
+    return
 
 
 def home(request):
@@ -512,6 +554,7 @@ def schedule(request):
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     
+
     context={
         "page_title":"일정 관리",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
@@ -525,10 +568,17 @@ def schedule(request):
         # DB에 변경사항 올리는 함수
         save_schedule(received_data, request.user)
     
+    if request.method == "POST":
+        # JSON으로 수정된 일정 데이터 받아옴
+        received_data = json.loads(request.body.decode('utf-8'))
+        
+        # DB에 변경사항 올리는 함수
+        save_schedule(received_data, request.user)
+    
     schedule_list = get_schedule(request)
     
     in_calendar, not_in_calendar = sep_schedule(schedule_list)
-    
+        
     context['in_calendar'] = in_calendar
     context['not_in_calendar'] = not_in_calendar
     
@@ -561,6 +611,7 @@ def page_register(request):
             user = user_form.save()
             additional_inform = additional_form.save(commit=False)
             additional_inform.user = user
+            additional_inform.phone = additional_form.cleaned_data['phone']
             additional_inform.save()
 
             return redirect("fillow:page-register-complete")
@@ -670,7 +721,37 @@ from fillow.msgToEml import load
 from .spam_detection import *
 from .gpt import *
 from .translation import *
+from datetime import datetime
+import re
 
+def upload_schedule(request,email):
+    user = request.user
+    # JSON 문자열을 Python 객체로 변환
+    json_raw = request.user.additionalinform.schedule
+    schedule_list = json.loads(json_raw)
+    # DB에서 일정 불러오기
+    temp=[]
+    if email.reply_req_yn==True:
+        dic={
+            'pk': email.id,
+            'title': email.category + " / " + email.from_name,
+            'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
+            'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+            'category': email.category,
+        }
+        temp.append(dic)
+    if email.meeting_date != "없음":
+        dic={
+            'pk': email.id,
+            'title': "회의 / " + email.from_name,
+            'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+            'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
+            'category': '회의',
+        }
+        temp.append(dic)
+    schedule_list+=temp
+
+    return schedule_list
 def upload_file(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
@@ -690,20 +771,26 @@ def upload_file(request):
             recent_document = Document.objects.latest('id')
             file_path = recent_document.uploaded_file.path
             
-            # eml_name = os.path.basename(file_path).split('.msg')[0] + '.eml'
-            eml_name = file_path.split('.msg')[0] + '.eml'
-            print(eml_name)
+
+            file_extension = uploaded_file.name.split('.')[-1].lower()
+            if file_extension == 'msg':
+                eml_name = file_path.split('.msg')[0] + '.eml'
             
-            with open(eml_name , "wb") as f:
-                contents = load(uploaded_file)
-                f.write(contents.as_bytes())        
+                with open(eml_name , "wb") as f:
+                    contents = load(uploaded_file)
+                    f.write(contents.as_bytes())        
+            else :
+                eml_name = file_path
+            
+            print(eml_name)
+                 
                     
             headers = ['file_name','Subject','Date','From','To','Cc','text_content']
             result = emlExtracter.prcessing_dir(headers, eml_name)
             # print(result['text_content'])
             
             gpt_result = process_file(result['text_content'])
-            
+            print(gpt_result)
             reply_req_yn = gpt_result.get('회신요청여부','')
             reply_req_yn = True if reply_req_yn == 'Y' else False
             
@@ -716,9 +803,30 @@ def upload_file(request):
             from_dept = gpt_result.get('부서', '')
             user_dept = user_additional_info.department
             dept_yn = True if from_dept == user_dept else False
+            email_date_tuple = result.get('Date', '')
+            email_date_str = ''.join(map(str, email_date_tuple))
             
+            # Remove all spaces from the date string
+            email_date_str = re.sub(r'\s+', '', email_date_str)
 
+            # Parse the date
+            email_date = datetime.strptime(email_date_str, '%a,%d%b%Y%H:%M:%S%z')
             
+            meeting_date=gpt_result.get('회의날짜', '')
+            current_year = datetime.now().year
+            current_month = datetime.now().month
+            month_match = re.search(r'(\d+)월', meeting_date)
+            if month_match:
+                meeting_month = int(month_match.group(1))
+                # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
+                if meeting_month < current_month:
+                    meeting_date = f"{current_year + 1}년 {meeting_date}"
+                else:
+                    # 그렇지 않으면 현재 연도를 사용합니다.
+                    meeting_date = f"{current_year}년 {meeting_date}"
+
+# ...
+
             # text=translate(result['text_content'])
             # print("translate text",text)
             # detect_spam(text)
@@ -726,7 +834,8 @@ def upload_file(request):
             user=request.user,
             email_file_name=result.get('file_name', ''),
             email_subject=result.get('Subject', ''),
-            email_date=result.get('Date', ''),
+            
+            email_date=email_date,
             email_from=result.get('From', ''),
             email_to=result.get('To', ''),
             email_cc=result.get('Cc', ''),
@@ -740,10 +849,21 @@ def upload_file(request):
             reply_end_date = gpt_result.get('회신마감일자',''),
             company_yn = company_yn,
             department_yn = dept_yn,
+            meeting_date=meeting_date,
             )
-
-            email_instance.save()
             
+
+            
+            email_instance.save()
+            if reply_req_yn == True or meeting_date != "없음":
+                # 새로운 스케줄을 리스트에 추가
+                schedule_list = upload_schedule(request,email_instance)
+
+                # Python 객체를 JSON 문자열로 변환하여 저장
+                request.user.additionalinform.schedule = json.dumps(schedule_list)
+
+                # 변경 사항을 데이터베이스에 저장
+                request.user.additionalinform.save()
             return redirect("fillow:index")
     else:
         form = DocumentForm()

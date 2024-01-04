@@ -49,6 +49,8 @@
         width: 40%;
         z-index : 1 ;
         color : black ;
+        max-width : 100% ;
+        overflow : hidden ;
     }
     
     .feature-description h3 {
@@ -130,15 +132,9 @@
         text-align: left;
     }
     
-    /* 기존 .landing-wording 스타일 유지 */
-    .landing-wording {
-        /* 기존 스타일... */
-        text-align: left;
-    }
-    
     /* 버튼 컨테이너 스타일 */
     .buttons-container {
-
+        display: flex;
         justify-content: center;
     
     }
@@ -165,13 +161,17 @@
         margin-top: 0.5rem !important;
     }
 
-    [data-theme-version=dark] .background {
-        background-image: linear-gradient(to top left, rgba(6, 87, 63, 1), rgba(6, 87, 63, 0)), url("{% static 'fillow/images/background_dark.png'%}");
-    }
+    [data-theme-version=dark] 
+    { .background {background-image: linear-gradient(to top left, rgba(6, 87, 63, 0), rgba(6, 87, 63, 1)), url("{% static 'fillow/images/background_dark.png'%}");
+        }
+      .background #logo {content: url("{% static 'fillow/images/logofull_dark.svg' %}")
+        } 
+      .landing-wording strong {
+        color: #0affc4; /* 강조할 텍스트의 색상을 변경합니다. */
+        font-weight: bold; /* 글씨를 두껍게 합니다. */
+        }}
 
-    [data-theme-version=dark] .background #logo {
-        content: url("{% static 'fillow/images/logofull_dark.svg' %}")
-    }
+
 
     #logo {
         display: block;
@@ -221,6 +221,21 @@
             padding-top : 2rem ;
             padding-left: 8rem;  /* 화면이 768픽셀 이상일 때 적용되는 패딩 값 */
         }
+            .buttons-container {
+            justify-content: flex-end; /* 화면이 768px 이상일 때 버튼을 오른쪽으로 정렬 */
+        }
+
+        
+        .feature-description {
+            /* 모바일 화면에서의 스타일 */
+            font-size: 1em  ;
+            padding: 10px;
+        }
+        .feature-image {
+            /* 이미지 크기 조정 */
+            width: 100%;
+            height: auto;
+        }
     }
     
     /* 큰 화면 (데스크톱)에 대한 스타일 */
@@ -246,7 +261,7 @@
     Content body start
 ***********************************-->
 
-<div class="content-body default-height home">
+<div id = 'main' class="content-body default-height home">
     <div class="container-fluid">
         <div class="background card">
             <div>
@@ -360,7 +375,7 @@
                 <div class="col-lg-6"></div>
                 <div class="col-lg-5">
                     <h3>HyeopJaeSea란?</h3>
-                    <span class="description">협재씨는 이메일이 쌓여 녹조빛으로 변한 이메일 홍수 속에서 당신의 디지털 바다를 제주도 협재해변처럼 맑은 에메랄드빛으로 변화시켜줄 이메일 자동 분류 서비스입니다. 현대 직장인의 업무는 대부분 이메일을 통해 이루어지고, 이 과정에서 대량의 이메일을 처리하게 됩니다. 바쁜 업무 중에 어떤 이메일이 중요한지 판단하는 것은 매일 하는 일이지만 에너지를 소모합니다. 협재씨는 사용자의 데이터를 기반으로 AI가 업무 패턴을 분석하여, 중요한 이메일을 빠르고 정확하게 분류해드립니다. AI 모델을 기반으로 한 협재씨 서비스는 사용자가 상세히 입력한 업무 정보에 따라 더욱 정확한 분류를 제공합니다.</span>
+                    <span class="description">협재씨는 이메일이 쌓여 녹조빛으로 변한 이메일 홍수 속에서 당신의 디지털 바다를 제주도 협재해변처럼 맑은 에메랄드빛으로 변화시켜줄 이메일 자동 분류 서비스입니다. 현대 직장인의 업무는 대부분 이메일을 통해 이루어지고, 이 과정에서 대량의 이메일을 처리하게 됩니다. 바쁜 업무 중에 어떤 이메일이 중요한지 판단하는 것은 매일 하는 일이지만 적지 않은 에너지를 소모합니다. 협재씨는 사용자의 데이터를 기반으로 AI가 업무 패턴을 분석하여, 중요한 이메일을 빠르고 정확하게 분류해드립니다. AI 모델을 기반으로 한 협재씨 서비스는 사용자가 상세히 입력한 업무 정보에 따라 더욱 정확한 분류를 제공합니다.</span>
                 </div>
             </div>
             
@@ -375,7 +390,7 @@
                 <div class="col-lg-1"></div>
                 <div class="col-lg-8">
                     <h3>스마트한 AI 이메일 분류기</h3>
-                    <span class="description">협재씨의 AI 이메일 분류기는 정해진 카테고리에 따라 이메일을 자동으로 분류합니다. 하나 이상의 이메일 계정을 연동하면, AI 모델이 업무 우선순위에 맞춰 이메일을 분류해드립니다. 프로 협재씨를 사용하시면 가중치 설정과 추가적인 분류 카테고리를 직접 설정하실 수 있어, 더욱 맞춤화된 이메일 관리 경험을 제공합니다.</span>
+                    <span class="description">협재씨의 AI 이메일 분류기는 정해진 카테고리에 따라 이메일을 자동으로 분류합니다. 하나 이상의 이메일 계정을 연동하면, <strong>AI 모델</strong>이 업무 우선순위에 맞춰 이메일을 분류해드립니다. 프로 협재씨를 사용하시면 가중치 설정과 추가적인 분류 카테고리를 직접 설정하실 수 있어, 더욱 맞춤화된 이메일 관리 경험을 제공합니다.</span>
                 </div>
             </div>
         </div>

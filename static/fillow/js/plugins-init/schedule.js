@@ -333,7 +333,7 @@ function fullCalender() {
                         cancelButtonColor: '#fc2e53',
                     }).then(function (result) {
                         if (result.isConfirmed) {
-                            window.location.href = '{% url "fillow:email_list" %}' + `${info.event.extendedProps.pk}`;
+                            window.location.href = '/email/' + `${info.event.extendedProps.pk}`;
                         }
                     });
                 }
