@@ -38,14 +38,14 @@
 								<div class="card">
 									<div class="card-header border-0 pb-0">
 										<div>
-											<h4 class="card-title">얼마 안 남은 회신 기한</h4>
-											<p class="mb-0">회신 요청 기한이 7일 이내인 이메일을 보여줍니다</p>
+											<h4 class="card-title">얼마 안 남은 일정 기한</h4>
+											<p class="mb-0">기한이 7일 이내인 일정을 보여줍니다</p>
 										</div>
 									</div>
 									<div class="card-body pb-0 pt-3">
 
 										<!-- 1단위 -->
-										<div class="project-details">
+										<!-- <div class="project-details">
 											<div class="d-flex align-items-center justify-content-between">
 												<div class="d-flex align-items-center">
 													<div class="profile-k">
@@ -86,54 +86,53 @@
 												</div>
 											</div>
 										</div>	
-										<hr>
+										<hr> -->
 										<!-- 1 단위 끝 -->
 
-										<div class="project-details"> 
-											<div class="d-flex align-items-center justify-content-between">
-												<div class="d-flex align-items-center">
-													<div class="profile-k">
-														<span class="bg-success">동현</span>	
+										{% for d in deadline %}
+											<div class="project-details">
+												<div class="d-flex align-items-center justify-content-between">
+													<div class="d-flex align-items-center">
+														<div class="profile-k">
+															<span class="bg-success"></span>	
+														</div>
+														<div class="ms-3">
+															<h5 class="mb-1">{{ d.title }}</h5>
+														</div>
+													</div>	
+													<!-- <div class="dropdown">
+														<div class="btn-link" data-bs-toggle="dropdown">
+															<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																<circle cx="12.4999" cy="3.5" r="2.5" fill="#A5A5A5"/>
+																<circle cx="12.4999" cy="11.5" r="2.5" fill="#A5A5A5"/>
+																<circle cx="12.4999" cy="19.5" r="2.5" fill="#A5A5A5"/>
+															</svg>
+														</div>
+														<div class="dropdown-menu dropdown-menu-right">
+															<a class="dropdown-item" href="javascript:void(0)">삭제</a>
+															<a class="dropdown-item" href="javascript:void(0)">수정</a>
+														</div>
+													</div> -->
+												</div>
+												<!-- <h5 class="mt-3">저녁 뭐먹을까요?</h5> -->
+												<div class="projects">
+													{% if d.category%}
+														<span class="badge badge-warning light me-3">{{ d.category }}</span>
+													{% endif %}
+												</div>
+												<div class="mt-3">
+													<div class="progress default-progress">
+														<div class="progress-bar bg-gradient1 progress-animated" style="width: {{ d.diff_percent }}%; height:5px;" role="progressbar">
+															<span class="sr-only">{{ d.diff }}일 남음</span>
+														</div>
 													</div>
-													<div class="ms-3">
-														<h5 class="mb-1">성공 가능성</h5>
-														<p class="mb-0">18조</p>
-													</div>
-												</div>	
-												<div class="dropdown">
-													<div class="btn-link" data-bs-toggle="dropdown">
-														<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-															<circle cx="12.4999" cy="3.5" r="2.5" fill="#A5A5A5"/>
-															<circle cx="12.4999" cy="11.5" r="2.5" fill="#A5A5A5"/>
-															<circle cx="12.4999" cy="19.5" r="2.5" fill="#A5A5A5"/>
-														</svg>
-													</div>
-													<div class="dropdown-menu dropdown-menu-right">
-														<a class="dropdown-item" href="javascript:void(0)">삭제</a>
-														<a class="dropdown-item" href="javascript:void(0)">수정</a>
+													<div class="d-flex align-items-end mt-3 justify-content-between">
+														<p class="mb-0">회신 기한: {{ d.end }} ({{ d.diff }}일 남음)</p>
 													</div>
 												</div>
-											</div>
-											<h5 class="mt-3">열심해 해봅시다!</h5>
-											<div class="projects">
-												<span class="badge badge-primary light me-3">우리팀</span>
-												<span class="badge badge-danger light">화이팅</span>
-											</div>
-											<div class="mt-3">
-												<div class="progress default-progress">
-													<div class="progress-bar bg-gradient1 progress-animated" style="width: 100%; height:5px;" role="progressbar">
-														<span class="sr-only">오늘이 회신 기한입니다.</span>
-													</div>
-												</div>
-												<div class="d-flex align-items-end mt-3 justify-content-between">
-													<p class="mb-0">회신 기한: 12/20/2022</p>
-												</div>
-											</div>
-										</div>	
-										<hr>
-									</div>
-									<div class="card-footer pt-0 border-0">
-										<a href="javascript:void(0);" class="btn btn-outline-primary btn-rounded d-block">다른 이메일 고정하기</a>
+											</div>	
+											<hr>
+										{% endfor %}	
 									</div>
 								</div>
 							</div>
@@ -205,7 +204,7 @@
 									<div class="card-header pb-0 border-0">
 										<div>
 											<h4 class="card-title">최근 이메일</h4>
-											<p class="mb-0">가장 최근에 받은 이메일을 5개까지 보여줍니다</p>
+											<p class="mb-0">가장 최근에 받은 이메일 중 읽지 않은 이메일을 5개까지 보여줍니다</p>
 										</div>
 										<div>
 											<a href="{% url 'fillow:email_list' %}" class="btn btn-outline-primary btn-rounded">받은 이메일 함으로</a>

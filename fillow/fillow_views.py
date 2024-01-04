@@ -89,6 +89,29 @@ def get_schedule(request):
     return schedule_list
 
 
+from datetime import datetime
+
+
+def get_7_deadline(request):
+    schedule = get_schedule(request)
+    result = []
+    
+    today = datetime.now()
+    
+    for s in schedule[:]:
+        deadline = s['end']
+        deadline = datetime.strptime(deadline, '%Y-%m-%d')
+        
+        diff = (deadline - today).days + 1
+
+        if diff > 0 and diff < 7:
+            s['diff'] = diff
+            s['diff_percent'] = 100 - diff / 7 * 100
+            result.append(s)
+        
+    result.sort(key=lambda x: x['diff'])
+    return result[:]
+
 def get_recent_email(id):
     unread_emails = Email.objects.filter(read=False, user_id=id)
     sorted_data = unread_emails.order_by('-email_date')
@@ -127,17 +150,17 @@ def index(request):
     
     most = get_most_category(request.user.id)
     recent = get_recent_email(request.user.id)
+    deadline = get_7_deadline(request)
     
     context={
         "page_title":"",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
+        "deadline":deadline
     }
     
     context.update(most)
     context.update(recent)
-    
-    print(context)
         
     return render(request,'fillow/index.html', context)
 
