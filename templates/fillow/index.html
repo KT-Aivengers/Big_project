@@ -34,7 +34,7 @@
 								</div>
 							</div>
 							<!-- 얼마 안 남은 회신 기한 -->
-							<div class="col-xl-6 col-xxl-12 col-sm-6">
+							<div class="col-xl-12 col-xxl-12 col-sm-12">
 								<div class="card">
 									<div class="card-header border-0 pb-0">
 										<div>
@@ -138,127 +138,6 @@
 								</div>
 							</div>
 							<!-- 얼마 안 남은 회신 기한 끝 -->
-							<!-- 최근 이메일 -->
-							<div class="col-xl-12">
-								<div class="card">
-
-									<!-- 헤더 영역 -->
-									<div class="card-header pb-0 border-0">
-										<div>
-											<h4 class="card-title">최근 이메일</h4>
-											<p class="mb-0">가장 최근에 받은 이메일을 5개까지 보여줍니다</p>
-										</div>
-										<div>
-											<a href="{% url 'fillow:email-inbox' %}" class="btn btn-outline-primary btn-rounded">받은 이메일 함으로</a>
-										</div>
-									</div>
-									<!-- 헤더 영역 끝 -->
-
-									<!-- 바디 영역 -->
-									<div class="card-body px-0 pt-2">
-
-										<!-- 1 단위 -->
-										<div class="d-flex justify-content-between recent-emails">
-											<div class="d-flex">
-												<div class="profile-k">
-													<span class="bg-success">영실</span>	
-												</div>
-												<div class="ms-3">
-													<a href="{% url 'fillow:email-inbox' %}"> <h4 class="fs-18 font-w500">일반적인 글 테스트</h4></a>
-													<P class="text-black mb-0">테스트용입니다.</P>
-												</div>
-											</div>
-											<div class="email-check">
-												<label class="like-btn mb-0">
-														<input type="checkbox">
-														<span class="checkmark"></span>
-												</label>
-											</div>
-										</div>
-										<!-- 1 단위 끝 -->
-
-										<div class="d-flex justify-content-between recent-emails">
-											<div class="d-flex">
-												<div class="profile-k">
-													<img src="{% static 'fillow/images/profile/small/pic6.jpg' %}" alt="">
-												</div>
-												<div class="ms-3">
-													<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">이미지 테스트</h4></a>
-													<P class="text-black mb-0">이미지 테스트용입니다.</P>
-
-													<!-- 첨부파일 -->
-													<div class="final-badge">
-														<span class="badge text-black border"><i class="far fa-file-alt me-3"></i>Master_file.fig</span>
-														<span class="badge text-black border"><i class="fas fa-image me-2"></i>CoverPreview.jpg</span>
-														<span class="badge border bgl-primary font-w700">4 files more</span>
-													</div>
-													<!-- 첨부파일 끝 -->
-												</div>
-											</div>
-											<div class="email-check">
-												<label class="like-btn mb-0">
-														<input type="checkbox">
-														<span class="checkmark"></span>
-												</label>
-											</div>
-										</div>
-
-										<div class="d-flex justify-content-between recent-emails">
-											<div class="d-flex">
-												<div class="profile-k">
-													<span class="bg-warning">G</span>	
-												</div>
-												<div class="ms-3">
-													<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">줄 바꿈 테스트</h4></a>
-													<P class="text-black mb-0">줄이 길면...<br>두 줄까지 표시?</P>
-												</div>
-											</div>
-											<div class="email-check">
-												<label class="like-btn mb-0">
-														<input type="checkbox">
-														<span class="checkmark"></span>
-												</label>
-											</div>
-										</div>
-
-										<div class="d-flex justify-content-between recent-emails">
-											<div class="d-flex">
-												<div class="profile-k">
-													<span class="bg-warning">세윤</span>
-												</div>
-												<div class="ms-3">
-													<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">안녕</h4></a>
-													<P class="text-black mb-0">안녕</P>
-												</div>
-											</div>
-											<div class="email-check">
-												<label class="like-btn mb-0">
-														<input type="checkbox">
-														<span class="checkmark"></span>
-												</label>
-											</div>
-										</div>
-
-										<div class="d-flex justify-content-between recent-emails">
-											<div class="d-flex">
-												<div class="profile-k">
-													<span class="bg-warning">성업</span>
-												</div>
-												<div class="ms-3">
-													<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">이메일 클릭시</h4></a>
-													<P class="text-black mb-0">해당 이메일 자세히 보기</P>
-												</div>
-											</div>
-											<div class="email-check">
-												<label class="like-btn mb-0">
-														<input type="checkbox">
-														<span class="checkmark"></span>
-												</label>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
 						</div>
 					</div>
 					<!-- 왼쪽 영역 끝 -->
@@ -295,175 +174,148 @@
 									</div>
 								</div>
 								<!-- 이메일 분류 현황 끝 -->
-								<!-- 이메일 분류 현황 -->
-							
-								<div class="col-12">
-									<div class="row">
-										<div class="col-xl-6 col-lg-12 col-sm-12">
-											<div class="card">
-												<div class="card-header">
-													<h4 class="card-title">최근1주일 Action내용</h4>
-												</div>
-												<div class="card-body">
-													<div id="barChart1"></div>
-												</div>
-											</div>
-										</div><div class="col-xl-6 col-xxl-12 col-sm-6">
-										</div>
-									</div>
-								</div>
+								
+								<!-- 7일내 Action내용 -->
+								<div class="col-xl-6 col-lg-12 col-sm-12">
 									<div class="card">
 										<div class="card-header border-0 pb-0">
-											<div>
-												<h4 class="card-title">최근1주일 Action내용</h4>
-												<p class="mb-0">이메일 분류 현황을 도식화하여 보여줍니다</p>
-											</div>	
-										</div>	
-										<div class="card-body pb-0">
-											<div id="emailchart"> </div>
-											<div class="email-lagend">
-												{% for label, count, color in email_count.data.zip %}
-													<div class="d-flex align-items-center justify-content-between mb-3">
-														<span class="fs-16 text-gray">	
-															<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																<rect width="20" height="20" rx="6" fill="{{ color }}"/>
-															</svg>
-															{{ label }}
-														</span>
-														<h5 class="mb-0 font-w600">{{ count }}</h5>
+											<h4 class="card-title">최근1주일 Action내용</h4>
+										</div>
+										<div class="card-body">
+											<div id="barChart1"></div>
+										</div>
+									</div>
+									<div class="col-xl-6 col-xxl-12 col-sm-6"></div>
+								</div>
+								<!-- 7일내 Action내용 끝 -->
+							</div>
+							<!-- 이메일 분류 현황 끝 -->
+							<!-- 최근 이메일 -->
+							<div class="col-xl-12">
+								<div class="card">
+	
+									<!-- 헤더 영역 -->
+									<div class="card-header pb-0 border-0">
+										<div>
+											<h4 class="card-title">최근 이메일</h4>
+											<p class="mb-0">가장 최근에 받은 이메일을 5개까지 보여줍니다</p>
+										</div>
+										<div>
+											<a href="{% url 'fillow:email-inbox' %}" class="btn btn-outline-primary btn-rounded">받은 이메일 함으로</a>
+										</div>
+									</div>
+									<!-- 헤더 영역 끝 -->
+
+									<!-- 바디 영역 -->
+									<div class="card-body px-0 pt-2">
+
+										<!-- 1 단위 -->
+										<div class="d-flex justify-content-between recent-emails">
+											<div class="d-flex">
+												<div class="profile-k">
+													<span class="bg-success">영실</span>	
+												</div>
+												<div class="ms-3">
+													<a href="{% url 'fillow:email-inbox' %}"> <h4 class="fs-18 font-w500">일반적인 글 테스트</h4></a>
+													<P class="text-black mb-0">테스트용입니다.</P>
+												</div>
+											</div>
+											<div class="email-check">
+												<label class="like-btn mb-0">
+													<input type="checkbox">
+													<span class="checkmark"></span>
+												</label>
+											</div>
+										</div>
+										<!-- 1 단위 끝 -->
+
+										<div class="d-flex justify-content-between recent-emails">
+											<div class="d-flex">
+												<div class="profile-k">
+													<img src="{% static 'fillow/images/profile/small/pic6.jpg' %}" alt="">
+												</div>
+												<div class="ms-3">
+													<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">이미지 테스트</h4></a>
+													<P class="text-black mb-0">이미지 테스트용입니다.</P>
+
+													<!-- 첨부파일 -->
+													<div class="final-badge">
+														<span class="badge text-black border"><i class="far fa-file-alt me-3"></i>Master_file.fig</span>
+														<span class="badge text-black border"><i class="fas fa-image me-2"></i>CoverPreview.jpg</span>
+														<span class="badge border bgl-primary font-w700">4 files more</span>
 													</div>
-												{% endfor %}
+													<!-- 첨부파일 끝 -->
+												</div>
+											</div>
+											<div class="email-check">
+												<label class="like-btn mb-0">
+													<input type="checkbox">
+													<span class="checkmark"></span>
+												</label>
+											</div>
+										</div>
+
+										<div class="d-flex justify-content-between recent-emails">
+											<div class="d-flex">
+												<div class="profile-k">
+													<span class="bg-warning">G</span>	
+												</div>
+												<div class="ms-3">
+													<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">줄 바꿈 테스트</h4></a>
+													<P class="text-black mb-0">줄이 길면...<br>두 줄까지 표시?</P>
+												</div>
+											</div>
+											<div class="email-check">
+												<label class="like-btn mb-0">
+													<input type="checkbox">
+													<span class="checkmark"></span>
+												</label>
+											</div>
+										</div>
+
+										<div class="d-flex justify-content-between recent-emails">
+											<div class="d-flex">
+												<div class="profile-k">
+													<span class="bg-warning">세윤</span>
+												</div>
+												<div class="ms-3">
+													<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">안녕</h4></a>
+													<P class="text-black mb-0">안녕</P>
+												</div>
+											</div>
+											<div class="email-check">
+												<label class="like-btn mb-0">
+													<input type="checkbox">
+													<span class="checkmark"></span>
+												</label>
+											</div>
+										</div>
+
+										<div class="d-flex justify-content-between recent-emails">
+											<div class="d-flex">
+												<div class="profile-k">
+													<span class="bg-warning">성업</span>
+												</div>
+												<div class="ms-3">
+													<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">이메일 클릭시</h4></a>
+													<P class="text-black mb-0">해당 이메일 자세히 보기</P>
+												</div>
+											</div>
+											<div class="email-check">
+												<label class="like-btn mb-0">
+													<input type="checkbox">
+													<span class="checkmark"></span>
+												</label>
 											</div>
 										</div>
 									</div>
 								</div>
-								<!-- 이메일 분류 현황 끝 -->
-								<!-- 최근 이메일 -->
-								<div class="col-xl-12">
-									<div class="card">
-	
-										<!-- 헤더 영역 -->
-										<div class="card-header pb-0 border-0">
-											<div>
-												<h4 class="card-title">최근 이메일</h4>
-												<p class="mb-0">가장 최근에 받은 이메일을 5개까지 보여줍니다</p>
-											</div>
-											<div>
-												<a href="{% url 'fillow:email-inbox' %}" class="btn btn-outline-primary btn-rounded">받은 이메일 함으로</a>
-											</div>
-										</div>
-										<!-- 헤더 영역 끝 -->
-	
-										<!-- 바디 영역 -->
-										<div class="card-body px-0 pt-2">
-	
-											<!-- 1 단위 -->
-											<div class="d-flex justify-content-between recent-emails">
-												<div class="d-flex">
-													<div class="profile-k">
-														<span class="bg-success">영실</span>	
-													</div>
-													<div class="ms-3">
-														<a href="{% url 'fillow:email-inbox' %}"> <h4 class="fs-18 font-w500">일반적인 글 테스트</h4></a>
-														<P class="text-black mb-0">테스트용입니다.</P>
-													</div>
-												</div>
-												<div class="email-check">
-													<label class="like-btn mb-0">
-															<input type="checkbox">
-															<span class="checkmark"></span>
-													</label>
-												</div>
-											</div>
-											<!-- 1 단위 끝 -->
-	
-											<div class="d-flex justify-content-between recent-emails">
-												<div class="d-flex">
-													<div class="profile-k">
-														<img src="{% static 'fillow/images/profile/small/pic6.jpg' %}" alt="">
-													</div>
-													<div class="ms-3">
-														<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">이미지 테스트</h4></a>
-														<P class="text-black mb-0">이미지 테스트용입니다.</P>
-	
-														<!-- 첨부파일 -->
-														<div class="final-badge">
-															<span class="badge text-black border"><i class="far fa-file-alt me-3"></i>Master_file.fig</span>
-															<span class="badge text-black border"><i class="fas fa-image me-2"></i>CoverPreview.jpg</span>
-															<span class="badge border bgl-primary font-w700">4 files more</span>
-														</div>
-														<!-- 첨부파일 끝 -->
-													</div>
-												</div>
-												<div class="email-check">
-													<label class="like-btn mb-0">
-															<input type="checkbox">
-															<span class="checkmark"></span>
-													</label>
-												</div>
-											</div>
-	
-											<div class="d-flex justify-content-between recent-emails">
-												<div class="d-flex">
-													<div class="profile-k">
-														<span class="bg-warning">G</span>	
-													</div>
-													<div class="ms-3">
-														<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">줄 바꿈 테스트</h4></a>
-														<P class="text-black mb-0">줄이 길면...<br>두 줄까지 표시?</P>
-													</div>
-												</div>
-												<div class="email-check">
-													<label class="like-btn mb-0">
-															<input type="checkbox">
-															<span class="checkmark"></span>
-													</label>
-												</div>
-											</div>
-	
-											<div class="d-flex justify-content-between recent-emails">
-												<div class="d-flex">
-													<div class="profile-k">
-														<span class="bg-warning">세윤</span>
-													</div>
-													<div class="ms-3">
-														<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">안녕</h4></a>
-														<P class="text-black mb-0">안녕</P>
-													</div>
-												</div>
-												<div class="email-check">
-													<label class="like-btn mb-0">
-															<input type="checkbox">
-															<span class="checkmark"></span>
-													</label>
-												</div>
-											</div>
-	
-											<div class="d-flex justify-content-between recent-emails">
-												<div class="d-flex">
-													<div class="profile-k">
-														<span class="bg-warning">성업</span>
-													</div>
-													<div class="ms-3">
-														<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">이메일 클릭시</h4></a>
-														<P class="text-black mb-0">해당 이메일 자세히 보기</P>
-													</div>
-												</div>
-												<div class="email-check">
-													<label class="like-btn mb-0">
-															<input type="checkbox">
-															<span class="checkmark"></span>
-													</label>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!-- 최근 이메일 -->
+							</div>
+							<!-- 최근 이메일 -->
 
 								
-							</div>
 						</div>
+					</div>
 					<!-- 오른쪽 영역 끝 -->
 				</div>
 			</div>
