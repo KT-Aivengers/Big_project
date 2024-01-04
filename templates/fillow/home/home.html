@@ -132,12 +132,6 @@
         text-align: left;
     }
     
-    /* 기존 .landing-wording 스타일 유지 */
-    .landing-wording {
-        /* 기존 스타일... */
-        text-align: left;
-    }
-    
     /* 버튼 컨테이너 스타일 */
     .buttons-container {
         display: flex;
@@ -167,13 +161,17 @@
         margin-top: 0.5rem !important;
     }
 
-    [data-theme-version=dark] .background {
-        background-image: linear-gradient(to top left, rgba(6, 87, 63, 1), rgba(6, 87, 63, 0)), url("{% static 'fillow/images/background_dark.png'%}");
-    }
+    [data-theme-version=dark] 
+    { .background {background-image: linear-gradient(to top left, rgba(6, 87, 63, 0), rgba(6, 87, 63, 1)), url("{% static 'fillow/images/background_dark.png'%}");
+        }
+      .background #logo {content: url("{% static 'fillow/images/logofull_dark.svg' %}")
+        } 
+      .landing-wording strong {
+        color: #0affc4; /* 강조할 텍스트의 색상을 변경합니다. */
+        font-weight: bold; /* 글씨를 두껍게 합니다. */
+        }}
 
-    [data-theme-version=dark] .background #logo {
-        content: url("{% static 'fillow/images/logofull_dark.svg' %}")
-    }
+
 
     #logo {
         display: block;
@@ -392,7 +390,7 @@
                 <div class="col-lg-1"></div>
                 <div class="col-lg-8">
                     <h3>스마트한 AI 이메일 분류기</h3>
-                    <span class="description">협재씨의 AI 이메일 분류기는 정해진 카테고리에 따라 이메일을 자동으로 분류합니다. 하나 이상의 이메일 계정을 연동하면, AI 모델이 업무 우선순위에 맞춰 이메일을 분류해드립니다. 프로 협재씨를 사용하시면 가중치 설정과 추가적인 분류 카테고리를 직접 설정하실 수 있어, 더욱 맞춤화된 이메일 관리 경험을 제공합니다.</span>
+                    <span class="description">협재씨의 AI 이메일 분류기는 정해진 카테고리에 따라 이메일을 자동으로 분류합니다. 하나 이상의 이메일 계정을 연동하면, <strong>AI 모델</strong>이 업무 우선순위에 맞춰 이메일을 분류해드립니다. 프로 협재씨를 사용하시면 가중치 설정과 추가적인 분류 카테고리를 직접 설정하실 수 있어, 더욱 맞춤화된 이메일 관리 경험을 제공합니다.</span>
                 </div>
             </div>
         </div>
