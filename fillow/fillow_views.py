@@ -2,7 +2,7 @@ from typing import Any
 from django.shortcuts import render
 from django.http import HttpResponse
 from fillow.forms import DocumentForm
-from .models import Qna, EmailCompose, EmailComposeTpl
+from .models import Qna, EmailCompose, EmailComposeTpl, AdditionalInform, Email
 from datetime import datetime, timedelta
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -11,15 +11,21 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import views
-from .models import AdditionalInform
 # from .gpt import process_file
 
 # 분류된 이메일 현황 받기
-def get_most_4_category():
+def get_most_category(id):
     # 이 부분은 DB에서 불러오기
-    total = 60
+    
+    unread_emails = Email.objects.filter(read=False, user_id=id)
     labels = ["결재승인", "휴가", "진행업무", "회의", "보고", "스크랩", "공지", "감사인사", "기타"]
-    count = [25, 10, 9, 6, 0, 1, 0, 0, 15]
+    email_counts = []
+    total = 0
+    
+    for label in labels:
+        count = len(unread_emails.filter(category=label))
+        total += count
+        email_counts.append(count)
     
     # 그래프 색상
     color = [
@@ -34,20 +40,14 @@ def get_most_4_category():
 		"#c8c8c8",
     ]
     
-    sum_ = sum(count)
-    
-    if sum_ < total:
-        labels.append("기타")
-        count.append(total - sum_)
-    
-    zip_ = zip(labels, count, color)
+    zip_ = zip(labels, email_counts, color)
     
     result = {
         "email_count": {
             "total" : total,
             "data": {
                 "labels": labels,
-                "count": count,
+                "count": email_counts,
                 "zip": list(zip_),
             }
         }
@@ -56,39 +56,53 @@ def get_most_4_category():
 from django.db.models import Q
 # 일정 불러오기
 def get_schedule(request):
-    user = request.user
-    # DB에서 일정 불러오기
-    emails = Email.objects.filter(
-    Q(user_id=request.user.id) & 
-    (Q(reply_req_yn=True) | ~Q(meeting_date="없음"))
-)
+#     user = request.user
+#     # DB에서 일정 불러오기
+#     emails = Email.objects.filter(
+#     Q(user_id=request.user.id) & 
+#     (Q(reply_req_yn=True) | ~Q(meeting_date="없음"))
+# )
 
-    schedule_list = [
-    {
-        'pk': email.id,
-        'title': email.category + " / " + email.from_name,
-        'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
-        'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-        'category': email.category,
-    } for email in emails if email.reply_req_yn==True
-] + [
-    {
-        'pk': email.id,
-        'title': "회의 / " + email.from_name,
-        'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-        'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
-        'category': '회의',
-    } for email in emails if email.meeting_date != "없음"
-]
-    print(schedule_list)
-    
-    
+#     schedule_list = [
+#     {
+#         'pk': email.id,
+#         'title': email.category + " / " + email.from_name,
+#         'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
+#         'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+#         'category': email.category,
+#     } for email in emails if email.reply_req_yn==True
+# ] + [
+#     {
+#         'pk': email.id,
+#         'title': "회의 / " + email.from_name,
+#         'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+#         'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
+#         'category': '회의',
+#     } for email in emails if email.meeting_date != "없음"
+# ] 
+    # DB에서 일정 불러오기
+    json_raw = request.user.additionalinform.schedule
+   
+    # json 파싱
+    schedule_list = json.loads(json_raw.replace("\'", "\""))
+   
     return schedule_list
 
 
-# DB에 올리는 코드 여기에 작성
-def save_schedule(schedule_json):
-    print(schedule_json)
+def get_recent_email(id):
+    unread_emails = Email.objects.filter(read=False, user_id=id)
+    sorted_data = unread_emails.order_by('-email_date')
+    
+    return {
+        'email_recent':
+        sorted_data[:5]
+    }
+
+# DB에 변경된 일정 반영하기
+def save_schedule(schedule_json, user):
+    inform = user.additionalinform
+    inform.schedule = json.dumps(schedule_json['schedule'])
+    inform.save()
     return
 
 
@@ -99,6 +113,8 @@ def home(request):
     return render(request,'fillow/home/home.html',context)
 
 from .models import AdditionalInform
+
+
 def index(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
@@ -108,14 +124,20 @@ def index(request):
         if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
             # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
             return redirect('fillow:additional_info')
-    most4 = get_most_4_category()
+    
+    most = get_most_category(request.user.id)
+    recent = get_recent_email(request.user.id)
+    
     context={
         "page_title":"",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
     
-    context.update(most4)
+    context.update(most)
+    context.update(recent)
+    
+    print(context)
         
     return render(request,'fillow/index.html', context)
 
@@ -123,7 +145,7 @@ def index(request):
 
 from .forms import AdditionalInformForm
 
- 
+
 def fillow_additionalinform(request):
     if request.method == "POST":
         form = AdditionalInformForm(request.POST)
@@ -140,12 +162,45 @@ def fillow_additionalinform(request):
 
 
 from django.core.files.storage import FileSystemStorage
+from .forms import PasswordConfirmationForm
+
+
+def check_password_(request):
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+    
+    if request.session.get('setting_checked'):
+        return redirect('fillow:profile')
+    
+    if request.method == 'POST':
+        form = PasswordConfirmationForm(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['password']
+            user = request.user  # 현재 로그인된 사용자를 가져옵니다.
+            if check_password(password, user.password):
+                request.session['setting_checked'] = True
+                return redirect('fillow:profile')
+            else:
+                # 비밀번호가 일치하지 않는 경우
+                msg = '비밀번호가 일치하지 않습니다'
+                return render(request, 'fillow/apps/profile/check-password.html', {'form': form, 'msg': msg})
+    else:
+        form = PasswordConfirmationForm()
+    return render(request, 'fillow/apps/profile/check-password.html', {'form': form})
+
+
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth import update_session_auth_hash
+
 
 def app_profile(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     
+    if not request.session.get('setting_checked'):
+        raise PermissionDenied
+        
     user_id = request.user.id
     inform = AdditionalInform.objects.get(user_id=user_id)
     user = User.objects.get(id=user_id)
@@ -158,18 +213,31 @@ def app_profile(request):
             inform.phone = request.POST.get("phone")
             user.first_name = request.POST.get("first_name")
             user.last_name = request.POST.get("last_name")
-            user.email = request.POST.get("email")
             
             user.save()
             inform.save()
+        
+        elif action=="password":
+            password = request.POST.get("password")
+            password_confirm = request.POST.get("password_confirm")
+            
+            try:
+                validate_password(password)
+                
+                if password != password_confirm:
+                    raise ValidationError('비밀번호가 일치하지 않습니다.')
+                user.set_password(password)
+                user.save()
+                update_session_auth_hash(request, user)
+            except ValidationError as e:
+                return render(request, 'fillow/apps/profile/profile.html', {'msg': e})
             
         elif request.FILES['image']:
             img = request.FILES['image']
             inform.image = img
             inform.save()
             
-          
-        return redirect("fillow:app-profile")
+        return redirect("fillow:profile")
     
     
     context={
@@ -182,7 +250,7 @@ def app_profile(request):
         "masking_name":request.user.first_name[1:],
     }
     
-    return render(request,'fillow/apps/app-profile.html',context)
+    return render(request,'fillow/apps/profile/profile.html',context)
 
 
 def email_compose(request):
@@ -524,16 +592,48 @@ def qna_details2(request, id):
     return render(request, 'fillow/apps/cs/qna_details2.html',context)
 
 
+# 일정 불러오기
+def get_schedule(request):
+    
+    # DB에서 일정 불러오기
+    json_raw = request.user.additionalinform.schedule
+    
+    # json 파싱
+    schedule_list = json.loads(json_raw.replace("\'", "\""))
+    
+    return schedule_list
+
+
+
+# DB에 변경된 일정 반영하기
+def save_schedule(schedule_json, user):
+    inform = user.additionalinform
+    inform.schedule = json.dumps(schedule_json['schedule'])
+    inform.save()
+    return
+
+# 배정, 비배정 일정 분리하기
+def sep_schedule(schedule_list):
+    # 달력에 배정 된 일정
+    in_calendar = []
+    # 배정되지 않은 일정
+    not_in_calendar = []
+    
+    # 받아온 일정 리스트에서 end 속성이 없는(배정이 되지 않은) 일정 분리
+    for schedule in schedule_list:
+        if (schedule.get('end')):
+            in_calendar.append(schedule)
+        else:
+            not_in_calendar.append(schedule)
+    
+    return in_calendar[:], not_in_calendar[:]
+
+
 def schedule(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
-    if request.method == "POST":
-        # JSON으로 수정된 일정 데이터 받아옴
-        received_data = json.loads(request.body.decode('utf-8'))
-        
-        # DB에 변경사항 올리는 함수
-        save_schedule(received_data)
+    
 
     context={
         "page_title":"일정 관리",
@@ -541,18 +641,23 @@ def schedule(request):
         "masking_name":request.user.first_name[1:],
     }
     
-    schedule_list = get_schedule(request)
-    # 달력에 배정 된 일정
-    in_calendar = []
-    # 배정되지 않은 일정
-    not_in_calendar = []
+    if request.method == "POST":
+        # JSON으로 수정된 일정 데이터 받아옴
+        received_data = json.loads(request.body.decode('utf-8'))
+        
+        # DB에 변경사항 올리는 함수
+        save_schedule(received_data, request.user)
     
-    # 받아온 일정 리스트에서 start 속성이 없는(배정이 되지 않은) 일정 분리
-    for schedule in schedule_list:
-        if (schedule.get('end')):
-            in_calendar.append(schedule)
-        else:
-            not_in_calendar.append(schedule)
+    if request.method == "POST":
+        # JSON으로 수정된 일정 데이터 받아옴
+        received_data = json.loads(request.body.decode('utf-8'))
+        
+        # DB에 변경사항 올리는 함수
+        save_schedule(received_data, request.user)
+    
+    schedule_list = get_schedule(request)
+    
+    in_calendar, not_in_calendar = sep_schedule(schedule_list)
         
     context['in_calendar'] = in_calendar
     context['not_in_calendar'] = not_in_calendar
@@ -586,18 +691,89 @@ def page_register(request):
             user = user_form.save()
             additional_inform = additional_form.save(commit=False)
             additional_inform.user = user
+            additional_inform.phone = additional_form.cleaned_data['phone']
             additional_inform.save()
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
-
-            return redirect("fillow:index")
+            return redirect("fillow:page-register-complete")
     else:
         user_form = UserForm()
         additional_form = AdditionalInformForm()
     return render(request, 'fillow/pages/page-register.html', {'user_form': user_form, 'additional_form': additional_form})
 
+
+def page_register_complete(request):
+    return render(request, 'fillow/pages/page-register-complete.html')
+
+from .forms import CustomPasswordResetForm
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.contrib import messages
+
+
+def page_reset_done(request):
+    return render(request, 'fillow/pages/page-reset-done.html')
+
+
 def page_forgot_password(request):
-    return render(request,'fillow/pages/page-forgot-password.html')
+    if request.method == "POST":
+        form = CustomPasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            try:
+                user = User.objects.get(email=email)
+            except:
+                return render(request,'fillow/pages/page-forgot-password.html', {'form': form, 'error': '해당 이메일로 가입된 계정이 없습니다.'})
+            
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            
+            reset_link = f'http://127.0.0.1:8000/reset/{uid}/{token}'
+            
+            send_mail(
+                '비밀번호 재설정',
+                f'비밀번호를 재설정하려면 다음 링크를 클릭하세요: {reset_link}',
+                'from@example.com',
+                [email],
+                fail_silently=False,
+            )
+            
+            return redirect('fillow:page-reset-done')
+    else:
+        form = CustomPasswordResetForm()
+    return render(request,'fillow/pages/page-forgot-password.html', {'form': form})
+
+
+def page_reset_confirm(request, uidb64, token):
+    if request.method == 'POST':
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        
+            if default_token_generator.check_token(user, token):
+                password = request.POST['password']
+                password_confirm = request.POST['password_confirm']
+                
+                validate_password(password)
+                    
+                if password != password_confirm:
+                    raise ValidationError('비밀번호가 일치하지 않습니다.')
+                user.set_password(password)
+                user.save()
+                
+                return redirect('fillow:page-reset-complete')
+        except ValidationError as e:
+            return render(request, 'fillow/pages/page-reset-confirm.html', {'msg': e})
+        except ValueError:
+            raise PermissionDenied
+    return render(request, 'fillow/pages/page-reset-confirm.html')
+
+
+def page_reset_complete(request):
+    return render(request, 'fillow/pages/page-reset-complete.html')
 
 def page_error_400(request):
     return render(request,'400.html')
@@ -644,6 +820,78 @@ def process_msg_file(eml_name, user):
     reply_req_yn = True if reply_req_yn == 'Y' else False
     
     user_additional_info = AdditionalInform.objects.filter(user=user).last()
+
+def upload_schedule(request,email):
+    user = request.user
+    # JSON 문자열을 Python 객체로 변환
+    json_raw = request.user.additionalinform.schedule
+    schedule_list = json.loads(json_raw)
+    # DB에서 일정 불러오기
+    temp=[]
+    if email.reply_req_yn==True:
+        dic={
+            'pk': email.id,
+            'title': email.category + " / " + email.from_name,
+            'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
+            'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+            'category': email.category,
+        }
+        temp.append(dic)
+    if email.meeting_date != "없음":
+        dic={
+            'pk': email.id,
+            'title': "회의 / " + email.from_name,
+            'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+            'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
+            'category': '회의',
+        }
+        temp.append(dic)
+    schedule_list+=temp
+
+    return schedule_list
+def upload_file(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+        
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            form.save()
+            
+            msg_name = request.FILES['uploaded_file'].name
+            form.cleaned_data['uploaded_file'].seek(0)
+            msg_contents = form.cleaned_data['uploaded_file'].read()
+            
+            uploaded_file = request.FILES['uploaded_file'] 
+            recent_document = Document.objects.latest('id')
+            file_path = recent_document.uploaded_file.path
+            
+
+            file_extension = uploaded_file.name.split('.')[-1].lower()
+            if file_extension == 'msg':
+                eml_name = file_path.split('.msg')[0] + '.eml'
+            
+                with open(eml_name , "wb") as f:
+                    contents = load(uploaded_file)
+                    f.write(contents.as_bytes())        
+            else :
+                eml_name = file_path
+            
+            print(eml_name)
+                 
+                    
+            headers = ['file_name','Subject','Date','From','To','Cc','text_content']
+            result = emlExtracter.prcessing_dir(headers, eml_name)
+            # print(result['text_content'])
+            
+            gpt_result = process_file(result['text_content'])
+            print(gpt_result)
+            reply_req_yn = gpt_result.get('회신요청여부','')
+            reply_req_yn = True if reply_req_yn == 'Y' else False
+            
+            user_additional_info = AdditionalInform.objects.filter(user=request.user).last()
 
     from_company = gpt_result.get('회사', '')
     user_company = user_additional_info.company

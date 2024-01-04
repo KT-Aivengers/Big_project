@@ -29,16 +29,22 @@
 	{% endfor %}
 	{% block additional_css %}
 	<style>
-		[data-theme-version=dark] .logo-auth {
-			content: url("{% static 'fillow/images/logofull_dark.svg' %}")
-		}
-	
-		.logo-auth {
-			width: 20vh;
-		}
+		.reg-form input[type="text"],
+    	.reg-form input[type="email"],
+    	.reg-form input[type="password"],
+    	.reg-form textarea {
+        margin-bottom: 10px;
+    }
+
+	[data-theme-version=dark] .logo-auth {
+		content: url("{% static 'fillow/images/logofull_dark.svg' %}")
+	}
+
+	.logo-auth {
+		width: 20vh;
+	}
 	</style>
 	{% endblock %}
-	
 </head>
 
 <body>
@@ -57,18 +63,10 @@
 							<div class="text-center mb-3">
 								<a href="{% url 'fillow:home' %}"><img class="logo-auth" src="{% static 'fillow/images/logofull.svg' %}" alt=""></a>
 							</div>
-							<h4 class="text-center mb-4">서비스 이용을 위해 추가 정보를 입력해주세요</h4>
-							<form action="" method="POST">
-								{% csrf_token %}
-								{{ form }}
-								<br>
-								<div class="text-center">
-									<button type="submit" class="btn btn-primary btn-block">입력완료</button>
-								</div>
-							</form>
-							<div class="new-account mt-3">
-								<p>다른 계정으로 로그인하기 <a class="text-primary" href="{% url 'fillow:page-login' %}">로그인</a></p>
-							</div>
+                            <p>비밀번호가 성공적으로 변경되었습니다.</p>
+						</div>
+                        <div class="card-footer">
+							<button id="back" class="btn btn-primary btn-block">확인</button>
 						</div>
 					</div>
 				</div>
@@ -94,6 +92,11 @@
 {% endfor %}
 
 {% block additional_js %}
+<script>
+	document.getElementById('back').addEventListener('click', function() {
+		window.location.href = "{% url 'fillow:page-login' %}";
+	});
+</script>
 {% endblock %}
 </body>
 </html>

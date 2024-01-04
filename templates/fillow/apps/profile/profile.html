@@ -2,6 +2,15 @@
 {% load static %}
         
 {% block additional_css %}
+<style>
+	.content {
+		background-color: #f3f3f3;
+	}
+
+	[data-theme-version=dark] .content {
+		background-color: #064b36;
+	}
+</style>
 {% endblock %}
         
 {% block content %}
@@ -42,15 +51,6 @@
 									<h4 class="text-muted mb-0">{{request.user.email}}</h4>
 									<p>Email</p>
 								</div>
-								{% comment %} <div class="dropdown ms-auto">
-									<a href="#" class="btn btn-primary light sharp" data-bs-toggle="dropdown" aria-expanded="true"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg></a>
-									<ul class="dropdown-menu dropdown-menu-end">
-										<li class="dropdown-item"><a href="javascript:void(0);"><i class="fa fa-user-circle text-primary me-2"></i> View profile</a></li>
-										<li class="dropdown-item"><a href="javascript:void(0);"><i class="fa fa-users text-primary me-2"></i> Add to btn-close friends</a></li>
-										<li class="dropdown-item"><a href="javascript:void(0);"><i class="fa fa-plus text-primary me-2"></i> Add to group</a></li>
-										<li class="dropdown-item"><a href="javascript:void(0);" class="text-danger"><i class="fa fa-ban text-danger me-2"></i> Block</a></li>
-									</ul>
-								</div> {% endcomment %}
 							</div>
 						</div>
 					</div>
@@ -81,21 +81,6 @@
 												{% endif %}
 											</div>
 										</div>
-										{% comment %} <div class="profile-skills mb-5">
-											<h4 class="text-primary mb-2">Skills</h4>
-											<a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Admin</a>
-											<a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Dashboard</a>
-											<a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Photoshop</a>
-											<a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Bootstrap</a>
-											<a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Responsive</a>
-											<a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Crypto</a>
-										</div> {% endcomment %}
-										{% comment %} <div class="profile-lang  mb-5">
-											<h4 class="text-primary mb-2">Language</h4>
-											<a href="javascript:void(0);" class="text-muted pe-3 f-s-16"><i class="flag-icon flag-icon-us"></i> English</a> 
-											<a href="javascript:void(0);" class="text-muted pe-3 f-s-16"><i class="flag-icon flag-icon-fr"></i> French</a>
-											<a href="javascript:void(0);" class="text-muted pe-3 f-s-16"><i class="flag-icon flag-icon-bd"></i> Bangla</a>
-										</div> {% endcomment %}
 										<div class="profile-personal-info">
 											<h4 class="text-primary mb-4">내 정보</h4>
 											<div class="row mb-2">
@@ -144,16 +129,22 @@
 										<div class="pt-3">
 											<div class="settings-form">
 												<h4 class="text-primary">내 정보 수정</h4>
-												<br>
-												<form method="POST" enctype="multipart/form-data">
-													{% csrf_token %}
-													<div class="mb-3">
-														<label for="formFile" class="form-label">프로필 사진 등록</label>
-														<input class="form-control" type="file" id="formFile-upload" name="image" accept="image/jpg,image/png,image/jpeg">
+												<div class="card content">
+													<div class="card-header">
+														<h4>프로필 사진 등록</h4>
 													</div>
-													<button class="btn btn-primary" id="btn-upload" type="submit" name="btn-post" value="img">등록</button>
-												</form>
-												
+													<form method="POST" enctype="multipart/form-data">
+														{% csrf_token %}
+														<div class="card-body">
+															<div class="mb-3">
+																<input class="form-control" type="file" id="formFile-upload" name="image" accept="image/jpg,image/png,image/jpeg">
+															</div>
+														</div>
+														<div class="card-footer">
+															<button class="btn btn-primary" id="btn-upload" type="submit" name="btn-post" value="img">등록하기</button>
+														</div>
+													</form>
+												</div>
 												<!-- Modal start-->
 												<div class="modal fade" id="submitModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true">
 													<div class="modal-dialog">
@@ -172,41 +163,76 @@
 													</div>
 												</div>
 												<!--Modal end-->
-												<br>
-												<form method="POST" action="">
-													{% csrf_token %}
-													<div class="row">
-														<div class="mb-3">
-															<label class="form-label">성</label>
-															<input type="text" class="form-control bg-transparent" value="{{request.user.last_name}}" name="last_name">
-														</div>
-														<div class="mb-3">
-															<label class="form-label">이름</label>
-															<input type="text" class="form-control bg-transparent" value="{{request.user.first_name}}" name="first_name">
-														</div>
-														<div class="mb-3">
-															<label class="form-label">이메일</label>
-															<input type="text" class="form-control bg-transparent" value="{{request.user.email}}" name="email">
-														</div>
-														<div class="mb-3">
-															<label class="form-label">회사</label>
-															<input type="text" class="form-control bg-transparent" value="{{company}}" name="company">
-														</div>
-														<div class="mb-3">
-															<label class="form-label">부서</label>
-															<input type="text" class="form-control bg-transparent" value="{{dept}}" name="dept">
-														</div>
-														<div class="mb-3">
-															<label class="form-label">휴대전화</label>
-															<input type="text" class="form-control bg-transparent" value="{{phone}}" name="phone">
-														</div>
-														<div class="mb-3">
-															<label class="form-label">자기소개</label>
-															<textarea class="form-control" rows="8" name="about" id="about">{{introduce}}</textarea>
-														</div>
+												<div class="card content">
+													<div class="card-header">
+														<h4>비밀번호 변경</h4>
 													</div>
-													<button class="btn btn-primary" type="submit" name="btn-post" value="edit">수정하기</button>
-												</form>
+													<form method="POST" action="">
+														{% csrf_token %}
+														<div class="card-body">
+															{% if msg %}
+																{% for m in msg %}
+																	<p style="color:red">{{ m }}</p>
+																{% endfor %}
+															{% endif %}
+															<div class="row">
+																<div class="mb-3">
+																	<label class="form-label">새 비밀번호</label>
+																	<input type="password" class="form-control" name="password">
+																</div>
+																<div class="mb-3">
+																	<label class="form-label">새 비밀번호 확인</label>
+																	<input type="password" class="form-control" name="password_confirm">
+																</div>
+															</div>
+														</div>
+														<div class="card-footer">
+															<button class="btn btn-primary" type="submit" name="btn-post" value="password">변경하기</button>
+														</div>
+													</form>
+													<div class="card-footer">
+
+													</div>
+												</div>
+												<div class="card content">
+													<div class="card-header">
+														<h4>개인정보 수정</h4>
+													</div>
+													<form method="POST" action="">
+														{% csrf_token %}
+														<div class="card-body">
+															<div class="row">
+																<div class="mb-3">
+																	<label class="form-label">성</label>
+																	<input type="text" class="form-control" value="{{request.user.last_name}}" name="last_name">
+																</div>
+																<div class="mb-3">
+																	<label class="form-label">이름</label>
+																	<input type="text" class="form-control" value="{{request.user.first_name}}" name="first_name">
+																</div>
+																<div class="mb-3">
+																	<label class="form-label">회사</label>
+																	<input type="text" class="form-control" value="{{company}}" name="company">
+																</div>
+																<div class="mb-3">
+																	<label class="form-label">부서</label>
+																	<input type="text" class="form-control" value="{{dept}}" name="dept">
+																</div>
+																<div class="mb-3">
+																	<label class="form-label">휴대전화</label>
+																	<input type="text" class="form-control" value="{{phone}}" name="phone">
+																</div>
+																<div class="mb-3">
+																	<label class="form-label">자기소개</label>
+																	<textarea class="form-control" rows="8" name="about" id="about">{{introduce}}</textarea>
+																</div>
+															</div>
+														</div>
+														<div class="card-footer">
+															<button class="btn btn-primary" type="submit" name="btn-post" value="edit">수정하기</button>
+														</div>
+													</form>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -241,16 +267,29 @@
 <!--**********************************
 	Content body end
 ***********************************-->
-<script src="{% static 'fillow/vendor/jquery/jquery.min.js' %}"></script>
+{% endblock %}
+{% block additional_js %}
 <script>
-    document.getElementById('btn-upload').addEventListener('click', function(e) {
+	document.getElementById('btn-upload').addEventListener('click', function(e) {
         var fileInput = document.getElementById('formFile-upload');
         if (fileInput.files.length === 0) {
             e.preventDefault();
             $('#submitModal').modal('show');
         }
     });
-</script>
 
+	// 탭 상태 유지하기
+	$(document).ready(function() {
+		var activeTab = localStorage.getItem('activeTab');
+		if (activeTab) {
+		  	$('.nav-tabs a[href="' + activeTab + '"]').tab('show');
+		}
+	
+		$('.nav-tabs a').on('shown.bs.tab', function(e) {
+		 	var activeTab = $(e.target).attr('href');
+		  	localStorage.setItem('activeTab', activeTab);
+		});
+	});
+</script>
 
 {% endblock %}

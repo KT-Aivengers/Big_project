@@ -14,6 +14,21 @@ from pathlib import Path
 import os
 from django.utils.translation import gettext as _
 
+from dotenv import load_dotenv
+from cryptography.fernet import Fernet
+
+# .env 파일로부터 환경 변수 로드
+load_dotenv()
+
+# .env 파일에서 암호화 키를 가져옴
+ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
+
+# 암호화 키가 없다면, 예외를 발생시켜 애플리케이션 구동을 중단
+if not ENCRYPTION_KEY:
+    raise ValueError("No encryption key set for Fernet")
+
+# Fernet 객체 생성
+FERNET_CIPHER_SUITE = Fernet(ENCRYPTION_KEY.encode())
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -187,3 +202,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# 비밀번호 초기화 이메일 설정
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Gmail SMTP 서버 호스트
+EMAIL_PORT = 587  # Gmail SMTP 포트
+EMAIL_USE_TLS = True  # TLS 보안 사용
+EMAIL_HOST_USER = 'kms160183@gmail.com'  # 발신자 Gmail 이메일
+EMAIL_HOST_PASSWORD = 'ygpd jexr ocyv rjnu'

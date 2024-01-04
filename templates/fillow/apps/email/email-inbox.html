@@ -8,35 +8,35 @@
 	}
 
 	#cat1 {
-		background-color: #ffa7d7;
-	}
-
-	#cat2 {
-		background-color: #312a2a;
-	}
-
-	#cat3 {
-		background-color: #d653c1;
-	}
-
-	#cat4 {
-		background-color: #ffdc00;
-	}
-
-	#cat5 {
 		background-color: #fc2e53;
 	}
 
-	#cat6 {
+	#cat2 {
 		background-color: #ffbf00;
 	}
 
-	#cat7 {
+	#cat3 {
+		background-color: #ffdc00;
+	}
+
+	#cat4 {
 		background-color: #09bd3c;
 	}
 
-	#cat8 {
+	#cat5 {
 		background-color: #15c08c;
+	}
+
+	#cat6 {
+		background-color: #ffa7d7;
+	}
+
+	#cat7 {
+		background-color: #d653c1;
+	}
+
+	#cat8 {
+		background-color: #312a2a;
 	}
 
 	#cat9 {
@@ -73,12 +73,12 @@
 									</div>
 									<div class="mail-list rounded mt-4">
 										{% if unread_email_count > 0 %}
-											<a href="{% url 'fillow:email_list' %}" class="list-group-item active">
+											<a href="{% url 'fillow:email_list' %}" class="list-group-item" id="inbox">
 												<i class="fa fa-inbox font-18 align-middle me-2"></i>받은 이메일<span
 												class="badge badge-danger text-white badge-sm float-end">{{ unread_email_count }}</span>
 											</a>
 										{% else %}
-											<a href="{% url 'fillow:email_list' %}" class="list-group-item active">
+											<a href="{% url 'fillow:email_list' %}" class="list-group-item" id="inbox">
 												<i class="fa fa-inbox font-18 align-middle me-2"></i>받은 이메일
 											</a>
 										{% endif %}
@@ -262,5 +262,55 @@
 	$(".fa.fa-star").click(function () {
 		$(this).toggleClass("yellow");
 	});
+
+	document.addEventListener('DOMContentLoaded', function() {
+		const urlParams = new URLSearchParams(window.location.search);
+		const categoryParam = urlParams.get('category');
+	
+		// 버튼 요소 가져오기
+		const inboxBtn = document.getElementById('inbox');
+		const cat1Btn = document.getElementById('cat1');
+		const cat2Btn = document.getElementById('cat2');
+		const cat3Btn = document.getElementById('cat3');
+		const cat4Btn = document.getElementById('cat4');
+		const cat5Btn = document.getElementById('cat5');
+		const cat6Btn = document.getElementById('cat6');
+		const cat7Btn = document.getElementById('cat7');
+		const cat8Btn = document.getElementById('cat8');
+		const cat9Btn = document.getElementById('cat9');
+	
+		// URL의 category 쿼리 매개변수에 따라 버튼 활성화
+		if (categoryParam === '결재승인') {
+			cat1Btn.classList.add('active');
+		} else if (categoryParam === '휴가') {
+			cat2Btn.classList.add('active');
+		} else if (categoryParam === '진행업무') {
+			cat3Btn.classList.add('active');
+		} else if (categoryParam === '회의') {
+			cat4Btn.classList.add('active');
+		} else if (categoryParam === '보고') {
+			cat5Btn.classList.add('active');
+		} else if (categoryParam === '스크랩') {
+			cat6Btn.classList.add('active');
+		} else if (categoryParam === '공지') {
+			cat7Btn.classList.add('active');
+		} else if (categoryParam === '감사인사') {
+			cat8Btn.classList.add('active');
+		} else if (categoryParam === '기타') {
+			cat9Btn.classList.add('active');
+		} else {
+			inboxBtn.classList.add('active');
+		}
+	});
+	const urlParams = new URLSearchParams(window.location.search);
+	const myParam = urlParams.get('category');
+
+	// 버튼 요소 가져오기
+	const button = document.getElementById('selected');
+
+	// URL의 쿼리 매개변수에 따라 버튼 클래스 변경
+	if (myParam === 'active') {
+		button.classList.add('active');
+	}
 </script>
 {% endblock %}

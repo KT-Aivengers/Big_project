@@ -2,22 +2,44 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
+from cryptography.fernet import Fernet
 # Create your models here.
 
 class AdditionalInform(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     department = models.CharField(max_length=10)
-    phone = models.CharField(max_length=16, 
-        validators=[
-            RegexValidator(
-                regex=r'^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$',
-                message="010-****-****의 형태로 입력해주세요."
-            ),
-        ],)
-    introduce = models.CharField(max_length=500)
+    # 암호화된 전화번호를 저장할 내부 필드 추가
+    _phone = models.CharField(max_length=255, null=True, blank=True)
+
+    # 외부에서 접근할 phone 필드는 실제로는 암호화된 데이터를 처리합니다.
+    @property
+    def phone(self):
+        # 복호화하여 평문 전화번호 반환
+        if self._phone:  # 암호화된 데이터가 있을 경우에만 복호화 진행
+            encrypted_data = self._phone.encode()
+            decrypted_data = settings.FERNET_CIPHER_SUITE.decrypt(encrypted_data)
+            return decrypted_data.decode()
+        return None
+
+    @phone.setter
+    def phone(self, value):
+        # 유효성 검사 수행
+        validator = RegexValidator(
+            regex=r'^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$',
+            message="010-****-****의 형태로 입력해주세요."
+        )
+        validator(value)
+
+        # 전화번호 암호화하여 내부 필드에 저장
+        encrypted_data = settings.FERNET_CIPHER_SUITE.encrypt(value.encode())
+        self._phone = encrypted_data.decode()
+    introduce = models.CharField(default='안녕하세요', max_length=500)
     image = models.ImageField(upload_to="profile/")
     USERNAME_FIELD = 'email'
     company = models.CharField(max_length=10)
+    schedule = models.TextField(default='[]')
+    
+    
 class Document(models.Model):
     uploaded_file = models.FileField(upload_to='documents/')
     
