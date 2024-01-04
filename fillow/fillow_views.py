@@ -219,6 +219,66 @@ def email_compose(request):
     
     return render(request,'fillow/apps/email/email-compose.html',context)
 
+
+def email_reply(request, email_id):
+    # Retrieve the Email object
+    original_email = get_object_or_404(Email, pk=email_id)
+
+    if request.user == original_email.user:
+        if request.method == "POST":
+            form = EmailComposeForm(request.POST)
+            if form.is_valid():
+                # Create a new email as a reply
+                user = request.user
+                email_to = form.cleaned_data.get('email_to', '')
+                email_cc = form.cleaned_data.get('email_cc', '')
+                email_subject = form.cleaned_data.get('email_subject', 'Re: ' + original_email.email_subject)
+                email_file = form.cleaned_data.get('email_file', '')
+                email_text_content = form.cleaned_data.get('email_text_content', '')
+                
+                current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                # Save the reply email
+                reply_email = Email.objects.create(
+                    email_from = user.email,
+                    email_to=email_to,
+                    email_cc=email_cc,
+                    email_subject=email_subject,
+                    email_file=email_file,
+                    email_text_content=email_text_content,
+                    email_date = current_date,
+                    user=user,
+                    sent = True,
+                    read = True,
+                    category = original_email.category,
+                    company_yn = original_email.company_yn,
+                    department_yn = original_email.department_yn,
+                    #reply_to=original_email  # Reference to the original email
+                )
+
+                # Update the 'reply_yn' attribute of the original email to True
+                original_email.reply_yn = True
+                original_email.reply_date = current_date
+                original_email.save()
+
+                # Add a success message (optional)
+                messages.success(request, 'Reply sent successfully.')
+
+                return redirect('fillow:email_list')
+            else:
+                print(form.errors)
+        else:
+            form = EmailComposeForm(initial={
+                'email_to': original_email.email_from,
+                'email_subject': 'Re: ' + original_email.email_subject,
+                'email_text_content': original_email.email_text_content,
+            })
+
+        return render(request, 'fillow/apps/email/email-reply.html', {'form': form, 'original_email': original_email})
+    else:
+        messages.error(request, 'You do not have permission to reply to this email.')
+        return redirect('fillow:email_list')  
+
+
 def email_compose_tpl(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
@@ -708,7 +768,7 @@ class EmailListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        
+        queryset = queryset.filter(sent=False)
         queryset = queryset.filter(trash=False)
         queryset = queryset.filter(user=self.request.user).order_by('-email_date')
         search_query = self.request.GET.get('search_query', '')
@@ -717,7 +777,64 @@ class EmailListView(ListView):
         internal_filter_d = self.request.GET.get('internal_d', '')
         
         if search_query:
-            queryset = queryset.filter(Q(email_subject__icontains=search_query) | Q(email_from__icontains=search_query))
+            queryset = queryset.filter(Q(email_subject__icontains=search_query) | Q(from_name__icontains=search_query))
+        
+        
+        if category_filter:
+            queryset = queryset.filter(category=category_filter)
+                
+        if internal_filter in ['0', '1']:
+            internal_filter = int(internal_filter)
+            queryset = queryset.filter(company_yn=internal_filter)
+            
+        if internal_filter_d in ['0', '1']:
+            internal_filter_d = int(internal_filter_d)
+            queryset = queryset.filter(department_yn=internal_filter_d)
+        recipient_filter = self.request.GET.get('recipient', '')
+        if recipient_filter in ['to', 'cc']:
+            user_email = self.request.user.email
+            if recipient_filter == 'to':
+                queryset = queryset.filter(email_to=user_email)
+            elif recipient_filter == 'cc':
+                queryset = queryset.filter(email_cc__contains=user_email)
+
+
+        self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
+        page_number = self.request.GET.get('page')
+        self.page_obj = self.paginator.get_page(page_number)
+        return self.page_obj.object_list
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        unread_email_count = Email.objects.filter(
+            user=self.request.user, read=False
+        ).count()
+        context['unread_email_count'] = unread_email_count
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        context.update({
+            'paginator': self.paginator,
+            'page_obj': self.page_obj,
+        })
+        return super().render_to_response(context, **response_kwargs)
+    
+class SentEmailListView(ListView):
+    model = Email
+    template_name = 'fillow/apps/email/email-inbox-sent.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(sent=True)
+        queryset = queryset.filter(trash=False)
+        queryset = queryset.filter(user=self.request.user).order_by('-email_date')
+        search_query = self.request.GET.get('search_query', '')
+        category_filter = self.request.GET.get('category', '')
+        internal_filter = self.request.GET.get('internal', '')
+        internal_filter_d = self.request.GET.get('internal_d', '')
+        
+        if search_query:
+            queryset = queryset.filter(Q(email_subject__icontains=search_query) | Q(from_name__icontains=search_query))
         
         
         if category_filter:

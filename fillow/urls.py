@@ -16,9 +16,9 @@ urlpatterns = [
     path('app-profile/',fillow_views.app_profile,name="app-profile"),
     path('email-compose/',fillow_views.email_compose,name="email-compose"),
     path('email-compose-tpl/',fillow_views.email_compose_tpl,name="email-compose-tpl"),
-    path('email-inbox/',fillow_views.email_inbox,name="email-inbox"),
-    path('email-read/',fillow_views.email_read,name="email-read"),
-    path('email-sent/',fillow_views.email_sent,name="email-sent"),
+    #path('email-inbox/',fillow_views.email_inbox,name="email-inbox"),
+    #path('email-read/',fillow_views.email_read,name="email-read"),
+    #path('email-sent/',fillow_views.email_sent,name="email-sent"),
     path('faq/',fillow_views.faq,name="faq"),
     path('qna/',fillow_views.qna,name="qna"),
     path('qna/<int:id>/',fillow_views.qna_details,name="qna-details"),
@@ -40,9 +40,13 @@ urlpatterns = [
     path('upload/', fillow_views.upload_file, name='upload_file'),
     
     path('email/', fillow_views.EmailListView.as_view(), name='email_list'),
+    path('email-sent/',fillow_views.SentEmailListView.as_view(),name="email-sent"),
     path('email/<int:pk>', fillow_views.EmailDetailView.as_view(), name='email_detail'),
     path('email/trash/<int:pk>/', fillow_views.email_trash, name='email-trash'),
     path('email/trash/', fillow_views.EmailListView_Trash.as_view(), name='email-list-trash'),
     path('email/create/', fillow_views.EmailCreateView.as_view(), name='email_create'),
     path('email/<int:pk>/update/', fillow_views.EmailUpdateView.as_view(), name='email_update'),
+    
+    path('email-reply/<int:email_id>/', fillow_views.email_reply, name="email-reply"),  
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

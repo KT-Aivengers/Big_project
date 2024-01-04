@@ -52,16 +52,16 @@
                                             <div class="intro-title d-flex justify-content-between mt-0">
                                                 <h5>카테고리</h5>
                                             </div>
-                                            <a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
+                                            <a href="{% url 'fillow:email_list' %}" class="list-group-item"><span class="icon-warning"><i
                                                         class="fa fa-circle" aria-hidden="true"></i></span>
                                                 Work </a>
-                                            <a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-primary"><i
+                                            <a href="{% url 'fillow:email_list' %}" class="list-group-item"><span class="icon-primary"><i
                                                         class="fa fa-circle" aria-hidden="true"></i></span>
                                                 Private </a>
-                                            <a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-success"><i
+                                            <a href="{% url 'fillow:email_list' %}" class="list-group-item"><span class="icon-success"><i
                                                         class="fa fa-circle" aria-hidden="true"></i></span>
                                                 Support </a>
-                                            <a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-dpink"><i
+                                            <a href="{% url 'fillow:email_list' %}" class="list-group-item"><span class="icon-dpink"><i
                                                         class="fa fa-circle" aria-hidden="true"></i></span>
                                                 Social </a>
                                         </div>
@@ -105,10 +105,15 @@
                                                             <i class="fa fa-folder"></i> <b class="caret m-l-5"></b>
                                                         </button>
                                                         <div class="dropdown-menu"> 
-                                                            <a class="dropdown-item" href="javascript: void(0);">Social</a> 
-                                                            <a class="dropdown-item" href="javascript: void(0);">Promotions</a> 
-                                                            <a class="dropdown-item" href="javascript: void(0);">Updates</a>
-                                                            <a class="dropdown-item" href="javascript: void(0);">Forums</a>
+                                                            <a class="dropdown-item" href="javascript: void(0);">경재승인</a> 
+                                                            <a class="dropdown-item" href="javascript: void(0);">휴가</a> 
+                                                            <a class="dropdown-item" href="javascript: void(0);">진행업무</a>
+                                                            <a class="dropdown-item" href="javascript: void(0);">회의</a>
+                                                            <a class="dropdown-item" href="javascript: void(0);">보고</a>
+                                                            <a class="dropdown-item" href="javascript: void(0);">스크랩</a>
+                                                            <a class="dropdown-item" href="javascript: void(0);">공지</a>
+                                                            <a class="dropdown-item" href="javascript: void(0);">감사인사</a>
+                                                            <a class="dropdown-item" href="javascript: void(0);">기타</a>
                                                         </div>
                                                     </div>
                                                     <div class="btn-group mb-1">
@@ -154,7 +159,9 @@
                                                         <hr>
                                                     </div>
                                                     <div class="read-content-attachment">
-                                                        <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-reply me-1"></i>Reply</button>
+                                                        <a class="btn btn-secondary btn-sm" href="{% url 'fillow:email-reply' email.id %}">
+                                                            <i class="fa-solid fa-reply me-1"></i> Reply
+                                                        </a>
                                                     </div>
                                                     <hr>
                                                     

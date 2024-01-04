@@ -46,6 +46,7 @@ class Email(models.Model):
     meeting_date = models.TextField(null=True)
     read = models.BooleanField(default=False)
     trash = models.BooleanField(default=False) 
+    sent = models.BooleanField(default = False)
     
 class Qna(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="qna")
