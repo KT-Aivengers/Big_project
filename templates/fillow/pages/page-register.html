@@ -43,6 +43,11 @@
 	.logo-auth {
 		width: 20vh;
 	}
+
+	#valid,
+	#invalid {
+		display: none;
+	}
 	</style>
 	{% endblock %}
 </head>
@@ -66,14 +71,43 @@
 							<h4 class="text-center mb-4">회원가입</h4>
 							<form action="" method="POST">
 								{% csrf_token %}
+								{{ user_form.username.label_tag }}
+								{{ user_form.username }}
+								<div class="row mb-2">
+									<div class="col-lg-4 text-lg-left">
+										<button id="username" type="button" class="btn btn-primary btn-sm">중복 확인</button>
+									</div>
+								</div>
+								<p id="message"></p>
+								{{ user_form.last_name.label_tag }}
+								{{ user_form.last_name }}
+								{{ user_form.first_name.label_tag }}
+								{{ user_form.first_name }}
+								{{ user_form.password1.label_tag }}
+								{{ user_form.password1 }}
+								{{ user_form.password2.label_tag }}
+								{{ user_form.password2 }}
+								{% if errors %}
+									<ul>
+										{% for field, error in errors.items %}
+											{% for message in error %}
+												<li style="color:red">{{ message }}</li>
+											{% endfor %}
+										{% endfor %}
+									</ul>
+								{% endif %}
+								<ul>
+									<li id="same"><i class="fa-solid fa-check" id="valid"></i><i class="fa-solid fa-xmark" id="invalid"></i>비밀번호와 확인란이 같아야 합니다.</li>
+								</ul>
+								{{ user_form.email.label_tag }}
+								{{ user_form.email }}
 								{% if msg %}
 									<p style="color:red">{{ msg }}</p>
 								{% endif %}
-								{{ user_form }}
 								{{ additional_form }}
 								<br>
 								<div class="text-center">
-									<button type="submit" class="btn btn-primary btn-block">회원가입</button>
+									<button id="submit" type="submit" class="btn btn-primary btn-block">회원가입</button>
 								</div>
 							</form>
 							<div class="new-account mt-3">
@@ -104,6 +138,7 @@
 {% endfor %}
 
 {% block additional_js %}
+<script src="../static/fillow/js/plugins-init/register.js"></script>
 {% endblock %}
 </body>
 </html>
