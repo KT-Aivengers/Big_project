@@ -2,7 +2,7 @@ from typing import Any
 from django.shortcuts import render
 from django.http import HttpResponse
 from fillow.forms import DocumentForm
-from .models import Qna, EmailCompose, EmailComposeTpl
+from .models import Qna, EmailCompose, EmailComposeTpl, AdditionalInform, Email
 from datetime import datetime, timedelta
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -11,15 +11,21 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import views
-from .models import AdditionalInform
 # from .gpt import process_file
 
 # 분류된 이메일 현황 받기
-def get_most_4_category():
+def get_most_category():
     # 이 부분은 DB에서 불러오기
-    total = 60
+    
+    unread_emails = Email.objects.filter(read=False)
     labels = ["결재승인", "휴가", "진행업무", "회의", "보고", "스크랩", "공지", "감사인사", "기타"]
-    count = [25, 10, 9, 6, 0, 1, 0, 0, 15]
+    email_counts = []
+    total = 0
+    
+    for label in labels:
+        count = len(unread_emails.filter(category=label))
+        total += count
+        email_counts.append(count)
     
     # 그래프 색상
     color = [
@@ -34,14 +40,14 @@ def get_most_4_category():
 		"#c8c8c8",
     ]
     
-    zip_ = zip(labels, count, color)
+    zip_ = zip(labels, email_counts, color)
     
     result = {
         "email_count": {
             "total" : total,
             "data": {
                 "labels": labels,
-                "count": count,
+                "count": email_counts,
                 "zip": list(zip_),
             }
         }
@@ -107,7 +113,7 @@ def index(request):
         if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
             # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
             return redirect('fillow:additional_info')
-    most4 = get_most_4_category()
+    most4 = get_most_category()
     context={
         "page_title":"",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
