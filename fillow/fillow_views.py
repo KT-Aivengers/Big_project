@@ -86,7 +86,7 @@ def index(request):
 
 from .forms import AdditionalInformForm
 
- 
+
 def fillow_additionalinform(request):
     if request.method == "POST":
         form = AdditionalInformForm(request.POST)
@@ -103,12 +103,42 @@ def fillow_additionalinform(request):
 
 
 from django.core.files.storage import FileSystemStorage
+from .forms import PasswordConfirmationForm
+
+
+def check_password_(request):
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+    
+    if request.method == 'POST':
+        form = PasswordConfirmationForm(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['password']
+            user = request.user  # 현재 로그인된 사용자를 가져옵니다.
+            if check_password(password, user.password):
+                request.session['checked'] = 'checked'
+                return redirect('fillow:profile')
+            else:
+                # 비밀번호가 일치하지 않는 경우
+                msg = '비밀번호가 일치하지 않습니다'
+                return render(request, 'fillow/apps/profile/check-password.html', {'form': form, 'msg': msg})
+    else:
+        form = PasswordConfirmationForm()
+    return render(request, 'fillow/apps/profile/check-password.html', {'form': form})
+
+
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth import update_session_auth_hash
+
 
 def app_profile(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     
+    if not request.session.get('checked'):
+        raise PermissionDenied
+        
     user_id = request.user.id
     inform = AdditionalInform.objects.get(user_id=user_id)
     user = User.objects.get(id=user_id)
@@ -121,18 +151,31 @@ def app_profile(request):
             inform.phone = request.POST.get("phone")
             user.first_name = request.POST.get("first_name")
             user.last_name = request.POST.get("last_name")
-            user.email = request.POST.get("email")
             
             user.save()
             inform.save()
+        
+        elif action=="password":
+            password = request.POST.get("password")
+            password_confirm = request.POST.get("password_confirm")
+            
+            try:
+                validate_password(password)
+                
+                if password != password_confirm:
+                    raise ValidationError('비밀번호가 일치하지 않습니다.')
+                user.set_password(password)
+                user.save()
+                update_session_auth_hash(request, user)
+            except ValidationError as e:
+                return render(request, 'fillow/apps/profile/profile.html', {'msg': e})
             
         elif request.FILES['image']:
             img = request.FILES['image']
             inform.image = img
             inform.save()
             
-        
-        return redirect("fillow:app-profile")
+        return redirect("fillow:profile")
     
     
     context={
@@ -145,7 +188,7 @@ def app_profile(request):
         "masking_name":request.user.first_name[1:],
     }
     
-    return render(request,'fillow/apps/app-profile.html',context)
+    return render(request,'fillow/apps/profile/profile.html',context)
 
 
 def email_compose(request):
@@ -594,7 +637,7 @@ def page_reset_confirm(request, uidb64, token):
         except ValidationError as e:
             return render(request, 'fillow/pages/page-reset-confirm.html', {'msg': e})
         except ValueError:
-            return render(request, 'fillow/pages/page-reset-confirm.html', {'msg': ['잘못된 접근입니다']})
+            raise PermissionDenied
     return render(request, 'fillow/pages/page-reset-confirm.html')
 
 

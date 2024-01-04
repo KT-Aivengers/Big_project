@@ -13,7 +13,9 @@ urlpatterns = [
     path('index/',fillow_views.index,name="index"),
     path('schedule/',fillow_views.schedule,name="schedule"),
 
-    path('app-profile/',fillow_views.app_profile,name="app-profile"),
+    path('profile/',fillow_views.app_profile,name="profile"),
+    path('check-password/',fillow_views.check_password_,name="check-password"),
+    
     path('email-compose/',fillow_views.email_compose,name="email-compose"),
     path('email-compose-tpl/',fillow_views.email_compose_tpl,name="email-compose-tpl"),
     path('email-inbox/',fillow_views.email_inbox,name="email-inbox"),

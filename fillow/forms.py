@@ -186,3 +186,11 @@ class CustomSetPasswordForm(SetPasswordForm):
         label_suffix="",
         widget=forms.PasswordInput
         )
+
+
+class PasswordConfirmationForm(forms.Form):
+    password = forms.CharField(
+        label='',
+        label_suffix="",
+        widget=forms.PasswordInput(attrs={"class":"form-control mb-3 mt-3"})
+        )
