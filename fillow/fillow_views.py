@@ -89,10 +89,14 @@ def get_schedule(request):
     return schedule_list
 
 
-def get_recent_email(request):
-    unread_emails = Email.objects.filter(read=False)
+def get_recent_email(id):
+    unread_emails = Email.objects.filter(read=False, user_id=id)
+    sorted_data = unread_emails.order_by('-email_date')
     
-
+    return {
+        'email_recent':
+        sorted_data[:5]
+    }
 
 # DB에 변경된 일정 반영하기
 def save_schedule(schedule_json, user):
@@ -120,7 +124,10 @@ def index(request):
         if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
             # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
             return redirect('fillow:additional_info')
-    most = get_most_category(request.user)
+    
+    most = get_most_category(request.user.id)
+    recent = get_recent_email(request.user.id)
+    
     context={
         "page_title":"",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
@@ -128,6 +135,9 @@ def index(request):
     }
     
     context.update(most)
+    context.update(recent)
+    
+    print(context)
         
     return render(request,'fillow/index.html', context)
 

@@ -208,27 +208,27 @@
 											<p class="mb-0">가장 최근에 받은 이메일을 5개까지 보여줍니다</p>
 										</div>
 										<div>
-											<a href="{% url 'fillow:email-inbox' %}" class="btn btn-outline-primary btn-rounded">받은 이메일 함으로</a>
+											<a href="{% url 'fillow:email_list' %}" class="btn btn-outline-primary btn-rounded">받은 이메일 함으로</a>
 										</div>
 									</div>
 									<!-- 헤더 영역 끝 -->
 
 									<!-- 바디 영역 -->
 									<div class="card-body px-0 pt-2">
-
-										<!-- 1 단위 -->
-										<div class="d-flex justify-content-between recent-emails">
-											<div class="d-flex">
-												<div class="profile-k">
-													<span class="bg-success">영실</span>	
-												</div>
-												<div class="ms-3">
-													<a href="{% url 'fillow:email-inbox' %}"> <h4 class="fs-18 font-w500">일반적인 글 테스트</h4></a>
-													<P class="text-black mb-0">테스트용입니다.</P>
+										{% for email in email_recent %}
+											<div class="d-flex justify-content-between recent-emails">
+												<div class="d-flex">
+													<div class="profile-k">
+														<span class="bg-success"></span>	
+													</div>
+													<div class="ms-3">
+														<a>{{ email.email_from }}</a>
+														<a href="/email/{{ email.id }}"> <h4 class="fs-18 font-w500">{{ email.email_subject }}</h4></a>
+														<P class="text-black mb-0">{{ email.email_text_content|slice:70 }}...</P>
+													</div>
 												</div>
 											</div>
-										</div>
-										<!-- 1 단위 끝 -->
+										{% endfor %}
 
 										<!-- <div class="d-flex justify-content-between recent-emails">
 											<div class="d-flex">
