@@ -654,11 +654,11 @@ def upload_file(request):
                 file_path = recent_document.uploaded_file.path
                 file_extension = uploaded_file.name.split('.')[-1].lower()
                 
-                print(file_path)
 
+                zip_path = os.path.join('media', recent_document.uploaded_file.name)
+                extract_path = os.path.join('media', 'extracted')
+                    
                 if file_extension == 'zip':
-                    zip_path = os.path.join('media', recent_document.uploaded_file.name)
-                    extract_path = os.path.join('media', 'extracted')
                     os.makedirs(extract_path, exist_ok=True)
                     extract_zip(zip_path, extract_path)
 
@@ -680,7 +680,8 @@ def upload_file(request):
                     process_msg_file(eml_name, request.user)
                 
                 # 압축 해제된 폴더 삭제
-                shutil.rmtree(extract_path)
+                if os.path.exists(extract_path) and os.path.isdir(extract_path):
+                    shutil.rmtree(extract_path)
 
 
             return redirect("fillow:index")
