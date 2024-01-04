@@ -103,6 +103,9 @@ def get_7_deadline(request):
         deadline = datetime.strptime(deadline, '%Y-%m-%d')
         
         diff = (deadline - today).days + 1
+        
+        if not s.get('category'):
+            s['category'] = '사용자일정'
 
         if diff > 0 and diff < 7:
             s['diff'] = diff

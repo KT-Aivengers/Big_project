@@ -2,6 +2,57 @@
 {% load static %}
         
 {% block additional_css %}
+<style>
+	.감사인사 {
+        background-color: #312a2a !important;
+		color: #fff !important;
+    }
+
+    .결재승인 {
+        background-color: #fc2e53 !important;
+		color: #fff !important;
+    }
+
+    .공지 {
+        background-color: #d653c1 !important;
+        color: #923883 !important;
+    }
+
+    .보고 {
+        background-color: #15c08c !important;
+        color: #0c7757 !important;
+    }
+
+    .스크랩 {
+        background-color: #ffa7d7 !important;
+        color: #996581 !important;
+    }
+
+    .진행업무 {
+        background-color: #ffdc00 !important;
+        color: #827100 !important;
+    }
+
+    .회의 {
+        background-color: #09bd3c !important;
+        color: #04551b !important;
+    }
+
+    .휴가 {
+        background-color: #ffbf00 !important;
+        color: #9d7600 !important;
+    }
+
+    .기타 {
+        background-color: #c8c8c8 !important;
+		color: #757575 !important;
+    }
+
+	.사용자일정 {
+		background-color: #faefd1 !important;
+		color: #aea692 !important;
+	}
+</style>
 {% endblock %}
 		
 {% block content %}	
@@ -25,7 +76,7 @@
 										<div class="col-xl-7 col-sm-7">
 											<h2 class="mb-0">당신의 메일함을 정리해드립니다</h2>
 											<span>AI에게 이메일 정리를 맡겨보세요</span>
-											<!-- <a href="javascript:void(0);" class="btn btn-rounded">Try Free Now</a> -->
+											<!-- <a href="javascript:void(0);" class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#contactmodal">Contact</a> -->
 										</div>
 										<div class="col-xl-5 col-sm-5 ">
 											<img src="{% static 'fillow/images/email_sort.png' %}" alt="head" width="100%">
@@ -43,96 +94,56 @@
 										</div>
 									</div>
 									<div class="card-body pb-0 pt-3">
-
-										<!-- 1단위 -->
-										<!-- <div class="project-details">
-											<div class="d-flex align-items-center justify-content-between">
-												<div class="d-flex align-items-center">
-													<div class="profile-k">
-														<span class="bg-success">민석</span>	
+										{% if deadline %}
+											{% for d in deadline %}
+												<div class="project-details">
+													<div class="d-flex align-items-center justify-content-between">
+														<div class="d-flex align-items-center">
+															<div class="profile-k">
+																<span class="bg-success {{ d.category }}"></span>	
+															</div>
+															<div class="ms-3">
+																<h5 class="mb-1">{{ d.title }}</h5>
+															</div>
+														</div>	
+														<!-- <div class="dropdown">
+															<div class="btn-link" data-bs-toggle="dropdown">
+																<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																	<circle cx="12.4999" cy="3.5" r="2.5" fill="#A5A5A5"/>
+																	<circle cx="12.4999" cy="11.5" r="2.5" fill="#A5A5A5"/>
+																	<circle cx="12.4999" cy="19.5" r="2.5" fill="#A5A5A5"/>
+																</svg>
+															</div>
+															<div class="dropdown-menu dropdown-menu-right">
+																<a class="dropdown-item" href="javascript:void(0)">삭제</a>
+																<a class="dropdown-item" href="javascript:void(0)">수정</a>
+															</div>
+														</div> -->
 													</div>
-													<div class="ms-3">
-														<h5 class="mb-1">저녁 메뉴 고르기</h5>
-														<p class="mb-0">나</p>
+													<!-- <h5 class="mt-3">저녁 뭐먹을까요?</h5> -->
+													<div class="projects">
+														<span class="badge badge-warning light {{ d.category }} cat">{{ d.category }}</span>
+													</div>
+													<div class="mt-3">
+														<div class="progress default-progress">
+															<div class="progress-bar bg-gradient1 progress-animated" style="width: {{ d.diff_percent }}%; height:5px;" role="progressbar">
+																<span class="sr-only">{{ d.diff }}일 남음</span>
+															</div>
+														</div>
+														<div class="d-flex align-items-end mt-3 justify-content-between">
+															<p class="mb-0">회신 기한: {{ d.end }} ({{ d.diff }}일 남음)</p>
+														</div>
 													</div>
 												</div>	
-												<div class="dropdown">
-													<div class="btn-link" data-bs-toggle="dropdown">
-														<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-															<circle cx="12.4999" cy="3.5" r="2.5" fill="#A5A5A5"/>
-															<circle cx="12.4999" cy="11.5" r="2.5" fill="#A5A5A5"/>
-															<circle cx="12.4999" cy="19.5" r="2.5" fill="#A5A5A5"/>
-														</svg>
-													</div>
-													<div class="dropdown-menu dropdown-menu-right">
-														<a class="dropdown-item" href="javascript:void(0)">삭제</a>
-														<a class="dropdown-item" href="javascript:void(0)">수정</a>
-													</div>
-												</div>
+												<hr>
+											{% endfor %}
+										{% else %}
+											<div class="text-center">
+												<br>
+												<h4>일정이 없습니다</h4>
+												<br>
 											</div>
-											<h5 class="mt-3">저녁 뭐먹을까요?</h5>
-											<div class="projects">
-												<span class="badge badge-warning light me-3">밥</span>
-												<span class="badge badge-danger light">스팸</span>
-											</div>
-											<div class="mt-3">
-												<div class="progress default-progress">
-													<div class="progress-bar bg-gradient1 progress-animated" style="width: 86%; height:5px;" role="progressbar">
-														<span class="sr-only">1일 남음</span>
-													</div>
-												</div>
-												<div class="d-flex align-items-end mt-3 justify-content-between">
-													<p class="mb-0">회신 기한: 12/20/2023</p>
-												</div>
-											</div>
-										</div>	
-										<hr> -->
-										<!-- 1 단위 끝 -->
-
-										{% for d in deadline %}
-											<div class="project-details">
-												<div class="d-flex align-items-center justify-content-between">
-													<div class="d-flex align-items-center">
-														<div class="profile-k">
-															<span class="bg-success"></span>	
-														</div>
-														<div class="ms-3">
-															<h5 class="mb-1">{{ d.title }}</h5>
-														</div>
-													</div>	
-													<!-- <div class="dropdown">
-														<div class="btn-link" data-bs-toggle="dropdown">
-															<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																<circle cx="12.4999" cy="3.5" r="2.5" fill="#A5A5A5"/>
-																<circle cx="12.4999" cy="11.5" r="2.5" fill="#A5A5A5"/>
-																<circle cx="12.4999" cy="19.5" r="2.5" fill="#A5A5A5"/>
-															</svg>
-														</div>
-														<div class="dropdown-menu dropdown-menu-right">
-															<a class="dropdown-item" href="javascript:void(0)">삭제</a>
-															<a class="dropdown-item" href="javascript:void(0)">수정</a>
-														</div>
-													</div> -->
-												</div>
-												<!-- <h5 class="mt-3">저녁 뭐먹을까요?</h5> -->
-												<div class="projects">
-													{% if d.category%}
-														<span class="badge badge-warning light me-3">{{ d.category }}</span>
-													{% endif %}
-												</div>
-												<div class="mt-3">
-													<div class="progress default-progress">
-														<div class="progress-bar bg-gradient1 progress-animated" style="width: {{ d.diff_percent }}%; height:5px;" role="progressbar">
-															<span class="sr-only">{{ d.diff }}일 남음</span>
-														</div>
-													</div>
-													<div class="d-flex align-items-end mt-3 justify-content-between">
-														<p class="mb-0">회신 기한: {{ d.end }} ({{ d.diff }}일 남음)</p>
-													</div>
-												</div>
-											</div>	
-											<hr>
-										{% endfor %}	
+										{% endif %}
 									</div>
 								</div>
 							</div>
@@ -214,46 +225,27 @@
 
 									<!-- 바디 영역 -->
 									<div class="card-body px-0 pt-2">
-										{% for email in email_recent %}
-											<div class="d-flex justify-content-between recent-emails">
-												<div class="d-flex">
-													<div class="profile-k">
-														<span class="bg-success"></span>	
-													</div>
-													<div class="ms-3">
-														<a>{{ email.email_from }}</a>
-														<a href="/email/{{ email.id }}"> <h4 class="fs-18 font-w500">{{ email.email_subject }}</h4></a>
-														<P class="text-black mb-0">{{ email.email_text_content|slice:70 }}...</P>
+										{% if email_recent %}
+											{% for email in email_recent %}
+												<div class="d-flex justify-content-between recent-emails">
+													<div class="d-flex">
+														<div class="profile-k">
+															<span class="bg-success {{ email.category }}"></span>	
+														</div>
+														<div class="ms-3">
+															<a>{{ email.email_from }}</a>
+															<a href="/email/{{ email.id }}"> <h4 class="fs-18 font-w500">{{ email.email_subject }}</h4></a>
+															<P class="text-black mb-0">{{ email.email_text_content|slice:70 }}...</P>
+														</div>
 													</div>
 												</div>
+											{% endfor %}
+										{% else %}
+											<div class="text-center">
+												<br>
+												<h4>읽지 않은 이메일이 없습니다</h4>
 											</div>
-										{% endfor %}
-
-										<!-- <div class="d-flex justify-content-between recent-emails">
-											<div class="d-flex">
-												<div class="profile-k">
-													<img src="{% static 'fillow/images/profile/small/pic6.jpg' %}" alt="">
-												</div>
-												<div class="ms-3">
-													<a href="{% url 'fillow:email-inbox' %}"><h4 class="fs-18 font-w500">이미지 테스트</h4></a>
-													<P class="text-black mb-0">이미지 테스트용입니다.</P>
-
-													첨부파일
-													<div class="final-badge">
-														<span class="badge text-black border"><i class="far fa-file-alt me-3"></i>Master_file.fig</span>
-														<span class="badge text-black border"><i class="fas fa-image me-2"></i>CoverPreview.jpg</span>
-														<span class="badge border bgl-primary font-w700">4 files more</span>
-													</div>
-													첨부파일 끝
-												</div>
-											</div>
-											<div class="email-check">
-												<label class="like-btn mb-0">
-													<input type="checkbox">
-													<span class="checkmark"></span>
-												</label>
-											</div>
-										</div> -->
+										{% endif %}
 									</div>
 								</div>
 							</div>
