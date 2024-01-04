@@ -14,10 +14,10 @@ from django.contrib.auth import views
 # from .gpt import process_file
 
 # 분류된 이메일 현황 받기
-def get_most_category():
+def get_most_category(id):
     # 이 부분은 DB에서 불러오기
     
-    unread_emails = Email.objects.filter(read=False)
+    unread_emails = Email.objects.filter(read=False, user_id=id)
     labels = ["결재승인", "휴가", "진행업무", "회의", "보고", "스크랩", "공지", "감사인사", "기타"]
     email_counts = []
     total = 0
@@ -89,6 +89,11 @@ def get_schedule(request):
     return schedule_list
 
 
+def get_recent_email(request):
+    unread_emails = Email.objects.filter(read=False)
+    
+
+
 # DB에 변경된 일정 반영하기
 def save_schedule(schedule_json, user):
     inform = user.additionalinform
@@ -104,6 +109,8 @@ def home(request):
     return render(request,'fillow/home/home.html',context)
 
 from .models import AdditionalInform
+
+
 def index(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
@@ -113,14 +120,14 @@ def index(request):
         if not AdditionalInform.objects.filter(user_id=request.user.id).exists():
             # 존재하지 않는다면 additionalinform 웹페이지로 리다이렉트
             return redirect('fillow:additional_info')
-    most4 = get_most_category()
+    most = get_most_category(request.user)
     context={
         "page_title":"",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
     
-    context.update(most4)
+    context.update(most)
         
     return render(request,'fillow/index.html', context)
 
@@ -152,13 +159,16 @@ def check_password_(request):
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     
+    if request.session.get('setting_checked'):
+        return redirect('fillow:profile')
+    
     if request.method == 'POST':
         form = PasswordConfirmationForm(request.POST)
         if form.is_valid():
             password = form.cleaned_data['password']
             user = request.user  # 현재 로그인된 사용자를 가져옵니다.
             if check_password(password, user.password):
-                request.session['checked'] = 'checked'
+                request.session['setting_checked'] = True
                 return redirect('fillow:profile')
             else:
                 # 비밀번호가 일치하지 않는 경우
@@ -178,7 +188,7 @@ def app_profile(request):
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     
-    if not request.session.get('checked'):
+    if not request.session.get('setting_checked'):
         raise PermissionDenied
         
     user_id = request.user.id
