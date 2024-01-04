@@ -51,4 +51,5 @@ urlpatterns = [
     path('email/trash/', fillow_views.EmailListView_Trash.as_view(), name='email-list-trash'),
     path('email/create/', fillow_views.EmailCreateView.as_view(), name='email_create'),
     path('email/<int:pk>/update/', fillow_views.EmailUpdateView.as_view(), name='email_update'),
+    path('page-register-terms/', fillow_views.page_register_terms, name='page-register-terms'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

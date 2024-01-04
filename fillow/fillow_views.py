@@ -1035,6 +1035,11 @@ class EmailDetailView(DetailView):
             self.object.save()
         return context
 
+def page_register_terms(request):
+    if request.method == 'POST':
+        # 폼 데이터 검증 및 처리
+        return redirect('fillow:page-register')
+    return render(request, 'fillow/pages/page-register-terms.html')
 
 def email_trash(request, pk):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
