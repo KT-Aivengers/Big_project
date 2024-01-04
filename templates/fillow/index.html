@@ -151,24 +151,31 @@
 									<div class="card">
 										<div class="card-header border-0 pb-0">
 											<div>
-												<h4 class="card-title">이메일 분류 현황</h4>
-												<p class="mb-0">이메일 분류 현황을 도식화하여 보여줍니다</p>
+												<h4 class="card-title">읽지 않은 이메일 분류 현황</h4>
+												<p class="mb-0">읽지 않은 이메일 분류 현황을 도식화하여 보여줍니다</p>
 											</div>	
 										</div>	
 										<div class="card-body pb-0">
 											<div id="emailchart"> </div>
 											<div class="email-lagend">
-												{% for label, count, color in email_count.data.zip %}
-													<div class="d-flex align-items-center justify-content-between mb-3">
-														<span class="fs-16 text-gray">	
-															<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																<rect width="20" height="20" rx="6" fill="{{ color }}"/>
-															</svg>
-															{{ label }}
-														</span>
-														<h5 class="mb-0 font-w600">{{ count }}</h5>
+												{% if email_count.total == 0 %}
+													<div class="text-center">
+														<h5 class="">읽지 않은 이메일이 없습니다</h5>
+														<br>
 													</div>
-												{% endfor %}
+												{% else %}
+													{% for label, count, color in email_count.data.zip %}
+														<div class="d-flex align-items-center justify-content-between mb-3">
+															<span class="fs-16 text-gray">	
+																<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																	<rect width="20" height="20" rx="6" fill="{{ color }}"/>
+																</svg>
+																{{ label }}
+															</span>
+															<h5 class="mb-0 font-w600">{{ count }}</h5>
+														</div>
+													{% endfor %}
+												{% endif %}
 											</div>
 										</div>
 									</div>
@@ -328,10 +335,15 @@
 {% endblock %}
 {% block additional_js %}
 <script>
+	var total = {{ email_count.total | safe}};
+	var data = {{ email_count.data | safe }};
 	// 이메일 분류 현황 함수 (사용법은 ApexCharts 검색)
 	var emailchart = function(){
-		var total = {{ email_count.total | safe}};
-		var data = {{ email_count.data | safe }};
+		// 받은 새로운 이메일이 없으면 표시 안함
+		if (total === 0) {
+			return;
+		}
+
 		var labels = data['labels'];
 		var count = data['count'];
 
