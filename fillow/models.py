@@ -34,7 +34,7 @@ class Email(models.Model):
     email_cc = models.CharField(max_length=1000, null=True)
     email_file = models.FileField(upload_to='uploads/', null=True)
     email_text_content = models.CharField(max_length=10000)
-    email_date = models.CharField(max_length=100)
+    email_date = models.DateTimeField()
     category = models.CharField(max_length=100)
     from_company = models.CharField(max_length=100)
     from_dept = models.CharField(max_length=100)
@@ -46,6 +46,7 @@ class Email(models.Model):
     department_yn = models.BooleanField(default=False)
     reply_yn = models.BooleanField(default=False)
     reply_date = models.CharField(max_length=100, null=True)
+    meeting_date = models.TextField(null=True)
     read = models.BooleanField(default=False)
     trash = models.BooleanField(default=False) 
     

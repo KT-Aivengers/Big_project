@@ -76,13 +76,11 @@
                                             <div class="right-box-padding">
                                                 <div class="toolbar mb-4" role="toolbar">
                                                     <div class="btn-group mb-1">
-                                                        <button type="button" class="btn btn-primary light px-3"><i class="fa fa-archive"></i></button>
-                                                        <button type="button" class="btn btn-primary light px-3"><i class="fa fa-exclamation-circle"></i></button>
-                                                        {% comment %} <button type="button" class="btn btn-primary light px-3"><i class="fa fa-trash"></i></button> {% endcomment %}
+                                                        <button type="button" class="btn btn-primary light px-3"><i class="fa fa-reply"></i></button>
+                                                        
                                                         <button type="button" class="btn btn-primary light px-3" data-bs-toggle="modal" data-bs-target="#trashModal">
                                                             <i class="fa fa-trash"></i>
                                                         </button>
-                                                        
                                                         <div class="modal fade" id="trashModal" tabindex="-1" aria-labelledby="trashModalLabel" aria-hidden="true">
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
@@ -100,6 +98,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        
                                                     </div>
                                                     <div class="btn-group mb-1">
                                                         <button type="button" class="btn btn-primary light dropdown-toggle px-3" data-bs-toggle="dropdown">
@@ -113,19 +112,6 @@
                                                         </div>
                                                     </div>
                                                     <div class="btn-group mb-1">
-                                                        <button type="button" class="btn btn-primary light dropdown-toggle px-3" data-bs-toggle="dropdown">
-                                                            <i class="fa fa-tag"></i> <b class="caret m-l-5"></b>
-                                                        </button>
-                                                        <div class="dropdown-menu"> 
-                                                            <a class="dropdown-item" href="javascript: void(0);">Updates</a> 
-                                                            <a class="dropdown-item" href="javascript: void(0);">Social</a> 
-                                                            <a class="dropdown-item" href="javascript: void(0);">Promotions</a>
-                                                            <a class="dropdown-item" href="javascript: void(0);">Forums</a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="btn-group mb-1">
-                                                        <button type="button" class="btn btn-primary light dropdown-toggle" data-bs-toggle="dropdown">More <span class="caret m-l-5"></span>
-                                                        </button>
                                                         <div class="dropdown-menu"> <a class="dropdown-item" href="javascript: void(0);">Mark as Unread</a> <a class="dropdown-item" href="javascript: void(0);">Add to Tasks</a>
                                                             <a class="dropdown-item" href="javascript: void(0);">Add Star</a> <a class="dropdown-item" href="javascript: void(0);">Mute</a>
                                                         </div>
@@ -137,21 +123,25 @@
                                                 <div class="read-content">
                                                     <div class="media pt-3 d-sm-flex d-block justify-content-between">
                                                         <div class="clearfix mb-3 d-flex">
-                                                            <img class="me-3 rounded" width="70" height="70" alt="image" src="{% static 'fillow/images/avatar/1.jpg' %}">
+                                                            {% if request.user.is_authenticated %}
+                                                                {% if email.img %}
+                                                                    <img class="me-3 rounded" width="70" height="70" alt="image" src="/media/{{ email.img }}">
+                                                                {% else %}
+                                                                    <img class="me-3 rounded" width="70" height="70" alt="image" src="{% static 'fillow/images/profile/profile_basic.jpeg' %}">
+                                                                {% endif %}
+                                                            {% else %}
+                                                                <a href='{% url "fillow:page-login" %}'>로그인</a>
+                                                            {% endif %}
                                                             <div class="media-body me-2">
                                                                 <h5 class="text-primary mb-0 mt-1">{{ email.email_from }}</h5>
-                                                                <p class="mb-0">{{ email.email_date }}</p>
+                                                                <p class="mb-0">{{ email.email_date|date:"Y M d D H:i" }}</p>
+                                                                <p class="mb-0">{{ email.category }}</p>
                                                             </div>
-                                                        </div>
-                                                        <div class="clearfix mb-3">
-                                                            <a href="javascript:void()"  data-bs-toggle="tooltip" data-bs-title="Reply" class="btn btn-primary px-3 my-1 light me-2"><i class="fa fa-reply"></i> </a>
-                                                            <a href="javascript:void()"  data-bs-toggle="tooltip" data-bs-title="Forward" class="btn btn-primary px-3 my-1 light me-2"><i class="fa fa-arrow-right"></i> </a>
-                                                            <a href="javascript:void()"  data-bs-toggle="tooltip" data-bs-title="Deleted" class="btn btn-primary px-3 my-1 light me-2"><i class="fa fa-trash"></i></a>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                     <div class="media mb-2 mt-3">
-                                                        <div class="media-body"><span class="pull-end">{{ email.email_date }}</span>
+                                                        <div class="media-body">
                                                             <h5 class="my-1 text-primary"> {{ email.email_subject }}</h5>
                                                             <p class="read-content-email">
                                                                 To: {{ email.email_to }}</p>
@@ -165,15 +155,9 @@
                                                     </div>
                                                     <div class="read-content-attachment">
                                                         <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-reply me-1"></i>Reply</button>
-                                                        <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-forward me-1"></i>Forward</button>
                                                     </div>
                                                     <hr>
-                                                    <div class="mb-3 pt-3">
-                                                        <textarea name="write-email" id="write-email" cols="30" rows="5" class="form-control" placeholder="It's really an amazing.I want to know more about it..!"></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="text-end">
-                                                    <button class="btn btn-primary " type="button">Send</button>
+                                                    
                                                 </div>
                                             </div>
                                         </div>

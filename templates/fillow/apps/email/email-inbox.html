@@ -214,8 +214,9 @@
 												</div>
 												<a href="{% url 'fillow:email_detail' email.id %}" class="col-mail col-mail-2">
 													<div class="subject">{{ email.email_subject }}</div>
-													<div class="date">{{ email.email_date }}</div>
+													<div class="date">{{ email.email_date|date:"Y M d D H:i" }}</div>
 												</a>
+												
 											</div>
 										</div>
 									{% endfor %}
