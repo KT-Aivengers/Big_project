@@ -59,6 +59,6 @@ urlpatterns = [
     path('email/create/', fillow_views.EmailCreateView.as_view(), name='email_create'),
     path('email/<int:pk>/update/', fillow_views.EmailUpdateView.as_view(), name='email_update'),
     path('page-register-terms/', fillow_views.page_register_terms, name='page-register-terms'),
-    path('email-reply/<int:email_id>/', fillow_views.email_reply, name="email-reply"),  
+    path('email-reply/<int:pk>/', fillow_views.email_reply, name="email-reply"),  
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

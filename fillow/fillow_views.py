@@ -977,7 +977,16 @@ def process_msg_file(eml_name, user):
         else:
             # 그렇지 않으면 현재 연도를 사용합니다.
             meeting_date = f"{current_year}년 {meeting_date}"
- 
+    reply_end_date = gpt_result.get('회신마감일자','')
+    month_match = re.search(r'(\d+)월', reply_end_date)
+    if month_match:
+        meeting_month = int(month_match.group(1))
+        # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
+        if meeting_month < current_month:
+            reply_end_date = f"{current_year + 1}년 {reply_end_date}"
+        else:
+            # 그렇지 않으면 현재 연도를 사용합니다.
+            reply_end_date = f"{current_year}년 {reply_end_date}"
  
     email_instance = Email(
     user=user,
@@ -987,7 +996,7 @@ def process_msg_file(eml_name, user):
     email_date=email_date,
     email_from=result.get('From', ''),
     email_to=result.get('To', ''),
-    email_cc=result.get('Cc', ''),
+    email_cc=result.get('Cc', ''),  
     email_text_content=result.get('text_content', ''),
     category = gpt_result.get('카테고리',''),
     from_company = from_company,
@@ -995,12 +1004,12 @@ def process_msg_file(eml_name, user):
     from_name = gpt_result.get('이름',''),
     reply_req_yn = reply_req_yn,
     reply_start_date = result.get('Date',''),
-    reply_end_date = gpt_result.get('회신마감일자',''),
+    reply_end_date = reply_end_date,
     company_yn = company_yn,
     department_yn = dept_yn,
     meeting_date=meeting_date,
     )
- 
+    
     email_instance.save()
     if reply_req_yn == True or meeting_date != "없음":
         # 새로운 스케줄을 리스트에 추가
