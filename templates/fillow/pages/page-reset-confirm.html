@@ -78,7 +78,19 @@
                                     <label for="id_email">새로운 비밀번호 확인</label>
                                     <input type="password" name="password_confirm" class="form-control" required="">
                                 </p>
-                                <button type="submit" class="btn btn-primary btn-block">비밀번호 변경</button>
+								<ul>
+									<li id="same"><i class="fa-solid fa-check" id="valid1"></i><i class="fa-solid fa-xmark" id="invalid1"></i><span></span></li>
+								</ul>
+								<ul>
+									<li id="length"><i class="fa-solid fa-check" id="valid2"></i><i class="fa-solid fa-xmark" id="invalid2"></i><span></span></li>
+								</ul>
+								<ul>
+									<li id="number"><i class="fa-solid fa-check" id="valid3"></i><i class="fa-solid fa-xmark" id="invalid3"></i><span></span></li>
+								</ul>
+								<ul>
+									<li id="common"><i class="fa-solid fa-check" id="valid4"></i><i class="fa-solid fa-xmark" id="invalid4"></i><span></span></li>
+								</ul>
+                                <button id="password" type="submit" class="btn btn-primary btn-block">비밀번호 변경</button>
                             </form>
 						</div>
 					</div>
@@ -105,6 +117,8 @@
 {% endfor %}
 
 {% block additional_js %}
+<script src="../../../static/fillow/js/plugins-init/common-data.js"></script>
+<script src="../../../static/fillow/js/reset-password/reset-password.js"></script>
 {% endblock %}
 </body>
 </html>

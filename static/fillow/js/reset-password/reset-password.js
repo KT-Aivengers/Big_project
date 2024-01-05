@@ -1,25 +1,22 @@
-const password1 = $('#password1');
-const password2 = $('#password2');
+const password1 = $('[name=password]');
+const password2 = $('[name=password_confirm]');
 
 const valid1 = $('#valid1');
 const valid2 = $('#valid2');
 const valid3 = $('#valid3');
 const valid4 = $('#valid4');
-const valid5 = $('#valid5');
 
 const invalid1 = $('#invalid1');
 const invalid2 = $('#invalid2');
 const invalid3 = $('#invalid3');
 const invalid4 = $('#invalid4');
-const invalid5 = $('#invalid5');
 
 const same = $('#same');
-const length = $('#length');;
+const length = $('#length');
 const number = $('#number');
 const common = $('#common');
-const similar = $('#similar');
 
-const passwordBtn = $('#passwordBtn');
+const passwordBtn = $('#password');
 
 function isCommon(password) {
     let result = false;
@@ -43,43 +40,11 @@ function isSameF(p1, p2) {
     return false;
 }
 
-
-function isSimilar(p1) {
-    const userAttrs = [
-        username,
-        firstName,
-        lastName,
-        email,
-    ]
-
-    let result = false;
-
-    userAttrs.forEach(function(attr) {
-        let a = attr;
-        let list = a.split(/\W+/).concat(a);
-
-        list.forEach(function(l) {
-            s = new difflib.SequenceMatcher(null, p1.toLowerCase(), l.toLowerCase());
-            if (s.quickRatio() >= 0.7) {
-                result = true;
-                return;
-            }
-        });
-
-        if (result) {
-            return;
-        }
-    });
-    return result
-}
-
-
 const textListValid = [
     ' 확인란과 동일합니다.',
     ' 길이가 8이상입니다.',
     ' 숫자로만 구성되어 있지 않습니다.',
     ' 자주 쓰이는 단어가 아닙니다.',
-    ' 개인정보와 다릅니다.',
 ]
 
 const textListInvalid = [
@@ -87,9 +52,7 @@ const textListInvalid = [
     ' 길이가 8 미만입니다.',
     ' 숫자로만 구성되어있습니다.',
     ' 자주 쓰이는 단어입니다.',
-    ' 개인정보와 비슷합니다.',
 ]
-
 
 function changeState(bool, valid, invalid, html, index) {
     if (bool) {
@@ -105,7 +68,6 @@ function changeState(bool, valid, invalid, html, index) {
     }
 }
 
-
 function validatePassword() {
     // 비밀번호 유효성 체크하기
     const password = password1.val();
@@ -115,7 +77,6 @@ function validatePassword() {
     let isMore8 = false;
     let isNotNumber = false;
     let isNotCommon = false;
-    let isNotSimilar = false;
 
     // 확인 값이 같은지 확인하기
     if (isSameF(password, passwordConfirm)) {
@@ -137,18 +98,12 @@ function validatePassword() {
         isNotCommon = true;
     }
 
-    // 유사도 확인하기
-    if (!isSimilar(password)) {
-        isNotSimilar = true;
-    }
-
     changeState(isSame, valid1, invalid1, same, 0);
     changeState(isMore8, valid2, invalid2, length, 1);
     changeState(isNotNumber, valid3, invalid3, number, 2);
     changeState(isNotCommon, valid4, invalid4, common, 3);
-    changeState(isNotSimilar, valid5, invalid5, similar, 4);
 
-    if (isSame && isMore8 && isNotNumber && isNotCommon && isNotSimilar) {
+    if (isSame && isMore8 && isNotNumber && isNotCommon) {
         passwordBtn.removeClass('disabled');
     } else {
         passwordBtn.addClass('disabled');

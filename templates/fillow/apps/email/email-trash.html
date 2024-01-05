@@ -153,32 +153,47 @@
 							<div>
 								<div role="toolbar" class="toolbar ms-1 ms-sm-0 ms-xl-1 d-flex align-items-center">
 									<div class="btn-group mb-1">
-										<div class="form-check custom-checkbox">
-											<input type="checkbox" class="form-check-input" id="checkAll">
-											<label class="form-check-label" for="checkAll"></label>
+										<button aria-expanded="false" data-bs-toggle="dropdown" class="btn btn-primary px-3 light dropdown-toggle mx-2" type="button">회사 <span
+												class="caret"></span>
+										</button>
+										<div class="dropdown-menu"> <a href="{% url 'fillow:email_list' %}?internal=1" class="dropdown-item">내부</a> <a href="{% url 'fillow:email_list' %}?internal=0" class="dropdown-item">외부</a>
 										</div>
 									</div>
 									<div class="btn-group mb-1">
-										<button class="btn btn-primary light px-3" type="button"><i class="ti-reload"></i>
-										</button>
-									</div>
-									<div class="btn-group mb-1">
-										<button aria-expanded="false" data-bs-toggle="dropdown" class="btn btn-primary px-3 light dropdown-toggle mx-2" type="button">More <span
+										<button aria-expanded="false" data-bs-toggle="dropdown" class="btn btn-primary px-3 light dropdown-toggle mx-2" type="button">부서 <span
 												class="caret"></span>
 										</button>
-										<div class="dropdown-menu"> <a href="javascript: void(0);" class="dropdown-item">Mark as Unread</a> <a href="javascript: void(0);" class="dropdown-item">Add to Tasks</a>
-											<a href="javascript: void(0);" class="dropdown-item">Add Star</a> <a href="javascript: void(0);" class="dropdown-item">Mute</a>
+										<div class="dropdown-menu"> <a href="{% url 'fillow:email_list' %}?internal_d=1" class="dropdown-item">내부</a> <a href="{% url 'fillow:email_list' %}?internal_d=0" class="dropdown-item">외부</a>
+										</div>
+									</div>
+									<div class="btn-group mb-1">
+										<button aria-expanded="false" data-bs-toggle="dropdown" class="btn btn-primary px-3 light dropdown-toggle mx-2" type="button">to/cc <span
+												class="caret"></span>
+										</button>
+										<div class="dropdown-menu"> <a href="{% url 'fillow:email_list' %}?recipient=to" class="dropdown-item">to</a> <a href="{% url 'fillow:email_list' %}?recipient=cc" class="dropdown-item">cc</a>
 										</div>
 									</div>
 									<div class="email-tools-box">
 										<i class="fa-solid fa-list-ul"></i>
 									</div>
-									<form class=" d-none d-sm-block ms-auto">
+									{% comment %} <form class=" d-none d-sm-block ms-auto">
 										<div class="input-group  ms-auto w-100 d-sm-inline-flex d-none">
 											<input type="text" class="form-control" placeholder="Search here">
 											<span class="input-group-text"><button class="bg-transparent border-0"><i class="flaticon-381-search-2"></i></button></span>
 										</div>
-									</form>
+									</form> {% endcomment %}
+									<form class="d-none d-sm-block ms-auto" action="{% url 'fillow:email_list' %}">
+										<div class="input-group ms-auto w-100 d-sm-inline-flex d-none">
+											<input type="text" class="form-control" placeholder="Search here" name="search_query">
+											<span class="input-group-text"><button class="bg-transparent border-0"><i class="flaticon-381-search-2"></i></button></span>
+										</div>
+									</form>	
+									<div class="btn-group mb-1">
+										<a href="{% url 'fillow:email_list' %}" class="btn btn-primary light px-3">
+											<i class="ti-reload"></i>
+										</a>
+									</div>
+														
 								</div>
         						<div class="email-list mt-3">
 									{% for email in object_list %}

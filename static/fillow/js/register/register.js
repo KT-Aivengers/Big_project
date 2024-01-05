@@ -112,17 +112,17 @@ const textListInvalid = [
 ]
 
 
-function changeState(bool, valid, invalid, html, index) {
+function changeState(bool, valid, invalid, element, index) {
     if (bool) {
         valid.css('display', 'inline-block');
         invalid.css('display', 'none');
-        html.css('color', 'green');
-        html.find('span').text(textListValid[index]);
+        element.css('color', 'green');
+        element.find('span').text(textListValid[index]);
     } else {
         valid.css('display', 'none')
         invalid.css('display', 'inline-block')
-        html.css('color', 'red');
-        html.find('span').text(textListInvalid[index]);
+        element.css('color', 'red');
+        element.find('span').text(textListInvalid[index]);
     }
 }
 
@@ -223,12 +223,38 @@ function validateForm() {
     }
 }
 
-username.on('input', validateForm);
+function changeUsername() {
+    const element = $('#username-message');
+    element.css('color', 'red');
+    element.find('span').text(' 중복 확인을 하지 않았습니다.');
+    element.find('i#username-valid').css('display', 'none');
+    element.find('i#username-invalid').css('display', 'inline-block');
+    isCheckUsername = false;
+    validateForm();
+}
+
+function changeEmail() {
+    const element = $('#email-message');
+    element.css('color', 'red');
+    element.find('span').text(' 중복 확인을 하지 않았습니다.');
+    element.find('i#email-valid').css('display', 'none');
+    element.find('i#email-invalid').css('display', 'inline-block');
+    isCheckEmail = false;
+    validateForm();
+}
+
+username.on('input', function() {
+    validateForm();
+    changeUsername();
+});
 firstName.on('input', validateForm);
 lastName.on('input', validateForm);
 password1.on('input', validateForm);
 password2.on('input', validateForm);
-email.on('input', validateForm);
+email.on('input', function() {
+    validateForm();
+    changeEmail();
+});
 company.on('input', validateForm);
 phone.on('input', validateForm);
 
@@ -247,19 +273,19 @@ $('#username').on('click', function() {
             'X-CSRFToken': csrftoken
         },
         success: function(response) {
-            const html = $('#username-message')
+            const element = $('#username-message');
             if (response.available) {
-                html.css('color', 'green');
-                html.find('span').text(' 사용 가능한 아이디입니다.');
-                html.find('i#username-valid').css('display', 'inline-block');
-                html.find('i#username-invalid').css('display', 'none');
+                element.css('color', 'green');
+                element.find('span').text(' 사용 가능한 아이디입니다.');
+                element.find('i#username-valid').css('display', 'inline-block');
+                element.find('i#username-invalid').css('display', 'none');
                 isCheckUsername = true;
                 validateForm();
             } else {
-                html.css('color', 'red');
-                html.find('span').text(' 이미 존재하는 아이디입니다.');
-                html.find('i#username-valid').css('display', 'none');
-                html.find('i#username-invalid').css('display', 'inline-block');
+                element.css('color', 'red');
+                element.find('span').text(' 이미 존재하는 아이디입니다.');
+                element.find('i#username-valid').css('display', 'none');
+                element.find('i#username-invalid').css('display', 'inline-block');
                 isCheckUsername = false;
                 validateForm();
             }
@@ -287,19 +313,19 @@ emailBtn.on('click', function() {
             'X-CSRFToken': csrftoken
         },
         success: function(response) {
-            const html = $('#email-message')
+            const element = $('#email-message');
             if (response.available) {
-                html.css('color', 'green');
-                html.find('span').text(' 사용 가능한 이메일입니다.');
-                html.find('i#email-valid').css('display', 'inline-block');
-                html.find('i#email-invalid').css('display', 'none');
+                element.css('color', 'green');
+                element.find('span').text(' 사용 가능한 이메일입니다.');
+                element.find('i#email-valid').css('display', 'inline-block');
+                element.find('i#email-invalid').css('display', 'none');
                 isCheckEmail = true;
                 validateForm();
             } else {
-                html.css('color', 'red');
-                html.find('span').text(' 이미 존재하는 이메일입니다.');
-                html.find('i#email-valid').css('display', 'none');
-                html.find('i#email-invalid').css('display', 'inline-block');
+                element.css('color', 'red');
+                element.find('span').text(' 이미 존재하는 이메일입니다.');
+                element.find('i#email-valid').css('display', 'none');
+                element.find('i#email-invalid').css('display', 'inline-block');
                 isCheckEmail = false;
                 validateForm();
             }
