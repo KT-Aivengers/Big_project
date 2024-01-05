@@ -7,39 +7,51 @@
 		color: #fff !important;
 	}
 
-	#cat1 {
+	.rounded-cat {
+		border-radius: 50%;
+		color: #fff;
+		width: 45px;
+		height: 45px;
+		font-size: 11px;
+	}
+
+	.read {
+		opacity: 30%;
+	}
+
+	#cat1, .결재승인 {
 		background-color: #fc2e53;
 	}
 
-	#cat2 {
+	#cat2, .휴가{
 		background-color: #ffbf00;
 	}
 
-	#cat3 {
+	#cat3, .진행업무 {
 		background-color: #ffdc00;
 	}
 
-	#cat4 {
+	#cat4, .회의 {
 		background-color: #09bd3c;
 	}
 
-	#cat5 {
+	#cat5, .보고{
 		background-color: #15c08c;
 	}
 
-	#cat6 {
+	#cat6, .스크랩 {
 		background-color: #ffa7d7;
 	}
 
-	#cat7 {
+	#cat7, .공지 {
 		background-color: #d653c1;
 	}
 
-	#cat8 {
+	#cat8, .감사인사 {
 		background-color: #312a2a;
 	}
 
-	#cat9 {
+	#cat9, .기타 {
 		background-color: #c8c8c8;
 	}
 </style>
@@ -201,18 +213,13 @@
 										<div class="message">
 											<div>
 												<div class="d-flex message-single">
-													<div class="ps-1 align-self-center">
-														<div class="form-check custom-checkbox">
-															<a href="{% url 'fillow:email_detail' email.id %}" class="col-mail col-mail-2">
-																<div class="subject">{{ email.category }}</div>
-															{% comment %} <input type="checkbox" class="form-check-input" id="checkbox2">
-															<label class="form-check-label" for="checkbox2"></label> {% endcomment %}
-														</div>
+													<div class="ms-2 rounded-cat d-flex align-items-center justify-content-center {% if email.read %}read{% endif %} {{ email.category }}">
+														<span>{{ email.category }}</span>
 													</div>
 												</div>
 												<a href="{% url 'fillow:email_detail' email.id %}" class="col-mail col-mail-2">
-													<div class="subject">{{ email.email_subject }}</div>
-													<div class="date"><p>{{email.from_name}}</p><p>{{ email.email_date|date:"Y M d D H:i" }}</p></div>
+													<div class="subject"><span>{{ email.email_subject }}</span></div>
+													<div class="date"><span>{{email.from_name}}&nbsp;&nbsp;&nbsp;{{ email.email_date|date:"Y M d D H:i" }}</span></div>
 												</a>
 												
 											</div>
