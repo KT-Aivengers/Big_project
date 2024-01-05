@@ -1074,13 +1074,16 @@ def upload_file(request):
                     os.makedirs(extract_path, exist_ok=True)
                     extract_zip(file_path, extract_path)
  
-                    for msg_file in os.listdir(extract_path):
-                        msg_file_path = os.path.join(extract_path, msg_file)
-                        eml_name = msg_file_path.split('.msg')[0] + '.eml'
+                    for file_name in os.listdir(extract_path):
+                        file_path = os.path.join(extract_path, file_name)
+                        # eml_name = file_path.split('.msg')[0] + '.eml'
+                        file_extension = file_name.split('.')[-1].lower()
+                        eml_name = file_path if file_extension == 'eml' else file_path.split('.msg')[0] + '.eml'
                        
-                        with open(eml_name, "wb") as f:
-                            contents = load(open(msg_file_path, "rb"))
-                            f.write(contents.as_bytes())
+                        if file_extension == 'msg':
+                            with open(eml_name, "wb") as f:
+                                contents = load(open(file_path, "rb"))
+                                f.write(contents.as_bytes())
                            
                         process_msg_file(eml_name, request.user)
  
