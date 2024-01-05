@@ -313,7 +313,22 @@ def email_compose(request):
             email_text_content = form.cleaned_data.get('email_text_content', '')
             EmailCompose.objects.create(email_to = email_to, email_cc=email_cc, email_subject=email_subject, 
                                         email_file=email_file, email_text_content=email_text_content, user = user)
-            return redirect("fillow:email-compose")
+                
+            current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                # Save the reply email
+            compose_email = Email.objects.create(
+                email_from = user.email,
+                email_to=email_to,
+                email_cc=email_cc,
+                email_subject=email_subject,
+                email_file=email_file,
+                email_text_content=email_text_content,
+                email_date = current_date,
+                user=user,
+                sent = True,
+                read = True,
+            )
+            return redirect("fillow:email-sent")
 
         else:
             print(form.errors)
@@ -323,9 +338,12 @@ def email_compose(request):
     
     return render(request,'fillow/apps/email/email-compose.html',context)
 
+    
 
 def email_reply(request, pk):
     # Retrieve the Email object
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
     original_email = get_object_or_404(Email, pk=pk)
     email_compose_tpl = EmailComposeTpl.objects.filter(user=request.user).last()
     
