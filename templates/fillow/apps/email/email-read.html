@@ -2,6 +2,47 @@
 {% load static %}
         
 {% block additional_css %}
+<style>
+	.category {
+		color: #fff !important;
+	}
+
+	#cat1 {
+		background-color: #ffa7d7;
+	}
+
+	#cat2 {
+		background-color: #312a2a;
+	}
+
+	#cat3 {
+		background-color: #d653c1;
+	}
+
+	#cat4 {
+		background-color: #ffdc00;
+	}
+
+	#cat5 {
+		background-color: #fc2e53;
+	}
+
+	#cat6 {
+		background-color: #ffbf00;
+	}
+
+	#cat7 {
+		background-color: #09bd3c;
+	}
+
+	#cat8 {
+		background-color: #15c08c;
+	}
+
+	#cat9 {
+		background-color: #c8c8c8;
+	}
+</style>
 {% endblock %}
         
 {% block content %}
@@ -52,18 +93,61 @@
                                             <div class="intro-title d-flex justify-content-between mt-0">
                                                 <h5>카테고리</h5>
                                             </div>
-                                            <a href="{% url 'fillow:email_list' %}" class="list-group-item"><span class="icon-warning"><i
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <a href="{% url 'fillow:email_list' %}?category=결재승인" id="cat1" class="list-group-item category"><span class="icon-warning"><i
                                                         class="fa fa-circle" aria-hidden="true"></i></span>
-                                                Work </a>
-                                            <a href="{% url 'fillow:email_list' %}" class="list-group-item"><span class="icon-primary"><i
+                                                    결재승인 </a>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <a href="{% url 'fillow:email_list' %}?category=휴가" id="cat2" class="list-group-item category"><span class="icon-primary"><i
                                                         class="fa fa-circle" aria-hidden="true"></i></span>
-                                                Private </a>
-                                            <a href="{% url 'fillow:email_list' %}" class="list-group-item"><span class="icon-success"><i
+                                                    휴가 </a>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <a href="{% url 'fillow:email_list' %}?category=진행업무" id="cat3"  class="list-group-item category"><span class="icon-warning"><i
                                                         class="fa fa-circle" aria-hidden="true"></i></span>
-                                                Support </a>
-                                            <a href="{% url 'fillow:email_list' %}" class="list-group-item"><span class="icon-dpink"><i
+                                                    진행업무 </a>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <a href="{% url 'fillow:email_list' %}?category=회의" id="cat4"  class="list-group-item category"><span class="icon-primary"><i
                                                         class="fa fa-circle" aria-hidden="true"></i></span>
-                                                Social </a>
+                                                    회의 </a>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <a href="{% url 'fillow:email_list' %}?category=보고" id="cat5"  class="list-group-item category"><span class="icon-warning"><i
+                                                        class="fa fa-circle" aria-hidden="true"></i></span>
+                                                    보고 </a>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <a href="{% url 'fillow:email_list' %}?category=스크랩" id="cat6"  class="list-group-item category"><span class="icon-primary"><i
+                                                        class="fa fa-circle" aria-hidden="true"></i></span>
+                                                    스크랩 </a>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <a href="{% url 'fillow:email_list' %}?category=공지" id="cat7"  class="list-group-item category"><span class="icon-warning"><i
+                                                        class="fa fa-circle" aria-hidden="true"></i></span>
+                                                    공지 </a>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <a href="{% url 'fillow:email_list' %}?category=감사인사" id="cat8"  class="list-group-item category"><span class="icon-primary"><i
+                                                        class="fa fa-circle" aria-hidden="true"></i></span>
+                                                    감사인사 </a>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <a href="{% url 'fillow:email_list' %}?category=기타" id="cat9"  class="list-group-item category"><span class="icon-warning"><i
+                                                        class="fa fa-circle" aria-hidden="true"></i></span>
+                                                    기타 </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -76,7 +160,11 @@
                                             <div class="right-box-padding">
                                                 <div class="toolbar mb-4" role="toolbar">
                                                     <div class="btn-group mb-1">
-                                                        <button type="button" class="btn btn-primary light px-3"><i class="fa fa-reply"></i></button>
+                                                        {% if email.trash == False %}
+                                                        <button type="button" class="btn btn-primary light px-3" onclick="window.location.href='{% url 'fillow:email-reply' email.pk %}'">
+                                                            <i class="fa fa-reply"></i>
+                                                        </button>
+                                                        
                                                         
                                                         <button type="button" class="btn btn-primary light px-3" data-bs-toggle="modal" data-bs-target="#trashModal">
                                                             <i class="fa fa-trash"></i>
@@ -98,24 +186,228 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        {% else %}
+                                                        <button type="button" class="btn btn-primary light px-3" data-bs-toggle="modal" data-bs-target="#trashModal">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                        <div class="modal fade" id="trashModal" tabindex="-1" aria-labelledby="trashModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="trashModalLabel">이메일 삭제</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        이 이메일을 영구적으로 삭제하겟습니까?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                                        <a href="{% url 'fillow:email-delete' email.pk %}" class="btn btn-primary">삭제</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {% endif %}
                                                         
                                                     </div>
-                                                    <div class="btn-group mb-1">
-                                                        <button type="button" class="btn btn-primary light dropdown-toggle px-3" data-bs-toggle="dropdown">
-                                                            <i class="fa fa-folder"></i> <b class="caret m-l-5"></b>
-                                                        </button>
-                                                        <div class="dropdown-menu"> 
-                                                            <a class="dropdown-item" href="javascript: void(0);">경재승인</a> 
-                                                            <a class="dropdown-item" href="javascript: void(0);">휴가</a> 
-                                                            <a class="dropdown-item" href="javascript: void(0);">진행업무</a>
-                                                            <a class="dropdown-item" href="javascript: void(0);">회의</a>
-                                                            <a class="dropdown-item" href="javascript: void(0);">보고</a>
-                                                            <a class="dropdown-item" href="javascript: void(0);">스크랩</a>
-                                                            <a class="dropdown-item" href="javascript: void(0);">공지</a>
-                                                            <a class="dropdown-item" href="javascript: void(0);">감사인사</a>
-                                                            <a class="dropdown-item" href="javascript: void(0);">기타</a>
+                                                    {% if email.trash == False %}
+                                                        <div class="btn-group mb-1">
+                                                            <button type="button" class="btn btn-primary light dropdown-toggle px-3" data-bs-toggle="dropdown">
+                                                                <i class="fa fa-folder"></i> <b class="caret m-l-5"></b>
+                                                            </button>
+                                                            <div class="dropdown-menu"> 
+                                                                <!-- '결제승인' 카테고리 변경 버튼 -->
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="openCategoryModal('categoryModal1')">결제승인</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="openCategoryModal('categoryModal2')">휴가</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="openCategoryModal('categoryModal3')">진행업무</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="openCategoryModal('categoryModal4')">회의</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="openCategoryModal('categoryModal5')">보고</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="openCategoryModal('categoryModal6')">스크랩</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="openCategoryModal('categoryModal7')">공지</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="openCategoryModal('categoryModal8')">감사인사</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="openCategoryModal('categoryModal9')">기타</a>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                        
+                                                        <!-- '결제승인' 카테고리 변경 모달 창 -->
+                                                        <div class="modal fade" id="categoryModal1" tabindex="-1" aria-labelledby="categoryModalLabel1" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="categoryModalLabel1">카테고리 변경</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        이 이메일을 '결제승인' 카테고리로 변경하시겠습니까?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                                        <a href="{% url 'fillow:change-category' email.pk '결제승인' %}" class="btn btn-primary">변경</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- 휴가 카테고리 변경 모달 창 -->
+                                                        <div class="modal fade" id="categoryModal2" tabindex="-1" aria-labelledby="categoryModalLabelVacation" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="categoryModalLabelVacation">카테고리 변경</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        이 이메일을 '휴가' 카테고리로 변경하시겠습니까?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                                        <a href="{% url 'fillow:change-category' email.pk '휴가' %}" class="btn btn-primary">변경</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- 진행업무 카테고리 변경 모달 창 -->
+                                                        <div class="modal fade" id="categoryModal3" tabindex="-1" aria-labelledby="categoryModalLabelTask" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="categoryModalLabelTask">카테고리 변경</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        이 이메일을 '진행업무' 카테고리로 변경하시겠습니까?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                                        <a href="{% url 'fillow:change-category' email.pk '진행업무' %}" class="btn btn-primary">변경</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- 회의 카테고리 변경 모달 창 -->
+                                                        <div class="modal fade" id="categoryModal4" tabindex="-1" aria-labelledby="categoryModalLabelMeeting" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="categoryModalLabelMeeting">카테고리 변경</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        이 이메일을 '회의' 카테고리로 변경하시겠습니까?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                                        <a href="{% url 'fillow:change-category' email.pk '회의' %}" class="btn btn-primary">변경</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- 보고 카테고리 변경 모달 창 -->
+                                                        <div class="modal fade" id="categoryModal5" tabindex="-1" aria-labelledby="categoryModalLabelReport" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="categoryModalLabelReport">카테고리 변경</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        이 이메일을 '보고' 카테고리로 변경하시겠습니까?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                                        <a href="{% url 'fillow:change-category' email.pk '보고' %}" class="btn btn-primary">변경</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- 스크랩 카테고리 변경 모달 창 -->
+                                                        <div class="modal fade" id="categoryModal6" tabindex="-1" aria-labelledby="categoryModalLabelScrap" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="categoryModalLabelScrap">카테고리 변경</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        이 이메일을 '스크랩' 카테고리로 변경하시겠습니까?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                                        <a href="{% url 'fillow:change-category' email.pk '스크랩' %}" class="btn btn-primary">변경</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- 공지 카테고리 변경 모달 창 -->
+                                                        <div class="modal fade" id="categoryModal7" tabindex="-1" aria-labelledby="categoryModalLabelNotice" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="categoryModalLabelNotice">카테고리 변경</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        이 이메일을 '공지' 카테고리로 변경하시겠습니까?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                                        <a href="{% url 'fillow:change-category' email.pk '공지' %}" class="btn btn-primary">변경</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- 감사인사 카테고리 변경 모달 창 -->
+                                                        <div class="modal fade" id="categoryModal8" tabindex="-1" aria-labelledby="categoryModalLabelThanks" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="categoryModalLabelThanks">카테고리 변경</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        이 이메일을 '감사인사' 카테고리로 변경하시겠습니까?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                                        <a href="{% url 'fillow:change-category' email.pk '감사인사' %}" class="btn btn-primary">변경</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- 기타 카테고리 변경 모달 창 -->
+                                                        <div class="modal fade" id="categoryModal9" tabindex="-1" aria-labelledby="categoryModalLabelOther" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="categoryModalLabelOther">카테고리 변경</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        이 이메일을 '기타' 카테고리로 변경하시겠습니까?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                                        <a href="{% url 'fillow:change-category' email.pk '기타' %}" class="btn btn-primary">변경</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        
+                                                        <script>
+                                                            function openCategoryModal(modalId) {
+                                                                var myModal = new bootstrap.Modal(document.getElementById(modalId));
+                                                                myModal.show();
+                                                            }
+                                                        </script>
+                                                    {% else %}
+                                                    {% endif %}
                                                     <div class="btn-group mb-1">
                                                         <div class="dropdown-menu"> <a class="dropdown-item" href="javascript: void(0);">Mark as Unread</a> <a class="dropdown-item" href="javascript: void(0);">Add to Tasks</a>
                                                             <a class="dropdown-item" href="javascript: void(0);">Add Star</a> <a class="dropdown-item" href="javascript: void(0);">Mute</a>
@@ -157,11 +449,6 @@
                                                     <div class="read-content-body default-height">
                                                         {{ email.email_text_content }}
                                                         <hr>
-                                                    </div>
-                                                    <div class="read-content-attachment">
-                                                        <a class="btn btn-secondary btn-sm" href="{% url 'fillow:email-reply' email.id %}">
-                                                            <i class="fa-solid fa-reply me-1"></i> Reply
-                                                        </a>
                                                     </div>
                                                     <hr>
                                                     

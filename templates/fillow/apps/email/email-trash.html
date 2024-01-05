@@ -2,6 +2,47 @@
 {% load static %}
 
 {% block additional_css %}
+<style>
+	.category {
+		color: #fff !important;
+	}
+
+	#cat1 {
+		background-color: #ffa7d7;
+	}
+
+	#cat2 {
+		background-color: #312a2a;
+	}
+
+	#cat3 {
+		background-color: #d653c1;
+	}
+
+	#cat4 {
+		background-color: #ffdc00;
+	}
+
+	#cat5 {
+		background-color: #fc2e53;
+	}
+
+	#cat6 {
+		background-color: #ffbf00;
+	}
+
+	#cat7 {
+		background-color: #09bd3c;
+	}
+
+	#cat8 {
+		background-color: #15c08c;
+	}
+
+	#cat9 {
+		background-color: #c8c8c8;
+	}
+</style>
 {% endblock %}
 {% block content %}
 
@@ -49,18 +90,61 @@
 										<div class="intro-title d-flex justify-content-between mt-0">
 											<h5>카테고리</h5>
 										</div>
-										<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-warning"><i
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=결재승인" id="cat1" class="list-group-item category"><span class="icon-warning"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
-											Work </a>
-										<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-primary"><i
+												결재승인 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=휴가" id="cat2" class="list-group-item category"><span class="icon-primary"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
-											Private </a>
-										<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-success"><i
+												휴가 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=진행업무" id="cat3"  class="list-group-item category"><span class="icon-warning"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
-											Support </a>
-										<a href="{% url 'fillow:email-inbox' %}" class="list-group-item"><span class="icon-dpink"><i
+												진행업무 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=회의" id="cat4"  class="list-group-item category"><span class="icon-primary"><i
 													class="fa fa-circle" aria-hidden="true"></i></span>
-											Social </a>
+												회의 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=보고" id="cat5"  class="list-group-item category"><span class="icon-warning"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												보고 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=스크랩" id="cat6"  class="list-group-item category"><span class="icon-primary"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												스크랩 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=공지" id="cat7"  class="list-group-item category"><span class="icon-warning"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												공지 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=감사인사" id="cat8"  class="list-group-item category"><span class="icon-primary"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												감사인사 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12">
+												<a href="{% url 'fillow:email_list' %}?category=기타" id="cat9"  class="list-group-item category"><span class="icon-warning"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												기타 </a>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>

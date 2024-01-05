@@ -324,10 +324,18 @@ def email_compose(request):
     return render(request,'fillow/apps/email/email-compose.html',context)
 
 
-def email_reply(request, email_id):
+def email_reply(request, pk):
     # Retrieve the Email object
-    original_email = get_object_or_404(Email, pk=email_id)
-
+    original_email = get_object_or_404(Email, pk=pk)
+    email_compose_tpl = EmailComposeTpl.objects.filter(user=request.user).last()
+    
+    context={
+        "page_title":"이메일 전송",
+        "email_compose_tpl": email_compose_tpl,
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
+    }
+    
     if request.user == original_email.user:
         if request.method == "POST":
             form = EmailComposeForm(request.POST)
@@ -339,6 +347,8 @@ def email_reply(request, email_id):
                 email_subject = form.cleaned_data.get('email_subject', 'Re: ' + original_email.email_subject)
                 email_file = form.cleaned_data.get('email_file', '')
                 email_text_content = form.cleaned_data.get('email_text_content', '')
+                EmailCompose.objects.create(email_to = email_to, email_cc=email_cc, email_subject=email_subject, 
+                                        email_file=email_file, email_text_content=email_text_content, user = user)
                 
                 current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 # Save the reply email
@@ -377,7 +387,7 @@ def email_reply(request, email_id):
                 'email_text_content': original_email.email_text_content,
             })
 
-        return render(request, 'fillow/apps/email/email-reply.html', {'form': form, 'original_email': original_email})
+        return render(request, 'fillow/apps/email/email-reply.html', {'context': context, 'original_email': original_email})
     else:
         messages.error(request, 'You do not have permission to reply to this email.')
         return redirect('fillow:email_list')  
@@ -907,6 +917,78 @@ def process_msg_file(eml_name, user):
     
     user_additional_info = AdditionalInform.objects.filter(user=user).last()
 
+def upload_schedule(request,email):
+    user = request.user
+    # JSON 문자열을 Python 객체로 변환
+    json_raw = request.user.additionalinform.schedule
+    schedule_list = json.loads(json_raw)
+    # DB에서 일정 불러오기
+    temp=[]
+    if email.reply_req_yn==True:
+        dic={
+            'pk': email.id,
+            'title': email.category + " / " + email.from_name,
+            'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
+            'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+            'category': email.category,
+        }
+        temp.append(dic)
+    if email.meeting_date != "없음":
+        dic={
+            'pk': email.id,
+            'title': "회의 / " + email.from_name,
+            'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+            'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
+            'category': '회의',
+        }
+        temp.append(dic)
+    schedule_list+=temp
+
+    return schedule_list
+def upload_file(request):
+    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+        
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            form.save()
+            
+            msg_name = request.FILES['uploaded_file'].name
+            form.cleaned_data['uploaded_file'].seek(0)
+            msg_contents = form.cleaned_data['uploaded_file'].read()
+            
+            uploaded_file = request.FILES['uploaded_file'] 
+            recent_document = Document.objects.latest('id')
+            file_path = recent_document.uploaded_file.path
+            
+
+            file_extension = uploaded_file.name.split('.')[-1].lower()
+            if file_extension == 'msg':
+                eml_name = file_path.split('.msg')[0] + '.eml'
+            
+                with open(eml_name , "wb") as f:
+                    contents = load(uploaded_file)
+                    f.write(contents.as_bytes())        
+            else :
+                eml_name = file_path
+            
+            print(eml_name)
+                 
+                    
+            headers = ['file_name','Subject','Date','From','To','Cc','text_content']
+            result = emlExtracter.prcessing_dir(headers, eml_name)
+            # print(result['text_content'])
+            
+            gpt_result = process_file(result['text_content'])
+            print(gpt_result)
+            reply_req_yn = gpt_result.get('회신요청여부','')
+            reply_req_yn = True if reply_req_yn == 'Y' else False
+            
+            user_additional_info = AdditionalInform.objects.filter(user=request.user).last()
+
     from_company = gpt_result.get('회사', '')
     user_company = user_additional_info.company
     company_yn = True if from_company == user_company else False
@@ -1211,6 +1293,33 @@ def email_trash(request, pk):
 
     return redirect("fillow:email-list-trash")
 
+def email_delete(request, pk):
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+    
+    email = Email.objects.get(pk=pk)
+
+    if request.user == email.user:
+        email.delete()
+        messages.success(request, 'Email permanently deleted.')
+        return redirect("fillow:email-list-trash")
+    return redirect("fillow:email-list-trash")
+
+
+def category_change(request, pk, category_name):
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+    email = Email.objects.get(pk=pk)
+    #email = get_object_or_404(Email, pk=pk)
+
+    if request.user == email.user:
+        email.category = category_name
+        email.save()
+        messages.success(request, f'Email category changed to {category_name}.')
+        return redirect('fillow:email_list')
+    else:
+        messages.error(request, 'You do not have permission to change the category of this email.')
+        return redirect('fillow:email_list') 
 
 class EmailUpdateView(UpdateView):
     model = Email
