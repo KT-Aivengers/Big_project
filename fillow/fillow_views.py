@@ -323,6 +323,66 @@ def email_compose(request):
     
     return render(request,'fillow/apps/email/email-compose.html',context)
 
+
+def email_reply(request, email_id):
+    # Retrieve the Email object
+    original_email = get_object_or_404(Email, pk=email_id)
+
+    if request.user == original_email.user:
+        if request.method == "POST":
+            form = EmailComposeForm(request.POST)
+            if form.is_valid():
+                # Create a new email as a reply
+                user = request.user
+                email_to = form.cleaned_data.get('email_to', '')
+                email_cc = form.cleaned_data.get('email_cc', '')
+                email_subject = form.cleaned_data.get('email_subject', 'Re: ' + original_email.email_subject)
+                email_file = form.cleaned_data.get('email_file', '')
+                email_text_content = form.cleaned_data.get('email_text_content', '')
+                
+                current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                # Save the reply email
+                reply_email = Email.objects.create(
+                    email_from = user.email,
+                    email_to=email_to,
+                    email_cc=email_cc,
+                    email_subject=email_subject,
+                    email_file=email_file,
+                    email_text_content=email_text_content,
+                    email_date = current_date,
+                    user=user,
+                    sent = True,
+                    read = True,
+                    category = original_email.category,
+                    company_yn = original_email.company_yn,
+                    department_yn = original_email.department_yn,
+                    #reply_to=original_email  # Reference to the original email
+                )
+
+                # Update the 'reply_yn' attribute of the original email to True
+                original_email.reply_yn = True
+                original_email.reply_date = current_date
+                original_email.save()
+
+                # Add a success message (optional)
+                messages.success(request, 'Reply sent successfully.')
+
+                return redirect('fillow:email_list')
+            else:
+                print(form.errors)
+        else:
+            form = EmailComposeForm(initial={
+                'email_to': original_email.email_from,
+                'email_subject': 'Re: ' + original_email.email_subject,
+                'email_text_content': original_email.email_text_content,
+            })
+
+        return render(request, 'fillow/apps/email/email-reply.html', {'form': form, 'original_email': original_email})
+    else:
+        messages.error(request, 'You do not have permission to reply to this email.')
+        return redirect('fillow:email_list')  
+
+
 def email_compose_tpl(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
@@ -800,6 +860,8 @@ from .gpt import *
 from .translation import *
 from datetime import datetime
 import re
+import zipfile
+import shutil
 
 def upload_schedule(request,email):
     user = request.user
@@ -829,128 +891,134 @@ def upload_schedule(request,email):
     schedule_list+=temp
 
     return schedule_list
+
+def extract_zip(zip_path, extract_path):
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_path)
+        
+def process_msg_file(eml_name, user):
+    headers = ['file_name','Subject','Date','From','To','Cc','text_content']
+    result = emlExtracter.prcessing_dir(headers, eml_name)
+    
+    gpt_result = process_file(result['text_content'])
+    
+    reply_req_yn = gpt_result.get('회신요청여부','')
+    reply_req_yn = True if reply_req_yn == 'Y' else False
+    
+    user_additional_info = AdditionalInform.objects.filter(user=user).last()
+
+    from_company = gpt_result.get('회사', '')
+    user_company = user_additional_info.company
+    company_yn = True if from_company == user_company else False
+    
+    from_dept = gpt_result.get('부서', '')
+    user_dept = user_additional_info.department
+    dept_yn = True if from_dept == user_dept else False
+    email_date_tuple = result.get('Date', '')
+    email_date_str = ''.join(map(str, email_date_tuple))
+    
+    # Remove all spaces from the date string
+    email_date_str = re.sub(r'\s+', '', email_date_str)
+
+    # Parse the date
+    email_date = datetime.strptime(email_date_str, '%a,%d%b%Y%H:%M:%S%z')
+    
+    meeting_date=gpt_result.get('회의날짜', '')
+    current_year = datetime.now().year
+    current_month = datetime.now().month
+    month_match = re.search(r'(\d+)월', meeting_date)
+    if month_match:
+        meeting_month = int(month_match.group(1))
+        # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
+        if meeting_month < current_month:
+            meeting_date = f"{current_year + 1}년 {meeting_date}"
+        else:
+            # 그렇지 않으면 현재 연도를 사용합니다.
+            meeting_date = f"{current_year}년 {meeting_date}"
+
+
+    email_instance = Email(
+    user=user,
+    email_file_name=result.get('file_name', ''),
+    email_subject=result.get('Subject', ''),
+    
+    email_date=email_date,
+    email_from=result.get('From', ''),
+    email_to=result.get('To', ''),
+    email_cc=result.get('Cc', ''),
+    email_text_content=result.get('text_content', ''),
+    category = gpt_result.get('카테고리',''),
+    from_company = from_company,
+    from_dept = from_dept,
+    from_name = gpt_result.get('이름',''),
+    reply_req_yn = reply_req_yn,
+    reply_start_date = result.get('Date',''),
+    reply_end_date = gpt_result.get('회신마감일자',''),
+    company_yn = company_yn,
+    department_yn = dept_yn,
+    meeting_date=meeting_date,
+    )
+
+    email_instance.save()
+        
 def upload_file(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
-        
+
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
-        
+
         if form.is_valid():
-            form.save()
-            
-            msg_name = request.FILES['uploaded_file'].name
-            form.cleaned_data['uploaded_file'].seek(0)
-            msg_contents = form.cleaned_data['uploaded_file'].read()
-            
-            uploaded_file = request.FILES['uploaded_file'] 
-            recent_document = Document.objects.latest('id')
-            file_path = recent_document.uploaded_file.path
-            
+            for uploaded_file in request.FILES.getlist('uploaded_file'):
+                form.save()
+                
+                recent_document = Document.objects.latest('id')
+                file_path = recent_document.uploaded_file.path
+                file_extension = uploaded_file.name.split('.')[-1].lower()
+                
 
-            file_extension = uploaded_file.name.split('.')[-1].lower()
-            if file_extension == 'msg':
-                eml_name = file_path.split('.msg')[0] + '.eml'
-            
-                with open(eml_name , "wb") as f:
-                    contents = load(uploaded_file)
-                    f.write(contents.as_bytes())        
-            else :
-                eml_name = file_path
-            
-            print(eml_name)
-                 
+                zip_path = os.path.join('media', recent_document.uploaded_file.name)
+                extract_path = os.path.join('media', 'extracted')
                     
-            headers = ['file_name','Subject','Date','From','To','Cc','text_content']
-            result = emlExtracter.prcessing_dir(headers, eml_name)
-            # print(result['text_content'])
-            
-            gpt_result = process_file(result['text_content'])
-            print(gpt_result)
-            reply_req_yn = gpt_result.get('회신요청여부','')
-            reply_req_yn = True if reply_req_yn == 'Y' else False
-            
-            user_additional_info = AdditionalInform.objects.filter(user=request.user).last()
+                if file_extension == 'zip':
+                    os.makedirs(extract_path, exist_ok=True)
+                    extract_zip(zip_path, extract_path)
 
-            from_company = gpt_result.get('회사', '')
-            user_company = user_additional_info.company
-            company_yn = True if from_company == user_company else False
-            
-            from_dept = gpt_result.get('부서', '')
-            user_dept = user_additional_info.department
-            dept_yn = True if from_dept == user_dept else False
-            email_date_tuple = result.get('Date', '')
-            email_date_str = ''.join(map(str, email_date_tuple))
-            
-            # Remove all spaces from the date string
-            email_date_str = re.sub(r'\s+', '', email_date_str)
+                    for msg_file in os.listdir(extract_path):
+                        msg_file_path = os.path.join(extract_path, msg_file)
+                        eml_name = msg_file_path.split('.msg')[0]
+                        process_msg_file(eml_name, request.user)
 
-            # Parse the date
-            email_date = datetime.strptime(email_date_str, '%a,%d%b%Y%H:%M:%S%z')
-            
-            meeting_date=gpt_result.get('회의날짜', '')
-            current_year = datetime.now().year
-            current_month = datetime.now().month
-            month_match = re.search(r'(\d+)월', meeting_date)
-            if month_match:
-                meeting_month = int(month_match.group(1))
-                # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
-                if meeting_month < current_month:
-                    meeting_date = f"{current_year + 1}년 {meeting_date}"
-                else:
-                    # 그렇지 않으면 현재 연도를 사용합니다.
-                    meeting_date = f"{current_year}년 {meeting_date}"
+                elif file_extension == 'msg':
+                    eml_name = file_path.split('.msg')[0] + '.eml'
+                        
+                    with open(eml_name, "wb") as f:
+                        contents = load(uploaded_file)
+                        f.write(contents.as_bytes())
+                        process_msg_file(eml_name, request.user)
+                
+                elif file_extension == 'eml' :
+                    eml_name = file_path
+                    process_msg_file(eml_name, request.user)
+                
+                # 압축 해제된 폴더 삭제
+                if os.path.exists(extract_path) and os.path.isdir(extract_path):
+                    shutil.rmtree(extract_path)
 
-# ...
 
-            # text=translate(result['text_content'])
-            # print("translate text",text)
-            # detect_spam(text)
-            email_instance = Email(
-            user=request.user,
-            email_file_name=result.get('file_name', ''),
-            email_subject=result.get('Subject', ''),
-            
-            email_date=email_date,
-            email_from=result.get('From', ''),
-            email_to=result.get('To', ''),
-            email_cc=result.get('Cc', ''),
-            email_text_content=result.get('text_content', ''),
-            category = gpt_result.get('카테고리',''),
-            from_company = from_company,
-            from_dept = from_dept,
-            from_name = gpt_result.get('이름',''),
-            reply_req_yn = reply_req_yn,
-            reply_start_date = result.get('Date',''),
-            reply_end_date = gpt_result.get('회신마감일자',''),
-            company_yn = company_yn,
-            department_yn = dept_yn,
-            meeting_date=meeting_date,
-            )
-            
-
-            
-            email_instance.save()
-            if reply_req_yn == True or meeting_date != "없음":
-                # 새로운 스케줄을 리스트에 추가
-                schedule_list = upload_schedule(request,email_instance)
-
-                # Python 객체를 JSON 문자열로 변환하여 저장
-                request.user.additionalinform.schedule = json.dumps(schedule_list)
-
-                # 변경 사항을 데이터베이스에 저장
-                request.user.additionalinform.save()
             return redirect("fillow:index")
+
     else:
         form = DocumentForm()
-        
-    context={
-        'form':form,
-        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
-        "masking_name":request.user.first_name[1:],
+
+    context = {
+        'form': form,
+        "img": AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name": request.user.first_name[1:],
     }
-    return render(request, 'fillow/pages/upload.html', context)
+    return render(request, 'fillow/pages/upload.html', context) 
+
 
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView, FormView
@@ -963,7 +1031,7 @@ class EmailListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        
+        queryset = queryset.filter(sent=False)
         queryset = queryset.filter(trash=False)
         queryset = queryset.filter(user=self.request.user).order_by('-email_date')
         search_query = self.request.GET.get('search_query', '')
@@ -972,7 +1040,64 @@ class EmailListView(ListView):
         internal_filter_d = self.request.GET.get('internal_d', '')
         
         if search_query:
-            queryset = queryset.filter(Q(email_subject__icontains=search_query) | Q(email_from__icontains=search_query))
+            queryset = queryset.filter(Q(email_subject__icontains=search_query) | Q(from_name__icontains=search_query))
+        
+        
+        if category_filter:
+            queryset = queryset.filter(category=category_filter)
+                
+        if internal_filter in ['0', '1']:
+            internal_filter = int(internal_filter)
+            queryset = queryset.filter(company_yn=internal_filter)
+            
+        if internal_filter_d in ['0', '1']:
+            internal_filter_d = int(internal_filter_d)
+            queryset = queryset.filter(department_yn=internal_filter_d)
+        recipient_filter = self.request.GET.get('recipient', '')
+        if recipient_filter in ['to', 'cc']:
+            user_email = self.request.user.email
+            if recipient_filter == 'to':
+                queryset = queryset.filter(email_to=user_email)
+            elif recipient_filter == 'cc':
+                queryset = queryset.filter(email_cc__contains=user_email)
+
+
+        self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
+        page_number = self.request.GET.get('page')
+        self.page_obj = self.paginator.get_page(page_number)
+        return self.page_obj.object_list
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        unread_email_count = Email.objects.filter(
+            user=self.request.user, read=False
+        ).count()
+        context['unread_email_count'] = unread_email_count
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        context.update({
+            'paginator': self.paginator,
+            'page_obj': self.page_obj,
+        })
+        return super().render_to_response(context, **response_kwargs)
+    
+class SentEmailListView(ListView):
+    model = Email
+    template_name = 'fillow/apps/email/email-inbox-sent.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(sent=True)
+        queryset = queryset.filter(trash=False)
+        queryset = queryset.filter(user=self.request.user).order_by('-email_date')
+        search_query = self.request.GET.get('search_query', '')
+        category_filter = self.request.GET.get('category', '')
+        internal_filter = self.request.GET.get('internal', '')
+        internal_filter_d = self.request.GET.get('internal_d', '')
+        
+        if search_query:
+            queryset = queryset.filter(Q(email_subject__icontains=search_query) | Q(from_name__icontains=search_query))
         
         
         if category_filter:
