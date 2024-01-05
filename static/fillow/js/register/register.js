@@ -7,6 +7,7 @@ const email = $('#id_email');
 const company = $('#id_company');
 const phone = $('#id_phone');
 
+const usernameBtn = $('#username');
 const emailBtn = $('#email');
 
 const valid1 = $('#valid1');
@@ -37,6 +38,7 @@ const csrftoken = $('[name=csrfmiddlewaretoken]').val();
 
 var isPasswordValid = false;
 var isPhoneValid = false;
+var isUsernameValid = false;
 var isEmailValid = false;
 var isFormFilled = false;
 var isCheckUsername = false;
@@ -190,6 +192,15 @@ function validateForm() {
         phoneValid.find('i#phone-invalid').css('display', 'inline-block');
     }
 
+    // 아이디 유효성 체크하기
+    if (username.val().trim() !== '') {
+        isUsernameValid = true;
+        usernameBtn.removeClass('disabled');
+    } else {
+        isUsernameValid = false;
+        usernameBtn.addClass('disabled');
+    }
+
     // 이메일 유효성 체크하기
     if (emailRegex.test(email.val())) {
         isEmailValid = true;
@@ -213,6 +224,7 @@ function validateForm() {
 
     if (isPasswordValid &&
         isPhoneValid &&
+        isUsernameValid &&
         isEmailValid &&
         isFormFilled &&
         isCheckUsername &&
