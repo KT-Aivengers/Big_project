@@ -86,6 +86,7 @@ dz_array = {
                             f"{folder_name}/vendor/lightgallery/dist/lightgallery.min.js",	
                             f"{folder_name}/vendor/lightgallery/dist/plugins/thumbnail/lg-thumbnail.min.js",
                             f"{folder_name}/vendor/lightgallery/dist/plugins/zoom/lg-zoom.min.js",
+                            f"{folder_name}/js/plugins-init/common-data.js",
                         ],
                         "email_compose": [
                             f"{folder_name}/vendor/dropzone/dist/dropzone.js",

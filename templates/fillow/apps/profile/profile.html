@@ -178,16 +178,31 @@
 															<div class="row">
 																<div class="mb-3">
 																	<label class="form-label">새 비밀번호</label>
-																	<input type="password" class="form-control" name="password">
+																	<input id="password1" type="password" class="form-control" name="password">
 																</div>
 																<div class="mb-3">
 																	<label class="form-label">새 비밀번호 확인</label>
-																	<input type="password" class="form-control" name="password_confirm">
+																	<input id="password2" type="password" class="form-control" name="password_confirm">
 																</div>
+																<ul>
+																	<li id="same"><i class="fa-solid fa-check" id="valid1"></i><i class="fa-solid fa-xmark" id="invalid1"></i><span></span></li>
+																</ul>
+																<ul>
+																	<li id="length"><i class="fa-solid fa-check" id="valid2"></i><i class="fa-solid fa-xmark" id="invalid2"></i><span></span></li>
+																</ul>
+																<ul>
+																	<li id="number"><i class="fa-solid fa-check" id="valid3"></i><i class="fa-solid fa-xmark" id="invalid3"></i><span></span></li>
+																</ul>
+																<ul>
+																	<li id="common"><i class="fa-solid fa-check" id="valid4"></i><i class="fa-solid fa-xmark" id="invalid4"></i><span></span></li>
+																</ul>
+																<ul>
+																	<li id="similar"><i class="fa-solid fa-check" id="valid5"></i><i class="fa-solid fa-xmark" id="invalid5"></i><span></span></li>
+																</ul>
 															</div>
 														</div>
 														<div class="card-footer">
-															<button class="btn btn-primary" type="submit" name="btn-post" value="password">변경하기</button>
+															<button id="passwordBtn" class="btn btn-primary disabled" type="submit" name="btn-post" value="password">변경하기</button>
 														</div>
 													</form>
 												</div>
@@ -213,12 +228,21 @@
 																</div>
 																<div class="mb-3">
 																	<label class="form-label">부서</label>
-																	<input type="text" class="form-control" value="{{dept}}" name="dept">
+																	<select class="default-select form-control wide" name="dept">
+																		<option value="개발부" {% if dept == '개발부' %} selected {% endif %}>개발부</option>
+																		<option value="영업부" {% if dept == '영업부' %} selected {% endif %}>영업부</option>
+																		<option value="마케팅부" {% if dept == '마케팅부' %} selected {% endif %}>마케팅부</option>
+																		<option value="R&D" {% if dept == 'R&D' %} selected {% endif %}>R&D</option>
+																		<option value="경영지원부" {% if dept == '경영지원부' %} selected {% endif %}>경영지원부</option>
+																	</select>
 																</div>
 																<div class="mb-3">
 																	<label class="form-label">휴대전화</label>
 																	<input type="text" class="form-control" value="{{phone}}" name="phone">
 																</div>
+																<ul>
+																	<li id="phone" style="color:green"><i class="fa-solid fa-check" id="phone-valid"></i><i class="fa-solid fa-xmark" id="phone-invalid"></i><span> 알맞은 전화번호 형식입니다.</span></li>
+																</ul>
 																<div class="mb-3">
 																	<label class="form-label">자기소개</label>
 																	<textarea class="form-control" rows="8" name="about" id="about">{{introduce}}</textarea>
@@ -235,25 +259,6 @@
 									</div>
 								</div>
 							</div>
-							<!-- Modal -->
-							<div class="modal fade" id="replyModal">
-								<div class="modal-dialog modal-dialog-centered" role="document">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h5 class="modal-title">Post Reply</h5>
-											<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-										</div>
-										<div class="modal-body">
-											<form>
-												<textarea class="form-control" rows="4">Message</textarea>
-											</form>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-primary">Reply</button>
-										</div>
-									</div>
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -266,6 +271,7 @@
 ***********************************-->
 {% endblock %}
 {% block additional_js %}
+<script src="../static/fillow/vendor/difflib/difflib.min.js"></script>
 <script>
 	document.getElementById('btn-upload').addEventListener('click', function(e) {
         var fileInput = document.getElementById('formFile-upload');
@@ -287,6 +293,17 @@
 		  	localStorage.setItem('activeTab', activeTab);
 		});
 	});
+
+	const username = "{{ request.user.username }}"
+	const firstName = "{{ request.user.first_name }}"
+	const lastName = "{{ request.user.last_name }}"
+	const email = "{{ request.user.email }}"
+
+	const company = "{{ company}} "
+	const dept = "{{ dept }}"
+	const phone = "{{ phone }}"
 </script>
+<script src="../static/fillow/js/profile/profile-password.js"></script>
+<script src="../static/fillow/js/profile/profile-info.js"></script>
 
 {% endblock %}
