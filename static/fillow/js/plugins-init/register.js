@@ -26,6 +26,7 @@ const length = $('#length');;
 const number = $('#number');
 const common = $('#common');
 const similar = $('#similar');
+const phoneValid = $('#phone');
 
 const submit = $('#submit');
 
@@ -177,8 +178,16 @@ function validateForm() {
     // 전화번호 유효성 체크하기
     if (phoneRegex.test(phone.val())) {
         isPhoneValid = true;
+        phoneValid.css('color', 'green');
+        phoneValid.find('span').text(' 알맞은 전화번호 형식입니다.');
+        phoneValid.find('i#phone-valid').css('display', 'inline-block');
+        phoneValid.find('i#phone-invalid').css('display', 'none');
     } else {
         isPhoneValid = false;
+        phoneValid.css('color', 'red');
+        phoneValid.find('span').html(' 전화번호 형식이 아닙니다<br>(xxx-xxx-xxxx 또는 xxx-xxxx-xxxx, -는 생략 가능).');
+        phoneValid.find('i#phone-valid').css('display', 'none');
+        phoneValid.find('i#phone-invalid').css('display', 'inline-block');
     }
 
     // 이메일 유효성 체크하기
