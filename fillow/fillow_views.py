@@ -391,7 +391,10 @@ def email_reply(request, pk):
                 original_email.reply_yn = True
                 original_email.reply_date = current_date
                 original_email.save()
-
+                # update_schedule
+                temp = upload_schedule(request.user, original_email)
+                # edit
+                save_schedule({'schedule': temp}, request.user)
                 # Add a success message (optional)
                 messages.success(request, 'Reply sent successfully.')
 
@@ -667,15 +670,6 @@ def get_schedule(request):
     
     return schedule_list
 
-
-
-# DB에 변경된 일정 반영하기
-def save_schedule(schedule_json, user):
-    inform = user.additionalinform
-    inform.schedule = json.dumps(schedule_json['schedule'])
-    inform.save()
-    return
-
 # 배정, 비배정 일정 분리하기
 def sep_schedule(schedule_list):
     # 달력에 배정 된 일정
@@ -704,13 +698,6 @@ def schedule(request):
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
-    
-    if request.method == "POST":
-        # JSON으로 수정된 일정 데이터 받아옴
-        received_data = json.loads(request.body.decode('utf-8'))
-        
-        # DB에 변경사항 올리는 함수
-        save_schedule(received_data, request.user)
     
     if request.method == "POST":
         # JSON으로 수정된 일정 데이터 받아옴
@@ -902,34 +889,34 @@ import re
 import zipfile
 import shutil
 
-def upload_schedule(request,email):
-    user = request.user
-    # JSON 문자열을 Python 객체로 변환
-    json_raw = request.user.additionalinform.schedule
-    schedule_list = json.loads(json_raw)
-    # DB에서 일정 불러오기
-    temp=[]
-    if email.reply_req_yn==True:
-        dic={
-            'pk': email.id,
-            'title': email.category + " / " + email.from_name,
-            'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
-            'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-            'category': email.category,
-        }
-        temp.append(dic)
-    if email.meeting_date != "없음":
-        dic={
-            'pk': email.id,
-            'title': "회의 / " + email.from_name,
-            'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-            'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
-            'category': '회의',
-        }
-        temp.append(dic)
-    schedule_list+=temp
+# def upload_schedule(request,email):
+#     user = request.user
+#     # JSON 문자열을 Python 객체로 변환
+#     json_raw = request.user.additionalinform.schedule
+#     schedule_list = json.loads(json_raw)
+#     # DB에서 일정 불러오기
+#     temp=[]
+#     if email.reply_req_yn==True:
+#         dic={
+#             'pk': email.id,
+#             'title': email.category + " / " + email.from_name,
+#             'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
+#             'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+#             'category': email.category,
+#         }
+#         temp.append(dic)
+#     if email.meeting_date != "없음":
+#         dic={
+#             'pk': email.id,
+#             'title': "회의 / " + email.from_name,
+#             'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+#             'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
+#             'category': '회의',
+#         }
+#         temp.append(dic)
+#     schedule_list+=temp
 
-    return schedule_list
+#     return schedule_list
 
 def extract_zip(zip_path, extract_path):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
@@ -1027,8 +1014,12 @@ def upload_schedule(user,email):
     json_raw = user.additionalinform.schedule
     schedule_list = json.loads(json_raw)
     # DB에서 일정 불러오기
+    for event in schedule_list:
+        if event.get('pk') == email.id:
+            schedule_list.remove(event)
+            return schedule_list
     temp=[]
-    if email.reply_req_yn==True:
+    if email.reply_req_yn==True and email.reply_yn == False:
         dic={
             'pk': email.id,
             'title': email.category + " / " + email.from_name,
@@ -1037,7 +1028,7 @@ def upload_schedule(user,email):
             'category': email.category,
         }
         temp.append(dic)
-    if email.meeting_date != "없음":
+    if email.meeting_date != "없음" and email.reply_yn == False:
         dic={
             'pk': email.id,
             'title': "회의 / " + email.from_name,
@@ -1047,7 +1038,6 @@ def upload_schedule(user,email):
         }
         temp.append(dic)
     schedule_list+=temp
- 
     return schedule_list
 
 
@@ -1074,13 +1064,16 @@ def upload_file(request):
                     os.makedirs(extract_path, exist_ok=True)
                     extract_zip(file_path, extract_path)
  
-                    for msg_file in os.listdir(extract_path):
-                        msg_file_path = os.path.join(extract_path, msg_file)
-                        eml_name = msg_file_path.split('.msg')[0] + '.eml'
+                    for file_name in os.listdir(extract_path):
+                        file_path = os.path.join(extract_path, file_name)
+                        # eml_name = file_path.split('.msg')[0] + '.eml'
+                        file_extension = file_name.split('.')[-1].lower()
+                        eml_name = file_path if file_extension == 'eml' else file_path.split('.msg')[0] + '.eml'
                        
-                        with open(eml_name, "wb") as f:
-                            contents = load(open(msg_file_path, "rb"))
-                            f.write(contents.as_bytes())
+                        if file_extension == 'msg':
+                            with open(eml_name, "wb") as f:
+                                contents = load(open(file_path, "rb"))
+                                f.write(contents.as_bytes())
                            
                         process_msg_file(eml_name, request.user)
  
