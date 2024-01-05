@@ -46,6 +46,10 @@ function isSameF(p1, p2) {
 
 function isSimilar(p1) {
     const userAttrs = [
+        username,
+        firstName,
+        lastName,
+        email,
     ]
 
     let result = false;
