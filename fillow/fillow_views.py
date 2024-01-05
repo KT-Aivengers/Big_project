@@ -1108,6 +1108,7 @@ def upload_file(request):
         'form': form,
         "img": AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name": request.user.first_name[1:],
+        "page_title": "이메일 업로드"
     }
     return render(request, 'fillow/pages/upload.html', context)
 
@@ -1166,6 +1167,7 @@ class EmailListView(ListView):
             user=self.request.user, read=False
         ).count()
         context['unread_email_count'] = unread_email_count
+        context['page_title'] = '받은 이메일'
         return context
 
     def render_to_response(self, context, **response_kwargs):
@@ -1223,6 +1225,7 @@ class SentEmailListView(ListView):
             user=self.request.user, read=False
         ).count()
         context['unread_email_count'] = unread_email_count
+        context['page_title'] = '보낸 이메일'
         return context
 
     def render_to_response(self, context, **response_kwargs):
@@ -1250,6 +1253,7 @@ class EmailListView_Trash(ListView):
             user=self.request.user, read=False
         ).count()
         context['unread_email_count'] = unread_email_count
+        context['page_title'] = '휴지통'
         return context
     def render_to_response(self, context, **response_kwargs):
         context.update({
@@ -1282,6 +1286,7 @@ class EmailDetailView(DetailView):
         if not self.object.read:
             self.object.read = True
             self.object.save()
+        context['page_title'] = '자세히'
         return context
 
 def page_register_terms(request):
