@@ -937,19 +937,85 @@ def extract_zip(zip_path, extract_path):
         
 def process_msg_file(eml_name, user):
     headers = ['file_name','Subject','Date','From','To','Cc','text_content']
+   
     result = emlExtracter.prcessing_dir(headers, eml_name)
-    
+    print(eml_name,headers)
+    # print("asd",result)
+    # print("asd",result['text_content'])
     gpt_result = process_file(result['text_content'])
-    
+   
     reply_req_yn = gpt_result.get('회신요청여부','')
     reply_req_yn = True if reply_req_yn == 'Y' else False
-    
+   
     user_additional_info = AdditionalInform.objects.filter(user=user).last()
+ 
+    from_company = gpt_result.get('회사', '')
+    user_company = user_additional_info.company
+    company_yn = True if from_company == user_company else False
+   
+    from_dept = gpt_result.get('부서', '')
+    user_dept = user_additional_info.department
+    dept_yn = True if from_dept == user_dept else False
+    email_date_tuple = result.get('Date', '')
+    email_date_str = ''.join(map(str, email_date_tuple))
+   
+    # Remove all spaces from the date string
+    email_date_str = re.sub(r'\s+', '', email_date_str)
+ 
+    # Parse the date
+    email_date = datetime.strptime(email_date_str, '%a,%d%b%Y%H:%M:%S%z')
+   
+    meeting_date=gpt_result.get('회의날짜', '')
+    current_year = datetime.now().year
+    current_month = datetime.now().month
+    month_match = re.search(r'(\d+)월', meeting_date)
+    if month_match:
+        meeting_month = int(month_match.group(1))
+        # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
+        if meeting_month < current_month:
+            meeting_date = f"{current_year + 1}년 {meeting_date}"
+        else:
+            # 그렇지 않으면 현재 연도를 사용합니다.
+            meeting_date = f"{current_year}년 {meeting_date}"
+ 
+ 
+    email_instance = Email(
+    user=user,
+    email_file_name=result.get('file_name', ''),
+    email_subject=result.get('Subject', ''),
+   
+    email_date=email_date,
+    email_from=result.get('From', ''),
+    email_to=result.get('To', ''),
+    email_cc=result.get('Cc', ''),
+    email_text_content=result.get('text_content', ''),
+    category = gpt_result.get('카테고리',''),
+    from_company = from_company,
+    from_dept = from_dept,
+    from_name = gpt_result.get('이름',''),
+    reply_req_yn = reply_req_yn,
+    reply_start_date = result.get('Date',''),
+    reply_end_date = gpt_result.get('회신마감일자',''),
+    company_yn = company_yn,
+    department_yn = dept_yn,
+    meeting_date=meeting_date,
+    )
+ 
+    email_instance.save()
+    if reply_req_yn == True or meeting_date != "없음":
+        # 새로운 스케줄을 리스트에 추가
+        schedule_list = upload_schedule(user,email_instance)
+ 
+        # Python 객체를 JSON 문자열로 변환하여 저장
+        user.additionalinform.schedule = json.dumps(schedule_list)
+ 
+        # 변경 사항을 데이터베이스에 저장
+        user.additionalinform.save()
 
-def upload_schedule(request,email):
-    user = request.user
+def upload_schedule(user,email):
+   
     # JSON 문자열을 Python 객체로 변환
-    json_raw = request.user.additionalinform.schedule
+    json_raw = user.additionalinform.schedule
     schedule_list = json.loads(json_raw)
     # DB에서 일정 불러오기
     temp=[]
@@ -972,163 +1038,70 @@ def upload_schedule(request,email):
         }
         temp.append(dic)
     schedule_list+=temp
-
+ 
     return schedule_list
+
+
 def upload_file(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
-        
+ 
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
-        
-        if form.is_valid():
-            form.save()
-            
-            msg_name = request.FILES['uploaded_file'].name
-            form.cleaned_data['uploaded_file'].seek(0)
-            msg_contents = form.cleaned_data['uploaded_file'].read()
-            
-            uploaded_file = request.FILES['uploaded_file'] 
-            recent_document = Document.objects.latest('id')
-            file_path = recent_document.uploaded_file.path
-            
-
-            file_extension = uploaded_file.name.split('.')[-1].lower()
-            if file_extension == 'msg':
-                eml_name = file_path.split('.msg')[0] + '.eml'
-            
-                with open(eml_name , "wb") as f:
-                    contents = load(uploaded_file)
-                    f.write(contents.as_bytes())        
-            else :
-                eml_name = file_path
-            
-            print(eml_name)
-                 
-                    
-            headers = ['file_name','Subject','Date','From','To','Cc','text_content']
-            result = emlExtracter.prcessing_dir(headers, eml_name)
-            # print(result['text_content'])
-            
-            gpt_result = process_file(result['text_content'])
-            print(gpt_result)
-            reply_req_yn = gpt_result.get('회신요청여부','')
-            reply_req_yn = True if reply_req_yn == 'Y' else False
-            
-            user_additional_info = AdditionalInform.objects.filter(user=request.user).last()
-
-    from_company = gpt_result.get('회사', '')
-    user_company = user_additional_info.company
-    company_yn = True if from_company == user_company else False
-    
-    from_dept = gpt_result.get('부서', '')
-    user_dept = user_additional_info.department
-    dept_yn = True if from_dept == user_dept else False
-    email_date_tuple = result.get('Date', '')
-    email_date_str = ''.join(map(str, email_date_tuple))
-    
-    # Remove all spaces from the date string
-    email_date_str = re.sub(r'\s+', '', email_date_str)
-
-    # Parse the date
-    email_date = datetime.strptime(email_date_str, '%a,%d%b%Y%H:%M:%S%z')
-    
-    meeting_date=gpt_result.get('회의날짜', '')
-    current_year = datetime.now().year
-    current_month = datetime.now().month
-    month_match = re.search(r'(\d+)월', meeting_date)
-    if month_match:
-        meeting_month = int(month_match.group(1))
-        # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
-        if meeting_month < current_month:
-            meeting_date = f"{current_year + 1}년 {meeting_date}"
-        else:
-            # 그렇지 않으면 현재 연도를 사용합니다.
-            meeting_date = f"{current_year}년 {meeting_date}"
-
-
-    email_instance = Email(
-    user=user,
-    email_file_name=result.get('file_name', ''),
-    email_subject=result.get('Subject', ''),
-    
-    email_date=email_date,
-    email_from=result.get('From', ''),
-    email_to=result.get('To', ''),
-    email_cc=result.get('Cc', ''),
-    email_text_content=result.get('text_content', ''),
-    category = gpt_result.get('카테고리',''),
-    from_company = from_company,
-    from_dept = from_dept,
-    from_name = gpt_result.get('이름',''),
-    reply_req_yn = reply_req_yn,
-    reply_start_date = result.get('Date',''),
-    reply_end_date = gpt_result.get('회신마감일자',''),
-    company_yn = company_yn,
-    department_yn = dept_yn,
-    meeting_date=meeting_date,
-    )
-
-    email_instance.save()
-        
-def upload_file(request):
-    # 유저가 로그인 되지 않은 상태일 때, redirect 홈
-    if not request.user.is_authenticated:
-        return redirect("fillow:home")
-
-    if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
-
+ 
         if form.is_valid():
             for uploaded_file in request.FILES.getlist('uploaded_file'):
-                form.save()
-                
+                new_doc = Document(uploaded_file=uploaded_file)
+                new_doc.save()
                 recent_document = Document.objects.latest('id')
                 file_path = recent_document.uploaded_file.path
+                # file_path = new_doc.uploaded_file.path
                 file_extension = uploaded_file.name.split('.')[-1].lower()
-                
-
-                zip_path = os.path.join('media', recent_document.uploaded_file.name)
+               
                 extract_path = os.path.join('media', 'extracted')
-                    
+               
                 if file_extension == 'zip':
                     os.makedirs(extract_path, exist_ok=True)
-                    extract_zip(zip_path, extract_path)
-
+                    extract_zip(file_path, extract_path)
+ 
                     for msg_file in os.listdir(extract_path):
                         msg_file_path = os.path.join(extract_path, msg_file)
-                        eml_name = msg_file_path.split('.msg')[0]
+                        eml_name = msg_file_path.split('.msg')[0] + '.eml'
+                       
+                        with open(eml_name, "wb") as f:
+                            contents = load(open(msg_file_path, "rb"))
+                            f.write(contents.as_bytes())
+                           
                         process_msg_file(eml_name, request.user)
-
-                elif file_extension == 'msg':
-                    eml_name = file_path.split('.msg')[0] + '.eml'
-                        
-                    with open(eml_name, "wb") as f:
-                        contents = load(uploaded_file)
-                        f.write(contents.as_bytes())
-                        process_msg_file(eml_name, request.user)
-                
-                elif file_extension == 'eml' :
-                    eml_name = file_path
+ 
+                elif file_extension in ['msg', 'eml']:
+                    eml_name = file_path if file_extension == 'eml' else file_path.split('.msg')[0] + '.eml'
+                   
+                    if file_extension == 'msg':
+                        with open(eml_name, "wb") as f:
+                            contents = load(uploaded_file)
+                            f.write(contents.as_bytes())
+                           
                     process_msg_file(eml_name, request.user)
-                
+               
                 # 압축 해제된 폴더 삭제
                 if os.path.exists(extract_path) and os.path.isdir(extract_path):
                     shutil.rmtree(extract_path)
-
-
+ 
             return redirect("fillow:index")
-
+ 
+ 
     else:
         form = DocumentForm()
-
+ 
     context = {
         'form': form,
         "img": AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name": request.user.first_name[1:],
     }
-    return render(request, 'fillow/pages/upload.html', context) 
+    return render(request, 'fillow/pages/upload.html', context)
+
 
 
 from django.shortcuts import render
