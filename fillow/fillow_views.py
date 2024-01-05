@@ -288,10 +288,18 @@ def email_compose(request):
     return render(request,'fillow/apps/email/email-compose.html',context)
 
 
-def email_reply(request, email_id):
+def email_reply(request, pk):
     # Retrieve the Email object
-    original_email = get_object_or_404(Email, pk=email_id)
-
+    original_email = get_object_or_404(Email, pk=pk)
+    email_compose_tpl = EmailComposeTpl.objects.filter(user=request.user).last()
+    
+    context={
+        "page_title":"이메일 전송",
+        "email_compose_tpl": email_compose_tpl,
+        "img":AdditionalInform.objects.get(user_id=request.user.id).image,
+        "masking_name":request.user.first_name[1:],
+    }
+    
     if request.user == original_email.user:
         if request.method == "POST":
             form = EmailComposeForm(request.POST)
@@ -303,6 +311,8 @@ def email_reply(request, email_id):
                 email_subject = form.cleaned_data.get('email_subject', 'Re: ' + original_email.email_subject)
                 email_file = form.cleaned_data.get('email_file', '')
                 email_text_content = form.cleaned_data.get('email_text_content', '')
+                EmailCompose.objects.create(email_to = email_to, email_cc=email_cc, email_subject=email_subject, 
+                                        email_file=email_file, email_text_content=email_text_content, user = user)
                 
                 current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 # Save the reply email
@@ -341,7 +351,7 @@ def email_reply(request, email_id):
                 'email_text_content': original_email.email_text_content,
             })
 
-        return render(request, 'fillow/apps/email/email-reply.html', {'form': form, 'original_email': original_email})
+        return render(request, 'fillow/apps/email/email-reply.html', {'context': context, 'original_email': original_email})
     else:
         messages.error(request, 'You do not have permission to reply to this email.')
         return redirect('fillow:email_list')  
@@ -1191,6 +1201,33 @@ def email_trash(request, pk):
 
     return redirect("fillow:email-list-trash")
 
+def email_delete(request, pk):
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+    
+    email = Email.objects.get(pk=pk)
+
+    if request.user == email.user:
+        email.delete()
+        messages.success(request, 'Email permanently deleted.')
+        return redirect("fillow:email-list-trash")
+    return redirect("fillow:email-list-trash")
+
+
+def category_change(request, pk, category_name):
+    if not request.user.is_authenticated:
+        return redirect("fillow:home")
+    email = Email.objects.get(pk=pk)
+    #email = get_object_or_404(Email, pk=pk)
+
+    if request.user == email.user:
+        email.category = category_name
+        email.save()
+        messages.success(request, f'Email category changed to {category_name}.')
+        return redirect('fillow:email_list')
+    else:
+        messages.error(request, 'You do not have permission to change the category of this email.')
+        return redirect('fillow:email_list') 
 
 class EmailUpdateView(UpdateView):
     model = Email
