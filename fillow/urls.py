@@ -16,6 +16,7 @@ urlpatterns = [
     path('profile/',fillow_views.app_profile,name="profile"),
     path('check-password/',fillow_views.check_password_,name="check-password"),
     path('check-username/',fillow_views.check_username,name="check-username"),
+    path('check-email/',fillow_views.check_email,name="check-email"),
     
     path('email-compose/',fillow_views.email_compose,name="email-compose"),
     path('email-compose-tpl/',fillow_views.email_compose_tpl,name="email-compose-tpl"),

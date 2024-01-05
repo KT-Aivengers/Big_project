@@ -698,6 +698,17 @@ def check_username(request):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
+def check_email(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        email = data.get('email').strip()
+        email_exists = User.objects.filter(email=email).exists()
+
+        return JsonResponse({'available': not email_exists})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
 def page_register_complete(request):
     return render(request, 'fillow/pages/page-register-complete.html')
 

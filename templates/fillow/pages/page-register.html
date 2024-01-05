@@ -33,21 +33,29 @@
     	.reg-form input[type="email"],
     	.reg-form input[type="password"],
     	.reg-form textarea {
-        margin-bottom: 10px;
-    }
+        	margin-bottom: 10px;
+    	}
 
-	[data-theme-version=dark] .logo-auth {
-		content: url("{% static 'fillow/images/logofull_dark.svg' %}")
-	}
+		[data-theme-version=dark] .logo-auth {
+			content: url("{% static 'fillow/images/logofull_dark.svg' %}")
+		}
 
-	.logo-auth {
-		width: 20vh;
-	}
+		.logo-auth {
+			width: 20vh;
+		}
 
-	#valid,
-	#invalid {
-		display: none;
-	}
+		#valid1,
+		#valid2,
+		#valid3,
+		#valid4,
+		#valid5,
+		#invalid1,
+		#invalid2,
+		#invalid3,
+		#invalid4,
+		#invalid5 {
+			display: none;
+		}
 	</style>
 	{% endblock %}
 </head>
@@ -78,7 +86,7 @@
 										<button id="username" type="button" class="btn btn-primary btn-sm">중복 확인</button>
 									</div>
 								</div>
-								<p id="message"></p>
+								<p id="username-message" style="color:red"><i class="fa-solid fa-check" id="username-valid" style="display:none"></i><i class="fa-solid fa-xmark" id="username-invalid"></i><span> 중복 확인을 하지 않았습니다.</span></p>
 								{{ user_form.last_name.label_tag }}
 								{{ user_form.last_name }}
 								{{ user_form.first_name.label_tag }}
@@ -97,13 +105,28 @@
 									</ul>
 								{% endif %}
 								<ul>
-									<li id="same"><i class="fa-solid fa-check" id="valid"></i><i class="fa-solid fa-xmark" id="invalid"></i>비밀번호와 확인란이 같아야 합니다.</li>
+									<li id="same"><i class="fa-solid fa-check" id="valid1"></i><i class="fa-solid fa-xmark" id="invalid1"></i><span></span></li>
+								</ul>
+								<ul>
+									<li id="length"><i class="fa-solid fa-check" id="valid2"></i><i class="fa-solid fa-xmark" id="invalid2"></i><span></span></li>
+								</ul>
+								<ul>
+									<li id="number"><i class="fa-solid fa-check" id="valid3"></i><i class="fa-solid fa-xmark" id="invalid3"></i><span></span></li>
+								</ul>
+								<ul>
+									<li id="common"><i class="fa-solid fa-check" id="valid4"></i><i class="fa-solid fa-xmark" id="invalid4"></i><span></span></span></li>
+								</ul>
+								<ul>
+									<li id="similar"><i class="fa-solid fa-check" id="valid5"></i><i class="fa-solid fa-xmark" id="invalid5"></i><span></span></span></li>
 								</ul>
 								{{ user_form.email.label_tag }}
 								{{ user_form.email }}
-								{% if msg %}
-									<p style="color:red">{{ msg }}</p>
-								{% endif %}
+								<div class="row mb-2">
+									<div class="col-lg-4 text-lg-left">
+										<button id="email" type="button" class="btn btn-primary btn-sm">중복 확인</button>
+									</div>
+								</div>
+								<p id="email-message" style="color:red"><i class="fa-solid fa-check" id="email-valid" style="display:none"></i><i class="fa-solid fa-xmark" id="email-invalid"></i><span> 중복 확인을 하지 않았습니다.</span></p>
 								{{ additional_form }}
 								<br>
 								<div class="text-center">
@@ -138,6 +161,8 @@
 {% endfor %}
 
 {% block additional_js %}
+<script src="../static/fillow/vendor/difflib/difflib.min.js"></script>
+<script src="../static/fillow/js/plugins-init/common-data.js"></script>
 <script src="../static/fillow/js/plugins-init/register.js"></script>
 {% endblock %}
 </body>
