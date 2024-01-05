@@ -46,7 +46,7 @@ urlpatterns = [
 
     path('upload/', fillow_views.upload_file, name='upload_file'),
     
-    path('email/', fillow_views.EmailListView.as_view(), name='email_list'),
+    path('email-inbox/', fillow_views.EmailListView.as_view(), name='email_list'),
     path('email/<int:pk>', fillow_views.EmailDetailView.as_view(), name='email_detail'),
     path('email/trash/<int:pk>/', fillow_views.email_trash, name='email-trash'),
     path('email/trash/', fillow_views.EmailListView_Trash.as_view(), name='email-list-trash'),
