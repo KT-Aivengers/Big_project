@@ -969,7 +969,7 @@ def process_msg_file(eml_name, user):
     current_year = datetime.now().year
     current_month = datetime.now().month
     month_match = re.search(r'(\d+)월', meeting_date)
-    if month_match:
+    if month_match and '년' not in meeting_date:
         meeting_month = int(month_match.group(1))
         # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
         if meeting_month < current_month:
@@ -979,7 +979,7 @@ def process_msg_file(eml_name, user):
             meeting_date = f"{current_year}년 {meeting_date}"
     reply_end_date = gpt_result.get('회신마감일자','')
     month_match = re.search(r'(\d+)월', reply_end_date)
-    if month_match:
+    if month_match and '년' not in reply_end_date:
         meeting_month = int(month_match.group(1))
         # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
         if meeting_month < current_month:
