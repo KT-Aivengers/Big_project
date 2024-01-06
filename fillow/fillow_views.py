@@ -99,18 +99,19 @@ def get_7_deadline(request):
     today = datetime.now()
     
     for s in schedule[:]:
-        deadline = s['end']
-        deadline = datetime.strptime(deadline, '%Y-%m-%d')
-        
-        diff = (deadline - today).days + 1
-        
-        if not s.get('category'):
-            s['category'] = '사용자일정'
+        deadline = s.get('end')
+        if deadline:
+            deadline = datetime.strptime(deadline, '%Y-%m-%d')
+            
+            diff = (deadline - today).days + 1
+            
+            if not s.get('category'):
+                s['category'] = '사용자일정'
 
-        if diff > 0 and diff < 7:
-            s['diff'] = diff
-            s['diff_percent'] = 100 - diff / 7 * 100
-            result.append(s)
+            if diff > 0 and diff < 7:
+                s['diff'] = diff
+                s['diff_percent'] = 100 - diff / 7 * 100
+                result.append(s)
         
     result.sort(key=lambda x: x['diff'])
     return result[:]
@@ -1024,7 +1025,7 @@ def upload_schedule(user,email):
             'pk': email.id,
             'title': email.category + " / " + email.from_name,
             'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
-            'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+            'end': None if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
             'category': email.category,
         }
         temp.append(dic)
