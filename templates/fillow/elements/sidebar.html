@@ -10,11 +10,11 @@
                     <span class="nav-text">이메일</span>
                 </a>
                 <ul aria-expanded="false">
+                    <li><a href="{% url 'fillow:upload_file' %}">이메일 업로드 </a></li>	
                     <li><a href="{% url 'fillow:email_list' %}">받은 이메일</a></li>
                     <li><a href="{% url 'fillow:email-sent' %}">보낸 이메일</a></li>
-                    <li><a href="{% url 'fillow:email-compose' %}">이메일 전송</a></li>	
-                    <li><a href="{% url 'fillow:email-compose-tpl' %}">전송 템플릿 </a></li>
-                    <li><a href="{% url 'fillow:upload_file' %}">이메일 업로드 </a></li>	
+                    <li><a href="{% url 'fillow:email-compose-tpl' %}">메일 템플릿</a></li>
+                    <li><a href="{% url 'fillow:email-compose' %}">메일 보내기</a></li>
                 </ul>
             </li>
 
