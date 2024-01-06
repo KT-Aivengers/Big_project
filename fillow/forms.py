@@ -12,11 +12,12 @@ from django.core.validators import RegexValidator
 class AdditionalInformForm(forms.ModelForm):
     
     DEPARTMENT_CHOICES = [
-        ('개발부', '개발부'),
+        ('IT전략기획부', 'IT전략기획부'),
         ('영업부', '영업부'),
         ('마케팅부', '마케팅부'),
         ('R&D', 'R&D'),
-        ('경영지원부', '경영지원부'),
+        ('기술영업부', '기술영업부'),
+        ('구매부', '구매부'),
     ]
     
     company = forms.CharField(
