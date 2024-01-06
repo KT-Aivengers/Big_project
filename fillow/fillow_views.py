@@ -921,7 +921,19 @@ import shutil
 
 def extract_zip(zip_path, extract_path):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(extract_path)
+        for filename in zip_ref.namelist():
+            # 파일 이름 인코딩 변환
+            correct_filename = filename.encode('cp437').decode('cp949', 'ignore')
+            
+            # 변환한 파일 이름으로 새 파일 경로 생성
+            extracted_path = os.path.join(extract_path, correct_filename)
+
+            # 파일의 디렉토리가 존재하지 않으면 생성
+            os.makedirs(os.path.dirname(extracted_path), exist_ok=True)
+            
+            # 파일 추출
+            with zip_ref.open(filename) as source, open(extracted_path, "wb") as target:
+                shutil.copyfileobj(source, target)
         
 def process_msg_file(eml_name, user):
     headers = ['file_name','Subject','Date','From','To','Cc','text_content']
