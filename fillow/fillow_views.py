@@ -31,12 +31,12 @@ def get_most_category(id):
     color = [
         "#fc2e53",
 		"#ffbf00",
-		"#ffdc00",
 		"#09bd3c",
-		"#15c08c",
+		"#128a7e",
+		"#369fc2",
 		"#ffa7d7",
+		"#6238fc",
 		"#d653c1",
-		"#312a2a",
 		"#c8c8c8",
     ]
     
@@ -1125,6 +1125,8 @@ from django.views.generic import ListView, DetailView, DeleteView, UpdateView, C
 from django.urls import reverse_lazy
 from .models import Email
 from django.core.paginator import Paginator
+
+
 class EmailListView(ListView):
     model = Email
     template_name = 'fillow/apps/email/email-inbox.html'
@@ -1174,6 +1176,7 @@ class EmailListView(ListView):
         ).count()
         context['unread_email_count'] = unread_email_count
         context['page_title'] = '받은 이메일'
+        context['img'] = AdditionalInform.objects.get(user_id=self.request.user.id).image
         return context
 
     def render_to_response(self, context, **response_kwargs):
@@ -1232,6 +1235,7 @@ class SentEmailListView(ListView):
         ).count()
         context['unread_email_count'] = unread_email_count
         context['page_title'] = '보낸 이메일'
+        context['img'] = AdditionalInform.objects.get(user_id=self.request.user.id).image
         return context
 
     def render_to_response(self, context, **response_kwargs):
@@ -1260,6 +1264,7 @@ class EmailListView_Trash(ListView):
         ).count()
         context['unread_email_count'] = unread_email_count
         context['page_title'] = '휴지통'
+        context['img'] = AdditionalInform.objects.get(user_id=self.request.user.id).image
         return context
     def render_to_response(self, context, **response_kwargs):
         context.update({

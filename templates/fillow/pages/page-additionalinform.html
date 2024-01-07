@@ -61,9 +61,12 @@
 							<form action="" method="POST">
 								{% csrf_token %}
 								{{ form }}
+								<ul>
+									<li id="phone"><i class="fa-solid fa-check" id="phone-valid"></i><i class="fa-solid fa-xmark" id="phone-invalid"></i><span></span></li>
+								</ul>
 								<br>
 								<div class="text-center">
-									<button type="submit" class="btn btn-primary btn-block">입력완료</button>
+									<button id="post" type="submit" class="btn btn-primary btn-block">입력완료</button>
 								</div>
 							</form>
 							<div class="new-account mt-3">
@@ -94,6 +97,7 @@
 {% endfor %}
 
 {% block additional_js %}
+<script src="../static/fillow/js/additionalinform/additionalinform.js"></script>
 {% endblock %}
 </body>
 </html>

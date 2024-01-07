@@ -132,24 +132,24 @@ function fullCalender() {
         // 색상 설정
         eventContent: function(info) {
             // 사용자 정의 일정 색
-            var color = '#faefd1';
+            var color = '#42a14f';
 
             // extendedProps에서 값을 가져와서 색상 설정
             let cat = info.event.extendedProps.category
             if (cat === '감사인사') {
-                color = '#312a2a';
+                color = '#d653c1';
             } else if (cat === '결재승인') {
                 color = '#fc2e53';
             } else if (cat === '공지') {
-                color = '#d653c1';
+                color = '#6238fc';
             } else if (cat === '보고') {
-                color = '#15c08c';
+                color = '#369fc2';
             } else if (cat === '스크랩') {
                 color = '#ffa7d7';
             } else if (cat === '진행업무') {
-                color = '#ffdc00';
-            } else if (cat === '회의') {
                 color = '#09bd3c';
+            } else if (cat === '회의') {
+                color = '#128a7e';
             } else if (cat === '휴가') {
                 color = '#ffbf00';
             } else if (cat === '기타') {
