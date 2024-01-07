@@ -71,20 +71,22 @@
                                                 <a href="{% url 'fillow:email-compose' %}" class="btn btn-primary btn-block col-lg-6">이메일 쓰기</a>
                                             </div>
                                             <div class="col-lg-6">
-                                                <a href="{% url 'fillow:email-sent' %}" class="btn btn-primary btn-block">보낸 이메일</a>
+                                                <a href="{% url 'fillow:email-compose-tpl' %}" class="btn btn-primary btn-block">템플릿 작성</a>
                                             </div>
                                         </div>
                                         <div class="mail-list rounded mt-4">
                                             {% if unread_email_count > 0 %}
-                                                <a href="{% url 'fillow:email_list' %}" class="list-group-item">
+                                                <a href="{% url 'fillow:email_list' %}" class="list-group-item" id="inbox">
                                                     <i class="fa fa-inbox font-18 align-middle me-2"></i>받은 이메일<span
                                                     class="badge badge-danger text-white badge-sm float-end">{{ unread_email_count }}</span>
                                                 </a>
                                             {% else %}
-                                                <a href="{% url 'fillow:email_list' %}" class="list-group-item">
+                                                <a href="{% url 'fillow:email_list' %}" class="list-group-item" id="inbox">
                                                     <i class="fa fa-inbox font-18 align-middle me-2"></i>받은 이메일
                                                 </a>
                                             {% endif %}
+                                            <a href="{% url 'fillow:email-sent' %}" class="list-group-item"><i
+                                                class="fa fa-inbox font-18 align-middle me-2"></i>보낸 이메일</a>
     
                                             <a href="{% url 'fillow:email-list-trash' %}" class="list-group-item"><i
                                                     class="fa fa-trash font-18 align-middle me-2"></i>휴지통</a>

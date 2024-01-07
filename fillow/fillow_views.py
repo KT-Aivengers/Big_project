@@ -1164,7 +1164,7 @@ class EmailListView(ListView):
                 queryset = queryset.filter(email_cc__contains=user_email)
 
 
-        self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
+        self.paginator = Paginator(queryset, 10)  # 페이지당 20개 이메일 표시
         page_number = self.request.GET.get('page')
         self.page_obj = self.paginator.get_page(page_number)
         return self.page_obj.object_list
@@ -1223,7 +1223,7 @@ class SentEmailListView(ListView):
                 queryset = queryset.filter(email_cc__contains=user_email)
 
 
-        self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
+        self.paginator = Paginator(queryset, 10)  # 페이지당 20개 이메일 표시
         page_number = self.request.GET.get('page')
         self.page_obj = self.paginator.get_page(page_number)
         return self.page_obj.object_list
@@ -1253,7 +1253,7 @@ class EmailListView_Trash(ListView):
         queryset = super().get_queryset()
         queryset = queryset.filter(trash=True)
         queryset = queryset.filter(user=self.request.user).order_by('-email_date')
-        self.paginator = Paginator(queryset, 1)  # 페이지당 20개 이메일 표시
+        self.paginator = Paginator(queryset, 10)  # 페이지당 20개 이메일 표시
         page_number = self.request.GET.get('page')
         self.page_obj = self.paginator.get_page(page_number)
         return self.page_obj.object_list

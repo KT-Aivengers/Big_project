@@ -80,7 +80,7 @@
 											<a href="{% url 'fillow:email-compose' %}" class="btn btn-primary btn-block col-lg-6">이메일 쓰기</a>
 										</div>
 										<div class="col-lg-6">
-											<a href="{% url 'fillow:email-sent' %}" class="btn btn-primary btn-block">보낸 이메일</a>
+											<a href="{% url 'fillow:email-compose-tpl' %}" class="btn btn-primary btn-block">템플릿 작성</a>
 										</div>
 									</div>
 									<div class="mail-list rounded mt-4">
@@ -94,7 +94,9 @@
 												<i class="fa fa-inbox font-18 align-middle me-2"></i>받은 이메일
 											</a>
 										{% endif %}
-												
+										<a href="{% url 'fillow:email-sent' %}" class="list-group-item"><i
+											class="fa fa-inbox font-18 align-middle me-2"></i>보낸 이메일</a>
+
 										<a href="{% url 'fillow:email-list-trash' %}" class="list-group-item"><i
 												class="fa fa-trash font-18 align-middle me-2"></i>휴지통</a>
 									</div>
@@ -197,11 +199,11 @@
 									</form> {% endcomment %}
 									<form class="d-none d-sm-block ms-auto" action="{% url 'fillow:email_list' %}">
 										<div class="input-group ms-auto w-100 d-sm-inline-flex d-none">
-											<input type="text" class="form-control" placeholder="Search here" name="search_query">
+											<input type="text" class="form-control" placeholder="검색" name="search_query">
 											<span class="input-group-text"><button class="bg-transparent border-0"><i class="flaticon-381-search-2"></i></button></span>
 										</div>
 									</form>	
-									<div class="btn-group mb-1">
+									<div class="btn-group mb-1" style="margin-left: 10px;">
 										<a href="{% url 'fillow:email_list' %}" class="btn btn-primary light px-3">
 											<i class="ti-reload"></i>
 										</a>
