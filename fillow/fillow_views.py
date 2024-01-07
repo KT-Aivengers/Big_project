@@ -180,6 +180,7 @@ def fillow_additionalinform(request):
             # 로그인된 사용자의 추가 정보를 저장
             additional_inform = form.save(commit=False)
             additional_inform.user = request.user
+            additional_inform.phone = form.cleaned_data['phone']
             additional_inform.save()
             return redirect("fillow:index")
     else:
