@@ -845,9 +845,9 @@ def page_forgot_password(request):
             reset_link = f'http://127.0.0.1:8000/reset/{uid}/{token}'
             
             send_mail(
-                '비밀번호 재설정',
-                f'비밀번호를 재설정하려면 다음 링크를 클릭하세요: {reset_link}',
-                'from@example.com',
+                'HyeopJaeSea 비밀번호 재설정',
+                f'비밀번호를 재설정하려면 다음 링크를 클릭하세요 - {reset_link}',
+                'hyeopjaesea@gmail.com',
                 [email],
                 fail_silently=False,
             )
