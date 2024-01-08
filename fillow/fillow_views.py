@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import views
+from django.db.models import Q
+from collections import defaultdict
 # from .gpt import process_file
 
 # 분류된 이메일 현황 받기
@@ -53,7 +55,10 @@ def get_most_category(id):
         }
     }
     return result
-from django.db.models import Q
+
+
+
+
 # 일정 불러오기
 def get_schedule(request):
 #     user = request.user
@@ -115,6 +120,27 @@ def get_7_deadline(request):
         
     result.sort(key=lambda x: x['diff'])
     return result[:]
+
+# 할일현황 raw 데이터 불러오기
+def dealinein7_emails(request):
+   
+    result = defaultdict(int)  # Default to 0 for each key
+    today = datetime.now()
+
+    for email in request:
+        deadline_str = email.get('end')
+        if deadline_str:
+            deadline = datetime.strptime(deadline_str, '%Y-%m-%d')
+            diff = (deadline - today).days
+
+            # Include emails with deadlines within the next 7 days
+            if 0 <= diff <= 7:
+                result[diff] += 1
+
+    # 일자별로 수정
+    sorted_dead7 = {k: result[k] for k in sorted(result)}
+
+    return sorted_dead7
 
 def get_recent_email(id):
     unread_emails = Email.objects.filter(read=False, user_id=id)

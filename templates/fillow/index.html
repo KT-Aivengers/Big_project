@@ -86,6 +86,7 @@
 											<h4 class="card-title">얼마 안 남은 일정 기한</h4>
 											<p class="mb-0">기한이 7일 이내인 일정을 보여줍니다</p>
 										</div>
+									
 									</div>
 									<div class="card-body pb-0 pt-3">
 										{% if deadline %}
@@ -186,17 +187,39 @@
 								</div>
 								<!-- 이메일 분류 현황 끝 -->
 								
-								<!-- 7일내 Action내용 -->
+								<!-- 할 일 현황 -->
 								<div class="col-xl-6 col-lg-12 col-sm-12">
 									<div class="card">
 										<div class="card-header border-0 pb-0">
-											<h4 class="card-title">최근1주일 Action내용</h4>
+											<div>						
+												<h4 class="card-title">할 일 현황</h4>
+												<p class="mb-0">최근 1주일동안 해야할 일을 도식화하여 보여줍니다.</p>										
+											</div>
 										</div>
-										<div class="card-body">
-											<div id="barChart1"></div>
+										<div class="card-body pb-0">
+											<div id="barChart_1"></div>
+											<div class="email-lagend">
+												{% if email_count.total == 0 %}
+													<div class="text-center">
+														<h5 class="">읽지 않은 이메일이 없습니다</h5>
+														<br>
+													</div>
+												{% else %}
+													{% for label, count, color in email_count.data.zip %}
+														<div class="d-flex align-items-center justify-content-between mb-3">
+															<span class="fs-16 text-gray">	
+																<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																	<rect width="20" height="20" rx="6" fill="{{ color }}"/>
+																</svg>
+																{{ label }}
+															</span>
+															<h5 class="mb-0 font-w600">{{ count }}</h5>
+														</div>
+													{% endfor %}
+												{% endif %}
+											</div>
 										</div>
 									</div>
-									<div class="col-xl-6 col-xxl-12 col-sm-6"></div>
 								</div>
 								<!-- 7일내 Action내용 끝 -->
 							</div>
@@ -319,47 +342,57 @@
     
 	}
 
+	var deaddic = {{ email_count.data | safe }};
+
 	var barChart1 = function(){
 		if(jQuery('#barChart_1').length > 0 ){
 			const barChart_1 = document.getElementById("barChart_1").getContext('2d');
     
-			barChart_1.height = 100;
+			barChart_1.height = 200;
 
-			new Chart(barChart_1, {
-				type: 'bar',
-				data: {
-					defaultFontFamily: 'Poppins',
-					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-					datasets: [
-						{
-							label: "My First dataset",
-							data: [65, 59, 80, 81, 56, 55, 40],
-							borderColor: 'rgba(136,108,192, 1)',
-							borderWidth: "0",
-							barPercentage: 0.5,
-							backgroundColor: 'rgba(136,108,192, 1)'
-						}
-					]
-				},
-				options: {
-					plugins:{
-						legend: false, 
+			var labels = ["0", "1", "2", "3", "4", "5", "6","7"] ;
+			var count = deaddic['label'] ;
+
+
+			var options = {
+					chart: {
+					  type: 'bar'
 					},
-					scales: {
-						y: {
-							ticks: {
-								beginAtZero: true
-							}
-						},
-						x: {
-							// Change here
-							
-						}
-					}
-				}
-			});
-		}
+					series: [{
+					  data: [{
+						x: labels[0],
+						y: 10
+					  },{
+						x: labels[1],
+						y: 10
+					  },{
+						x: labels[2],
+						y: 10
+					  },{
+						x: labels[3],
+						y: 10
+					  },{
+						x: labels[4],
+						y: 10
+					  },{
+						x: labels[5],
+						y: 10
+					  },{
+						x: labels[6],
+						y: 10
+					  },{
+						x: labels[7],
+						y: 10
+					  }]
+					}]
+				  }
+				  
+			};
+		var chart = new ApexCharts(document.querySelector("#barChart_1"), options);
+        chart.render();
 	}
+    
+	
 </script>
 {% endblock %}
 
