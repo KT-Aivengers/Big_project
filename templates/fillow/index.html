@@ -190,7 +190,7 @@
 								<!-- 이메일 분류 현황 끝 -->
 								
 								<!-- 할 일 현황 -->
-								<div class="col-xl-6 col-lg-12 col-sm-12">
+								<div class="col-xl-6 col-xxl-12 col-sm-12">
 									<div class="card">
 										<div class="card-header border-0 pb-0">
 											<div>						
@@ -201,7 +201,7 @@
 										<div class="card-body pb-0">
 											<div id="barChart_1"></div>
 											<div class="email-lagend">
-												{% if email_count.total == 0 %}
+												{% if tasks_sum == 0 %}
 													<div class="text-center">
 														<h5 class="">7일간 계획된 할 일이 없습니다</h5>
 														<br>
@@ -344,53 +344,44 @@
         var chart = new ApexCharts(document.querySelector("#emailchart"), options);
         chart.render();
     
-	}
+	};
 
-	var deaddic = {{ email_count.data | safe }};
+	var tasks = {{ tasks | safe }};
 
 	var barChart1 = function(){
 		if($('#barChart_1').length > 0 ){
-			var labels = ["0", "1", "2", "3", "4", "5", "6","7"] ;
-			var count = deaddic['label'] ;
-
-
 			var options = {
-					chart: {
-					  type: 'bar'
-					},
-					series: [{
-					  data: [{
-						x: labels[0],
-						y: 10
-					  },{
-						x: labels[1],
-						y: 10
-					  },{
-						x: labels[2],
-						y: 10
-					  },{
-						x: labels[3],
-						y: 10
-					  },{
-						x: labels[4],
-						y: 10
-					  },{
-						x: labels[5],
-						y: 10
-					  },{
-						x: labels[6],
-						y: 10
-					  },{
-						x: labels[7],
-						y: 10
-					  }]
-					}]
-				  }
-				  
-			};
+						chart: {
+						type: 'bar',
+						height:230,
+						chart: {
+						fontFamily: 'Noto Sans KR, sans-serif',
+						fontSize: '14px'},
+						},
+						series: [{name : "할 일 개수",
+						data: Object.values(tasks)
+						}],
+						plotOptions: {
+							bar: {
+								horizontal: false,
+								columnWidth: '55%',
+							},
+						},
+						xaxis: {
+							categories: Object.keys(tasks),
+						},
+						yaxis: {
+							labels: {
+								formatter: function (value) {
+									return parseInt(value); // Formats the y-axis labels to integers
+								}
+							}
+						},
+						colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#546E7A', '#26a69a', '#D10CE8']
+					};
 		var chart = new ApexCharts(document.querySelector("#barChart_1"), options);
         chart.render();
-	}
+		};}
     
 	
 </script>

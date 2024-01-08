@@ -122,25 +122,25 @@ def get_7_deadline(request):
     return result[:]
 
 # 할일현황 raw 데이터 불러오기
-def deadlinein7_emails(id):
+def deadlinein7_tasks(schedule_list):
    
-    result = defaultdict(int)  # Default to 0 for each key
+    result = {i: 0 for i in range(8)}# Default to 0 for each key
     today = datetime.now()
 
-    for email in request:
-        deadline_str = email.get('end')
+    for schedule in schedule_list:
+        deadline_str = schedule.get('end')
         if deadline_str:
             deadline = datetime.strptime(deadline_str, '%Y-%m-%d')
-            diff = (deadline - today).days
+            diff = (deadline - today).days + 1
 
             # Include emails with deadlines within the next 7 days
             if 0 <= diff <= 7:
                 result[diff] += 1
 
     # 일자별로 수정
-    sorted_dead7 = {k: result[k] for k in sorted(result)}
+    todo_in_7 = result.copy()
 
-    return sorted_dead7
+    return todo_in_7
 
 def get_recent_email(id):
     unread_emails = Email.objects.filter(read=False, user_id=id)
@@ -181,12 +181,18 @@ def index(request):
     most = get_most_category(request.user.id)
     recent = get_recent_email(request.user.id)
     deadline = get_7_deadline(request)
-    
+    schedule_list = get_schedule(request)
+    tasks = deadlinein7_tasks(schedule_list)
+    tasks_sum = sum(tasks.values())
+
+    print(tasks_sum)
     context={
         "page_title":"",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
-        "deadline":deadline
+        "deadline":deadline,
+        "tasks" : tasks,
+        "tasks_sum": tasks_sum,
     }
     
     context.update(most)
@@ -325,7 +331,7 @@ def email_compose(request):
     email_compose_tpl = EmailComposeTpl.objects.filter(user=request.user).last()
     
     context={
-        "page_title":"메일 보내기",
+        "page_title":"이메일 전송",
         "email_compose_tpl": email_compose_tpl,
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
@@ -448,7 +454,7 @@ def email_compose_tpl(request):
         return redirect("fillow:home")
     
     context={
-        "page_title":"메일 템플릿",
+        "page_title":"전송 템플릿",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
