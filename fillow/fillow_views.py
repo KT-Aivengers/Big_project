@@ -325,7 +325,7 @@ def email_compose(request):
     email_compose_tpl = EmailComposeTpl.objects.filter(user=request.user).last()
     
     context={
-        "page_title":"이메일 전송",
+        "page_title":"메일 보내기",
         "email_compose_tpl": email_compose_tpl,
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
@@ -448,7 +448,7 @@ def email_compose_tpl(request):
         return redirect("fillow:home")
     
     context={
-        "page_title":"전송 템플릿",
+        "page_title":"메일 템플릿",
         "img":AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name":request.user.first_name[1:],
     }
