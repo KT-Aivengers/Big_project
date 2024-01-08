@@ -122,7 +122,7 @@ def get_7_deadline(request):
     return result[:]
 
 # 할일현황 raw 데이터 불러오기
-def dealinein7_emails(request):
+def deadlinein7_emails(id):
    
     result = defaultdict(int)  # Default to 0 for each key
     today = datetime.now()

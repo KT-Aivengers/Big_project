@@ -170,8 +170,9 @@
 													</div>
 												{% else %}
 													{% for label, count, color in email_count.data.zip %}
+														{% if count != 0 %}
 														<div class="d-flex align-items-center justify-content-between mb-3">
-															<span class="fs-16 text-gray">	
+															<span class="fs-16 text-gray"> 
 																<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 																	<rect width="20" height="20" rx="6" fill="{{ color }}"/>
 																</svg>
@@ -179,6 +180,7 @@
 															</span>
 															<h5 class="mb-0 font-w600">{{ count }}</h5>
 														</div>
+														{% endif %}
 													{% endfor %}
 												{% endif %}
 											</div>
@@ -201,20 +203,22 @@
 											<div class="email-lagend">
 												{% if email_count.total == 0 %}
 													<div class="text-center">
-														<h5 class="">읽지 않은 이메일이 없습니다</h5>
+														<h5 class="">7일간 계획된 할 일이 없습니다</h5>
 														<br>
 													</div>
 												{% else %}
 													{% for label, count, color in email_count.data.zip %}
-														<div class="d-flex align-items-center justify-content-between mb-3">
-															<span class="fs-16 text-gray">	
-																<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<rect width="20" height="20" rx="6" fill="{{ color }}"/>
-																</svg>
-																{{ label }}
-															</span>
-															<h5 class="mb-0 font-w600">{{ count }}</h5>
-														</div>
+														{% if count != 0 %}
+															<div class="d-flex align-items-center justify-content-between mb-3">
+																<span class="fs-16 text-gray"> 
+																	<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<rect width="20" height="20" rx="6" fill="{{ color }}"/>
+																	</svg>
+																	{{ label }}
+																</span>
+																<h5 class="mb-0 font-w600">{{ count }}</h5>
+															</div>
+														{% endif %}
 													{% endfor %}
 												{% endif %}
 											</div>
