@@ -80,14 +80,6 @@
 ***********************************-->
 <div class="content-body default-height">
     <div class="container-fluid">
-        
-        <!-- <div class="row page-titles">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">일정 관리</a></li>
-            </ol>
-        </div> -->
-        <!-- row -->
-
         <div class="row">
             <div class="col-xl-3 col-xxl-4">
                 <div class="card">
@@ -100,11 +92,6 @@
                                 <p>회신이 필요하지만 회신 기한을 알아내지 못한 일정은 아래에<br>추가됩니다.
                                 <p>그러한 일정은 사용자가 직접 드래그 앤 드롭하여 추가할 수 있습니다.</p>
                                 <p>직접 일정을 추가하기 위해 달력의 날짜를 클릭하세요.</p>
-                                {% comment %}
-                                <!-- 1 단위 -->
-                                <div class="external-event btn-primary light" data-class="bg-primary"><i class="fa fa-move"></i><span>배치 테스트</span></div>
-                                <!-- 1 단위 끝 -->
-                                {% endcomment %}
                                 {% for schedule in not_in_calendar %}
                                     <div class="external-event btn-primary light {{ schedule.category }}" category="{{ schedule.category }}" pk="{{ schedule.pk }}"><i class="fa fa-move"></i><span>{{ schedule.title }}</span></div>
                                 {% endfor %}

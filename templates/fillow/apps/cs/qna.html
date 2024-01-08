@@ -41,18 +41,6 @@
                                         <p>{{field.label}}{{ field }}</p>
                                     </div>
                                 {% endfor %}
-                                        {% comment %}
-                                        <label class="form-label">제목</label>
-                                        <input type="text" class="form-control mb-xl-0 mb-3" id="exampleFormControlInput1" name="title1" placeholder="제목">
-                                    </div>
-                                    <div class="col-xl-3 col-sm-6 mb-3 mb-xl-0 align-items-center">
-                                        <label class="form-label me-2">상태</label>
-                                        <select class="form-control default-select h-auto wide" aria-label="Default select example" name="status">
-                                            <option selected value="0">---</option>
-                                            <option value="1" >답변 대기중</option>
-                                            <option value="2" >답변 완료</option>
-                                        </select> 
-                                    </div>{% endcomment %}
                                     <div class="col-xl-3 col-sm-6 align-self-end">
                                         <div>
                                             <button class="btn btn-primary me-2" title="검색" type="submit" name="btn-search" value="search"><i class="fa-solid fa-magnifying-glass"></i> 검색</button>
@@ -117,7 +105,6 @@
                                 <th>제목</th>
                                 <th>상태</th>
                                 <th>최종 수정 날짜</th>
-                                {% comment %} <th>수정</th> {% endcomment %}
                             </tr>
                         </thead>
                         <tbody>
