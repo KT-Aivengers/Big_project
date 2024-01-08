@@ -43,6 +43,11 @@
 	.logo-auth {
 		width: 20vh;
 	}
+
+	.terms-scroll {
+        height: 17em; /* 원하는 높이로 설정 */
+        overflow-y: scroll; /* 세로 스크롤 활성화 */
+    }
 	</style>
 	{% endblock %}
 </head>
@@ -65,6 +70,8 @@
 								<div class="terms">
 									<div calss = 'card'>
 										<strong> 이용약관</strong><br>
+										<div class="terms-scroll">
+						
 										1. 서론<br>
 
 										본 약관은 사용자가 "협재씨" 서비스(이하 '서비스')를 이용함에 있어 필요한 권리, 의무, 책임사항 및 서비스 이용 조건과 절차를 규정합니다.
@@ -101,12 +108,16 @@
 
 										서비스와 사용자 간 발생한 분쟁은 상호 협의 하에 해결하도록 노력합니다.
 										협의로 해결되지 않는 분쟁은 관련 법률
+										</div>
 									</div>
 								<br>
 								</div>
-								
+								<input type="checkbox" id="agreeTerms" name="terms_agree"> 이용약관에 동의합니다.
+								<br>
 								<div class="privacy-policy">
 									<strong>개인정보 처리방침</strong>
+									<div class="terms-scroll">
+									
 
 										<br>1. 서론<br>
 
@@ -148,10 +159,11 @@
 										이메일 내용의 AI 분석을 위해 데이터가 사용될 수 있음을 알립니다.
 										사용자는 쿠키 사용 설정을 관리할 수 있습니다.
 										<br>
+									</div>
+									
 								</div>
 								<br>
-								<input type="checkbox" id="agreeTerms" name="terms_agree"> 이용약관에 동의합니다.
-								<br>
+								
 								<input type="checkbox" id="agreePrivacy" name="privacy_policy_agree"> 개인정보 처리방침에 동의합니다.
 								<br>
 								<br>
