@@ -1073,7 +1073,7 @@
 			// NewCustomers1();
 			// redial();
 			emailchart();
-				
+			barChart1();
 			},
 			
 			resize:function(){
