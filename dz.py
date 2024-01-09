@@ -56,13 +56,6 @@ dz_array = {
                         "faq": [
                         ],
                         "qna": [
-                            f"{folder_name}/vendor/bootstrap-daterangepicker/daterangepicker.css",
-                            f"{folder_name}/vendor/clockpicker/css/bootstrap-clockpicker.min.css",
-                            f"{folder_name}/vendor/jquery-asColorPicker/css/asColorPicker.min.css",
-                            f"{folder_name}/vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css",
-                            f"{folder_name}/vendor/bootstrap-datepicker-master/css/bootstrap-datepicker.min.css",
-                            f"{folder_name}/vendor/pickadate/themes/default.css",
-                            f"{folder_name}/vendor/pickadate/themes/default.date.css",
                             f"{folder_name}/vendor/sweetalert2/sweetalert2.min.css",
                         ],
                         "schedule": [
@@ -102,12 +95,6 @@ dz_array = {
                         "faq": [
                         ],
                         "qna": [
-                            f"{folder_name}/vendor/moment/moment.min.js",
-                            f"{folder_name}/vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js",
-                            f"{folder_name}/vendor/pickadate/picker.js",
-                            f"{folder_name}/vendor/pickadate/picker.time.js",
-                            f"{folder_name}/vendor/pickadate/picker.date.js",
-                            f"{folder_name}/js/plugins-init/pickadate-init.kr.js",
                             f"{folder_name}/vendor/sweetalert2/sweetalert2.min.js",
                             f"{folder_name}/js/qna/qna.js",
                         ],
