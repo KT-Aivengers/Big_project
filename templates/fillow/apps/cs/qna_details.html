@@ -1,6 +1,15 @@
 {% extends 'fillow/elements/layouts/admin.html' %}
 {% load static %}
 {% block additional_css %}
+<style>
+    .content {
+        font-size: 16px;
+    }
+
+    #edit {
+        margin-right: 3px;
+    }
+</style>
 {% endblock additional_css %}
 
 {% block content %}
@@ -15,33 +24,45 @@
 		</div>
         <div class="card mb-4 d-block">
             <div>
-                <div>
+                <div class="card-header">
                     <h3 class="card-title">{{qna.title}}</h3>
                 </div>
-                <hr>
                 <div class="card-body">
-                    <h3>내용 : {{qna.question}}</h3>
-                    {% if not qna.answer %}
-                        <div class="col-12">
-                            <a href='{% url "fillow:qna-details2" qna.id %}' style="color:white" class="btn btn-primary mb-2">수정하기</a>
-                            <form action="" method="POST">
-                                {% csrf_token %}
-                                <button class="btn btn-danger light btn-sl-sm" type="submit" name="btn-act" value="delete">삭제하기</button>
-                            </form>
-                        </div>
-                    {% else %}
+                    <p class="content">{{qna.question}}</p>
+                    {% if qna.answer %}
+                        <hr>
+                        <p class="content">{{qna.answer}}</p>
                     {% endif %}
                 </div>
-                </div>
-                <div class="card-body">
-                    <h3>답변 : {{qna.answer}}</h3>
-                    {% if request.user.is_staff %}
-                        <a href='{% url "fillow:qna-details2" qna.id %}' style="color:white" class="btn btn-primary mb-2">답변하기</a>
-                    {% else %}
-                    {% endif %}
+                {% if not qna.answer %}
+                    <div class="card-footer">
+                        <button id="edit" style="color:white" class="btn btn-primary">수정하기</a>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-danger" type="submit" name="btn-act" value="delete">삭제하기</button>
+                        </form>
+                        {% if request.user.is_staff %}
+                            <button id="answer" style="color:white" class="btn btn-primary">답변하기</a>
+                        {% endif %}
+                    </div>
+                        
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
-
 {% endblock content %}
+
+{% block additional_js %}
+<script>
+    document.getElementById('edit').addEventListener('click', function() {
+		window.location.href = '{% url "fillow:qna-details2" qna.id %}';
+	});
+
+    {% if request.user.is_staff %}
+        document.getElementById('answer').addEventListener('click', function() {
+            window.location.href = '{% url "fillow:qna-details2" qna.id %}';
+        });
+    {% endif %}
+</script>
+{% endblock %}
