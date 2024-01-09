@@ -80,6 +80,7 @@ dz_array = {
                             f"{folder_name}/vendor/peity/jquery.peity.min.js",
                             f"{folder_name}/js/dashboard/dashboard-1.js",
                             f"{folder_name}/vendor/owl-carousel/owl.carousel.js",
+                            f"{folder_name}/js/index/index.js",
                         ],
                         "app_profile": [
                             f"{folder_name}/vendor/chart-js/chart.bundle.min.js",	
