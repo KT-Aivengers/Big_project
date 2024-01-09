@@ -49,6 +49,7 @@ urlpatterns = [
     path('email-inbox/', fillow_views.EmailListView.as_view(), name='email_list'),
     path('email-sent/',fillow_views.SentEmailListView.as_view(),name="email-sent"),
     path('email/trash/', fillow_views.EmailListView_Trash.as_view(), name='email-list-trash'),
+    path('email/spam/', fillow_views.SpamEmailListView.as_view(), name='email-list-spam'),
     path('email/create/', fillow_views.EmailCreateView.as_view(), name='email_create'),
     path('email/<int:pk>', fillow_views.EmailDetailView.as_view(), name='email_detail'),
     path('email/<int:pk>/update/', fillow_views.EmailUpdateView.as_view(), name='email_update'),

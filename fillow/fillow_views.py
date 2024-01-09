@@ -913,7 +913,7 @@ def process_msg_file(eml_name, user):
     
         # Parse the date
         email_date = datetime.strptime(email_date_str, '%a,%d%b%Y%H:%M:%S%z')
-        category = None
+        category = "스팸"
         from_company = None
         from_dept = None
         from_name = None
@@ -922,6 +922,31 @@ def process_msg_file(eml_name, user):
         company_yn = False
         department_yn = False
         meeting_date=None
+        
+        email_instance = Email(
+        user=user,
+        email_file_name=result.get('file_name', ''),
+        email_subject=result.get('Subject', ''),
+    
+        email_date=email_date,
+        email_from=result.get('From', ''),
+        email_to=result.get('To', ''),
+        email_cc=result.get('Cc', ''),  
+        email_text_content=result.get('text_content', ''),
+        category = category,
+        from_company = from_company,
+        from_dept = from_dept,
+        from_name = from_name,
+        reply_req_yn = reply_req_yn,
+        reply_start_date = result.get('Date',''),
+        reply_end_date = reply_end_date,
+        company_yn = company_yn,
+        department_yn = department_yn,
+        meeting_date=meeting_date,
+        spam=spam,
+        )
+        
+        email_instance.save()
     else:
         
         gpt_result = process_file(result['text_content'])
@@ -971,30 +996,30 @@ def process_msg_file(eml_name, user):
                 reply_end_date = f"{current_year}년 {reply_end_date}"
         spam=False
  
-    email_instance = Email(
-    user=user,
-    email_file_name=result.get('file_name', ''),
-    email_subject=result.get('Subject', ''),
-   
-    email_date=email_date,
-    email_from=result.get('From', ''),
-    email_to=result.get('To', ''),
-    email_cc=result.get('Cc', ''),  
-    email_text_content=result.get('text_content', ''),
-    category = gpt_result.get('카테고리',''),
-    from_company = from_company,
-    from_dept = from_dept,
-    from_name = gpt_result.get('이름',''),
-    reply_req_yn = reply_req_yn,
-    reply_start_date = result.get('Date',''),
-    reply_end_date = reply_end_date,
-    company_yn = company_yn,
-    department_yn = dept_yn,
-    meeting_date=meeting_date,
-    spam=spam,
-    )
+        email_instance = Email(
+        user=user,
+        email_file_name=result.get('file_name', ''),
+        email_subject=result.get('Subject', ''),
     
-    email_instance.save()
+        email_date=email_date,
+        email_from=result.get('From', ''),
+        email_to=result.get('To', ''),
+        email_cc=result.get('Cc', ''),  
+        email_text_content=result.get('text_content', ''),
+        category = gpt_result.get('카테고리',''),
+        from_company = from_company,
+        from_dept = from_dept,
+        from_name = gpt_result.get('이름',''),
+        reply_req_yn = reply_req_yn,
+        reply_start_date = result.get('Date',''),
+        reply_end_date = reply_end_date,
+        company_yn = company_yn,
+        department_yn = dept_yn,
+        meeting_date=meeting_date,
+        spam=spam,
+        )
+        
+        email_instance.save()
     if reply_req_yn == True or meeting_date != "없음":
         # 새로운 스케줄을 리스트에 추가
         schedule_list = upload_schedule(user,email_instance)
@@ -1112,6 +1137,67 @@ class EmailListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        queryset = queryset.filter(spam=False)
+        queryset = queryset.filter(sent=False)
+        queryset = queryset.filter(trash=False)
+        queryset = queryset.filter(user=self.request.user).order_by('-email_date')
+        search_query = self.request.GET.get('search_query', '')
+        category_filter = self.request.GET.get('category', '')
+        internal_filter = self.request.GET.get('internal', '')
+        internal_filter_d = self.request.GET.get('internal_d', '')
+        
+        if search_query:
+            queryset = queryset.filter(Q(email_subject__icontains=search_query) | Q(from_name__icontains=search_query))
+        
+        
+        if category_filter:
+            queryset = queryset.filter(category=category_filter)
+                
+        if internal_filter in ['0', '1']:
+            internal_filter = int(internal_filter)
+            queryset = queryset.filter(company_yn=internal_filter)
+            
+        if internal_filter_d in ['0', '1']:
+            internal_filter_d = int(internal_filter_d)
+            queryset = queryset.filter(department_yn=internal_filter_d)
+        recipient_filter = self.request.GET.get('recipient', '')
+        if recipient_filter in ['to', 'cc']:
+            user_email = self.request.user.email
+            if recipient_filter == 'to':
+                queryset = queryset.filter(email_to=user_email)
+            elif recipient_filter == 'cc':
+                queryset = queryset.filter(email_cc__contains=user_email)
+
+
+        self.paginator = Paginator(queryset, 10)  # 페이지당 20개 이메일 표시
+        page_number = self.request.GET.get('page')
+        self.page_obj = self.paginator.get_page(page_number)
+        return self.page_obj.object_list
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        unread_email_count = Email.objects.filter(
+            user=self.request.user, read=False
+        ).count()
+        context['unread_email_count'] = unread_email_count
+        context['page_title'] = '받은 이메일'
+        context['img'] = AdditionalInform.objects.get(user_id=self.request.user.id).image
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        context.update({
+            'paginator': self.paginator,
+            'page_obj': self.page_obj,
+        })
+        return super().render_to_response(context, **response_kwargs)
+    
+class SpamEmailListView(ListView):
+    model = Email
+    template_name = 'fillow/apps/email/email-inbox-spam.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(spam=True)
         queryset = queryset.filter(sent=False)
         queryset = queryset.filter(trash=False)
         queryset = queryset.filter(user=self.request.user).order_by('-email_date')

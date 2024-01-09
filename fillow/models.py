@@ -53,9 +53,9 @@ class Email(models.Model):
     email_text_content = models.CharField(max_length=10000)
     email_date = models.DateTimeField()
     category = models.CharField(max_length=100)
-    from_company = models.CharField(max_length=100)
-    from_dept = models.CharField(max_length=100)
-    from_name = models.CharField(max_length=100)
+    from_company = models.CharField(max_length=100, null=True)
+    from_dept = models.CharField(max_length=100, null=True)
+    from_name = models.CharField(max_length=100, null=True)
     reply_req_yn = models.BooleanField(default=False)
     reply_start_date = models.CharField(max_length=100)
     reply_end_date = models.CharField(max_length=100)
@@ -67,6 +67,7 @@ class Email(models.Model):
     read = models.BooleanField(default=False)
     trash = models.BooleanField(default=False) 
     sent = models.BooleanField(default = False)
+    spam = models.BooleanField(default = False)
     
 class Qna(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="qna")

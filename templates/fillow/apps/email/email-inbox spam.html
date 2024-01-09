@@ -2,16 +2,69 @@
 {% load static %}
 
 {% block additional_css %}
+<style>
+	.category {
+		color: #fff !important;
+	}
+
+	.rounded-cat {
+		border-radius: 10%;
+		color: #fff;
+		width: 45px;
+		height: 38px;
+		font-size: 10px;
+	}
+
+	.read {
+		opacity: 30%;
+	}
+
+	#cat1, .결재승인 {
+		background-color: #fc2e53;
+	}
+
+	#cat2, .휴가{
+		background-color: #ffbf00;
+	}
+
+	#cat3, .진행업무 {
+		background-color: #09bd3c;
+	}
+
+	#cat4, .회의 {
+		background-color: #128a7e;
+	}
+
+	#cat5, .보고{
+		background-color: #369fc2;
+	}
+
+	#cat6, .스크랩 {
+		background-color: #ffa7d7;
+	}
+
+	#cat7, .공지 {
+		background-color: #6238fc;
+	}
+
+	#cat8, .감사인사 {
+		background-color: #d653c1;
+	}
+
+	#cat9, .기타 {
+		background-color: #c8c8c8;
+	}
+</style>
 {% endblock %}
 {% block content %}
 
 <div class="content-body default-height">
 
-<div class="container-fluid">
+  <div class="container-fluid">
 	<div class="row page-titles">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="javascript:void(0)">이메일</a></li>
-			<li class="breadcrumb-item active"><a href="javascript:void(0)">보낸 이메일</a></li>
+			<li class="breadcrumb-item active"><a href="javascript:void(0)">받은 이메일</a></li>
 		</ol>
 	</div>
 	<div class="row">
@@ -41,14 +94,74 @@
 												<i class="fa fa-inbox font-18 align-middle me-2"></i>받은 이메일
 											</a>
 										{% endif %}
-										<a href="{% url 'fillow:email-sent' %}" class="list-group-item active"><i
+										<a href="{% url 'fillow:email-sent' %}" class="list-group-item"><i
 											class="fa fa-inbox font-18 align-middle me-2"></i>보낸 이메일</a>
-										
-										<a href="{% url 'fillow:email-list-spam' %}" class="list-group-item"><i
+
+										<a href="{% url 'fillow:email-list-spam' %}" class="list-group-item active"><i
 											class="fa fa-inbox font-18 align-middle me-2"></i>스팸</a>
 
 										<a href="{% url 'fillow:email-list-trash' %}" class="list-group-item"><i
 												class="fa fa-trash font-18 align-middle me-2"></i>휴지통</a>
+									</div>
+									<div class="mail-list rounded overflow-hidden">
+										<div class="intro-title d-flex justify-content-between mt-0">
+											<h5>카테고리</h5>
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=결재승인" id="cat1" class="list-group-item category"><span class="icon-warning"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												결재승인 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=휴가" id="cat2" class="list-group-item category"><span class="icon-primary"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												휴가 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=진행업무" id="cat3"  class="list-group-item category"><span class="icon-warning"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												진행업무 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=회의" id="cat4"  class="list-group-item category"><span class="icon-primary"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												회의 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=보고" id="cat5"  class="list-group-item category"><span class="icon-warning"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												보고 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=스크랩" id="cat6"  class="list-group-item category"><span class="icon-primary"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												스크랩 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=공지" id="cat7"  class="list-group-item category"><span class="icon-warning"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												공지 </a>
+											</div>
+											<div class="col-lg-6">
+												<a href="{% url 'fillow:email_list' %}?category=감사인사" id="cat8"  class="list-group-item category"><span class="icon-primary"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												감사인사 </a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12">
+												<a href="{% url 'fillow:email_list' %}?category=기타" id="cat9"  class="list-group-item category"><span class="icon-warning"><i
+													class="fa fa-circle" aria-hidden="true"></i></span>
+												기타 </a>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -81,7 +194,7 @@
 									<div class="email-tools-box">
 										<i class="fa-solid fa-list-ul"></i>
 									</div>
-									<form class="d-none d-sm-block ms-auto" action="{% url 'fillow:email-sent' %}">
+									<form class="d-none d-sm-block ms-auto" action="{% url 'fillow:email_list' %}">
 										<div class="input-group ms-auto w-100 d-sm-inline-flex d-none">
 											<input type="text" class="form-control" placeholder="검색" name="search_query">
 											<span class="input-group-text"><button class="bg-transparent border-0"><i class="flaticon-381-search-2"></i></button></span>
@@ -99,11 +212,13 @@
 										<div class="message">
 											<div>
 												<div class="d-flex message-single">
-													
+													<div class="ms-2 rounded-cat d-flex align-items-center justify-content-center {% if email.read %}read{% endif %} {{ email.category }}">
+														<span>{{ email.category }}</span>
+													</div>
 												</div>
 												<a href="{% url 'fillow:email_detail' email.id %}" class="col-mail col-mail-2">
-													<div class="subject">{{ email.email_subject }}</div>
-													<div class="date">{{ email.email_date|date:"Y M d D H:i" }}</div>
+													<div class="subject"><span>{{ email.email_subject }}</span></div>
+													<div class="date"><span>{{email.from_name}}&nbsp;&nbsp;&nbsp;{{ email.email_date|date:"Y M d D H:i" }}</span></div>
 												</a>
 												
 											</div>
@@ -143,13 +258,4 @@
 
 </div>
 </div>
-
-{% endblock %}
-
-{% block additional_js %}
-<script>
-	$(".fa.fa-star").click(function () {
-		$(this).toggleClass("yellow");
-	});
-</script>
 {% endblock %}
