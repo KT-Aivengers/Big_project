@@ -695,10 +695,9 @@ def sep_schedule(schedule_list):
     
     # 받아온 일정 리스트에서 end 속성이 없는(배정이 되지 않은) 일정 분리
     for schedule in schedule_list:
-        if (schedule.get('end') not in ['null', None]):
+        if (schedule.get('end') != 'null'):
             in_calendar.append(schedule)
         else:
-            schedule['end'] = 'null'
             not_in_calendar.append(schedule)
     
     return in_calendar[:], not_in_calendar[:]
@@ -1052,7 +1051,7 @@ def upload_schedule(user,email):
             'pk': email.id,
             'title': email.category + " / " + email.from_name,
             'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
-            'end': None if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
+            'end': 'null' if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
             'category': email.category,
         }
         temp.append(dic)
