@@ -67,6 +67,11 @@
         width: 350px;
     }
 
+    .schedule-title {
+        color: white;
+    }
+    
+
     [data-theme-version=dark] .end-date {
         background-color: #15c08c !important;
     }
@@ -88,12 +93,12 @@
 
                         <div class="">
                             <div id="external-events" class="my-3">
-                                <p>AI가 자동으로 회신 기한을 분석하여 일정에 추가합니다.</p>
-                                <p>회신이 필요하지만 회신 기한을 알아내지 못한 일정은 아래에<br>추가됩니다.
-                                <p>그러한 일정은 사용자가 직접 드래그 앤 드롭하여 추가할 수 있습니다.</p>
-                                <p>직접 일정을 추가하기 위해 달력의 날짜를 클릭하세요.</p>
+                                <p>🤖AI가 자동으로 회신 기한을 분석하여 일정에 추가합니다.</p>
+                                <p>📧회신이 필요하지만 회신 기한을 알아내지 못한 일정은 아래에<br>추가됩니다.
+                                <br>아래 표시된 일정은 사용자가 직접 🖱️Drag&Drop🖱️ 하여 추가할 수 있습니다.</p>
+                                <p>📅직접 일정을 추가하기 위해 달력의 날짜를 클릭하세요.</p>
                                 {% for schedule in not_in_calendar %}
-                                    <div class="external-event btn-primary light {{ schedule.category }}" category="{{ schedule.category }}" pk="{{ schedule.pk }}"><i class="fa fa-move"></i><span>{{ schedule.title }}</span></div>
+                                    <div class="external-event btn-primary light {{ schedule.category }}" category="{{ schedule.category }}" pk="{{ schedule.pk }}"><i class="fa fa-move"></i><span class="schedule-title" >{{ schedule.title }}</span></div>
                                 {% endfor %}
                             </div>
                         </div>
