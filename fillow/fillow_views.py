@@ -817,7 +817,7 @@ def page_forgot_password(request):
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             
-            reset_link = f'http://127.0.0.1:8000/reset/{uid}/{token}'
+            reset_link = f'http://hyeopjaesea.com/reset/{uid}/{token}'
             
             send_mail(
                 'HyeopJaeSea 비밀번호 재설정',
@@ -1086,7 +1086,7 @@ def upload_file(request):
                 if os.path.exists(extract_path) and os.path.isdir(extract_path):
                     shutil.rmtree(extract_path)
  
-            return redirect("fillow:index")
+            return redirect("fillow:upload_file")
  
  
     else:
@@ -1098,7 +1098,7 @@ def upload_file(request):
         "masking_name": request.user.first_name[1:],
         "page_title": "이메일 업로드"
     }
-    return render(request, 'fillow/pages/upload.html', context)
+    return render(request, 'fillow/apps/email/upload.html', context)
 
 
 
