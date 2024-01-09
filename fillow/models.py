@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
-from cryptography.fernet import Fernet
 # Create your models here.
 
 class AdditionalInform(models.Model):
@@ -45,7 +44,6 @@ class Document(models.Model):
     
 class Email(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='emails')
-    # tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='emails', null=True)
     email_file_name = models.CharField(max_length=100)
     email_subject = models.CharField(max_length=100)
     email_from = models.CharField(max_length=1000)
@@ -73,7 +71,6 @@ class Email(models.Model):
 class Qna(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="qna")
     question = models.CharField(max_length=300, blank=True)
-    # image = models.ImageField(blank=True, upload_to='fillow')
     answer = models.CharField(max_length=300, blank=True)
     title = models.CharField(max_length=50, blank=True)
     edit_date = models.DateField()

@@ -1,19 +1,39 @@
-from typing import Any
-from django.shortcuts import render
-from django.http import HttpResponse
-from fillow.forms import DocumentForm
-from .models import Qna, EmailCompose, EmailComposeTpl, AdditionalInform, Email
-from datetime import datetime, timedelta
-from django.shortcuts import get_object_or_404
-from django.shortcuts import redirect
-from .forms import UserForm, LoginForm, EmailComposeTplForm, EmailComposeForm
+# django
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth import views
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.paginator import Paginator
 from django.db.models import Q
-from collections import defaultdict
-# from .gpt import process_file
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.views.generic import ListView, DetailView, UpdateView, CreateView
+
+# models
+from .models import *
+
+# forms
+from .forms import *
+
+# python library
+from datetime import datetime, timedelta
+import os
+import re
+import zipfile
+import shutil
+
+# custom
+from fillow import emlExtracter
+from fillow.msgToEml import load
+from .gpt import *
+from .translation import *
+from .spam_detection import *
 
 # 분류된 이메일 현황 받기
 def get_most_category(id):
@@ -61,30 +81,6 @@ def get_most_category(id):
 
 # 일정 불러오기
 def get_schedule(request):
-#     user = request.user
-#     # DB에서 일정 불러오기
-#     emails = Email.objects.filter(
-#     Q(user_id=request.user.id) & 
-#     (Q(reply_req_yn=True) | ~Q(meeting_date="없음"))
-# )
-
-#     schedule_list = [
-#     {
-#         'pk': email.id,
-#         'title': email.category + " / " + email.from_name,
-#         'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
-#         'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-#         'category': email.category,
-#     } for email in emails if email.reply_req_yn==True
-# ] + [
-#     {
-#         'pk': email.id,
-#         'title': "회의 / " + email.from_name,
-#         'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-#         'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
-#         'category': '회의',
-#     } for email in emails if email.meeting_date != "없음"
-# ] 
     # DB에서 일정 불러오기
     json_raw = request.user.additionalinform.schedule
    
@@ -92,9 +88,6 @@ def get_schedule(request):
     schedule_list = json.loads(json_raw.replace("\'", "\""))
    
     return schedule_list
-
-
-from datetime import datetime
 
 
 def get_7_deadline(request):
@@ -165,7 +158,7 @@ def home(request):
     }
     return render(request,'fillow/home/home.html',context)
 
-from .models import AdditionalInform
+
 
 
 def index(request):
@@ -202,7 +195,6 @@ def index(request):
 
 
 
-from .forms import AdditionalInformForm
 
 
 def fillow_additionalinform(request):
@@ -221,8 +213,7 @@ def fillow_additionalinform(request):
     return render(request, 'fillow/pages/page-additionalinform.html', {'form': form})
 
 
-from django.core.files.storage import FileSystemStorage
-from .forms import PasswordConfirmationForm
+
 
 
 def check_password_(request):
@@ -249,8 +240,7 @@ def check_password_(request):
     return render(request, 'fillow/apps/profile/check-password.html', {'form': form})
 
 
-from django.core.exceptions import PermissionDenied
-from django.contrib.auth import update_session_auth_hash
+
 
 
 def app_profile(request):
@@ -519,14 +509,6 @@ def faq(request):
     }
     return render(request,'fillow/apps/cs/faq.html',context)
 
-from .models import Qna, EmailComposeTpl
-
-from django.shortcuts import get_object_or_404
-from django.core.paginator import Paginator
-from django.db.models import Q
-from django.urls import reverse
-from .forms import QnaSearchForm
-from datetime import datetime
 
 def qna(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
@@ -750,13 +732,7 @@ def schedule(request):
     return render(request,'fillow/apps/schedule/schedule.html',context)
 
 
-from django.shortcuts import redirect
-from .forms import UserForm, LoginForm, EmailComposeTplForm, DocumentForm
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth import views
-from django.contrib import messages
+
 
 def page_register(request):
     if request.method == "POST":
@@ -793,7 +769,7 @@ def page_register(request):
     return render(request, 'fillow/pages/page-register.html', {'user_form': user_form, 'additional_form': additional_form})
 
 
-from django.http import JsonResponse
+
 
 
 def check_username(request):
@@ -821,14 +797,7 @@ def check_email(request):
 def page_register_complete(request):
     return render(request, 'fillow/pages/page-register-complete.html')
 
-from .forms import CustomPasswordResetForm
-from django.core.mail import send_mail
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
-from django.contrib import messages
+
 
 
 def page_reset_done(request):
@@ -908,49 +877,6 @@ def page_error_503(request):
     return render(request,'503.html')
 
 
-from fillow import emlExtracter
-import os
-import sys
-from .models import Document
-from django.core.files.base import ContentFile
-import io
-from fillow.msgToEml import load
-from .spam_detection import *
-from .gpt import *
-from .translation import *
-from datetime import datetime
-import re
-import zipfile
-import shutil
-
-# def upload_schedule(request,email):
-#     user = request.user
-#     # JSON 문자열을 Python 객체로 변환
-#     json_raw = request.user.additionalinform.schedule
-#     schedule_list = json.loads(json_raw)
-#     # DB에서 일정 불러오기
-#     temp=[]
-#     if email.reply_req_yn==True:
-#         dic={
-#             'pk': email.id,
-#             'title': email.category + " / " + email.from_name,
-#             'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
-#             'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-#             'category': email.category,
-#         }
-#         temp.append(dic)
-#     if email.meeting_date != "없음":
-#         dic={
-#             'pk': email.id,
-#             'title': "회의 / " + email.from_name,
-#             'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-#             'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
-#             'category': '회의',
-#         }
-#         temp.append(dic)
-#     schedule_list+=temp
-
-#     return schedule_list
 
 def extract_zip(zip_path, extract_path):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
@@ -1176,11 +1102,6 @@ def upload_file(request):
 
 
 
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView, FormView
-from django.urls import reverse_lazy
-from .models import Email
-from django.core.paginator import Paginator
 
 
 class EmailListView(ListView):
@@ -1332,8 +1253,7 @@ class EmailListView_Trash(ListView):
 class EmailDetailView(DetailView):
 
     model = Email
-    #template_name = 'fillow/test.html'
-    template_name = 'fillow/apps/email/email-read.html'  # 수정: template_name을 read.html로 변경
+    template_name = 'fillow/apps/email/email-read.html'
     
     def dispatch(self, request, *args, **kwargs):
         # Get the email object
@@ -1349,7 +1269,6 @@ class EmailDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['attachments'] = self.object.email_attachments  # 첨부파일 추가
         if not self.object.read:
             self.object.read = True
             self.object.save()
@@ -1393,7 +1312,6 @@ def category_change(request, pk, category_name):
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     email = Email.objects.get(pk=pk)
-    #email = get_object_or_404(Email, pk=pk)
 
     if request.user == email.user:
         email.category = category_name
