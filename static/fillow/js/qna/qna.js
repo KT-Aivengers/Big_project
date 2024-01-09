@@ -9,9 +9,10 @@ var qnaModal = new bootstrap.Modal(document.getElementById('postModal'))
 
 // 모달 닫기
 closeModalBtn.addEventListener('click', function() {
+    event.preventDefault();
     // 입력된 내용 가져오기
-    var title = document.getElementById('title').value.trim();
-    var detail = document.getElementById('detail').value.trim();
+    var title = document.getElementById('title1').value.trim();
+    var detail = document.getElementById('question').value.trim();
 
     // 제목 또는 내용 중 하나라도 존재하는 경우 SweetAlert 표시, 아니면 바로 모달 닫기
     if (title !== '' || detail !== '') {
@@ -27,8 +28,8 @@ closeModalBtn.addEventListener('click', function() {
         }).then((result) => {
             // 여기에 SweetAlert 확인 후 할 작업 추가
             if (result.isConfirmed) {
-                document.getElementById('title').value = '';
-                document.getElementById('detail').value = '';
+                document.getElementById('title1').value = '';
+                document.getElementById('question').value = '';
                 Swal.close();
                 qnaModal.hide();
             }
@@ -37,9 +38,3 @@ closeModalBtn.addEventListener('click', function() {
         qnaModal.hide();
     }
 });
-
-// 게시
-// postBtn.addEventListener('click', function() {
-//     document.getElementById('title').value = '';
-//     document.getElementById('detail').value = '';
-// });

@@ -109,7 +109,7 @@ dz_array = {
                             f"{folder_name}/vendor/pickadate/picker.date.js",
                             f"{folder_name}/js/plugins-init/pickadate-init.kr.js",
                             f"{folder_name}/vendor/sweetalert2/sweetalert2.min.js",
-                            f"{folder_name}/js/plugins-init/qna-init.js",
+                            f"{folder_name}/js/qna/qna.js",
                         ],
                         "schedule": [
                             f"{folder_name}/vendor/moment/moment.min.js",
