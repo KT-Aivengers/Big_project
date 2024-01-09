@@ -58,7 +58,7 @@ class Email(models.Model):
     from_name = models.CharField(max_length=100, null=True)
     reply_req_yn = models.BooleanField(default=False)
     reply_start_date = models.CharField(max_length=100)
-    reply_end_date = models.CharField(max_length=100)
+    reply_end_date = models.CharField(max_length=100, null=True)
     company_yn = models.BooleanField(default=False)
     department_yn = models.BooleanField(default=False)
     reply_yn = models.BooleanField(default=False)

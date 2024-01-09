@@ -1050,7 +1050,8 @@ def upload_schedule(user,email):
             'category': email.category,
         }
         temp.append(dic)
-    if email.meeting_date != "없음" and email.reply_yn == False:
+
+    if email.meeting_date != "없음" and email.reply_yn == False and email.spam == False:
         dic={
             'pk': email.id,
             'title': "회의 / " + email.from_name,
@@ -1113,7 +1114,7 @@ def upload_file(request):
                 if os.path.exists(extract_path) and os.path.isdir(extract_path):
                     shutil.rmtree(extract_path)
  
-            return redirect("fillow:upload_file")
+            return redirect('fillow:upload_file')
  
  
     else:
