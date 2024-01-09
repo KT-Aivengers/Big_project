@@ -943,6 +943,7 @@ def process_msg_file(eml_name, user):
         company_yn = company_yn,
         department_yn = department_yn,
         meeting_date=meeting_date,
+        read=True,
         spam=spam,
         )
         
