@@ -78,6 +78,9 @@ dz_array = {
                         ],
                         "email_sent": [
                         ],
+                        "upload_file": [
+                            f"{folder_name}/js/email/upload.js",
+                        ],
                         "faq": [
                         ],
                         "qna": [
