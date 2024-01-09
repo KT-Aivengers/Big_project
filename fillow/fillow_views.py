@@ -903,6 +903,7 @@ def process_msg_file(eml_name, user):
     # print("asd",result['text_content'])
     if detect_spam(translate(result['text_content'])) == "spam":
         # 휴지통으로 보내기
+        
         spam=True
         email_date_tuple = result.get('Date', '')
         email_date_str = ''.join(map(str, email_date_tuple))
@@ -922,6 +923,7 @@ def process_msg_file(eml_name, user):
         department_yn = False
         meeting_date=None
     else:
+        
         gpt_result = process_file(result['text_content'])
     
         reply_req_yn = gpt_result.get('회신요청여부','')
