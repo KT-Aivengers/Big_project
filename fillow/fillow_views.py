@@ -818,13 +818,17 @@ def page_forgot_password(request):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             
             reset_link = f'http://hyeopjaesea.com/reset/{uid}/{token}'
+            with open('static/fillow/email/email_template.htm', 'r') as file:
+                html_text = file.read()
+            html_text = html_text.replace(r"{{placeholder}}", reset_link)
             
             send_mail(
-                'HyeopJaeSea 비밀번호 재설정',
-                f'비밀번호를 재설정하려면 다음 링크를 클릭하세요 - {reset_link}',
-                'hyeopjaesea@gmail.com',
-                [email],
+                subject='HyeopJaeSea 비밀번호 재설정',
+                message='',
+                from_email='hyeopjaesea@gmail.com',
+                recipient_list=[email],
                 fail_silently=False,
+                html_message=html_text,
             )
             
             return redirect('fillow:page-reset-done')
