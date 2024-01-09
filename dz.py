@@ -79,6 +79,7 @@ dz_array = {
                         "email_sent": [
                         ],
                         "upload_file": [
+                            f"{folder_name}/vendor/sweetalert2/sweetalert2.min.js",
                             f"{folder_name}/js/email/upload.js",
                         ],
                         "faq": [
