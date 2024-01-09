@@ -35,16 +35,10 @@ dz_array = {
                         "home" : [
                         ],
                         "index": [
-                            f"{folder_name}/vendor/owl-carousel/owl.carousel.css",
-                            f"{folder_name}/vendor/nouislider/nouislider.min.css",
                         ],
                         "app_profile": [
-                            f"{folder_name}/vendor/lightgallery/dist/css/lightgallery.css",
-                            f"{folder_name}/vendor/lightgallery/dist/css/lg-thumbnail.css",
-                            f"{folder_name}/vendor/lightgallery/dist/css/lg-zoom.css",
                         ],
                         "email_compose": [
-                            f"{folder_name}/vendor/ckeditor/ckeditor.js",
                         ],
                         "email_inbox": [
                         ],
@@ -66,24 +60,15 @@ dz_array = {
                     },
                     "js":{
                         "index": [
-                            f"{folder_name}/vendor/counter/counter.min.js",
-                            f"{folder_name}/vendor/counter/waypoint.min.js",
                             f"{folder_name}/vendor/apexchart/apexchart.js",
                             f"{folder_name}/vendor/chart-js/chart.bundle.min.js",
-                            f"{folder_name}/vendor/peity/jquery.peity.min.js",
                             f"{folder_name}/js/dashboard/dashboard-1.js",
-                            f"{folder_name}/vendor/owl-carousel/owl.carousel.js",
-                            f"{folder_name}/js/index/index.js",
                         ],
                         "app_profile": [
-                            f"{folder_name}/vendor/chart-js/chart.bundle.min.js",	
-                            f"{folder_name}/vendor/lightgallery/dist/lightgallery.min.js",	
-                            f"{folder_name}/vendor/lightgallery/dist/plugins/thumbnail/lg-thumbnail.min.js",
-                            f"{folder_name}/vendor/lightgallery/dist/plugins/zoom/lg-zoom.min.js",
+                            f"{folder_name}/vendor/chart-js/chart.bundle.min.js",
                             f"{folder_name}/js/plugins-init/common-data.js",
                         ],
                         "email_compose": [
-                            f"{folder_name}/vendor/dropzone/dist/dropzone.js",
                         ],
                         "email_inbox": [
                         ],
