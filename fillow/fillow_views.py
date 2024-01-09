@@ -695,9 +695,10 @@ def sep_schedule(schedule_list):
     
     # 받아온 일정 리스트에서 end 속성이 없는(배정이 되지 않은) 일정 분리
     for schedule in schedule_list:
-        if (schedule.get('end')):
+        if (schedule.get('end') not in ['null', None]):
             in_calendar.append(schedule)
         else:
+            schedule['end'] = 'null'
             not_in_calendar.append(schedule)
     
     return in_calendar[:], not_in_calendar[:]
@@ -728,7 +729,7 @@ def schedule(request):
         
     context['in_calendar'] = in_calendar
     context['not_in_calendar'] = not_in_calendar
-    
+                                              
     return render(request,'fillow/apps/schedule/schedule.html',context)
 
 
