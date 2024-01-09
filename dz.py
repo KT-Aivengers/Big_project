@@ -71,6 +71,7 @@ dz_array = {
                         "email_compose": [
                         ],
                         "email_inbox": [
+                            f"{folder_name}/js/email/email-inbox",
                         ],
                         "email_read": [
                             f"{folder_name}/vendor/jqueryui/js/jquery-ui.min.js",
