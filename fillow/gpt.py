@@ -1,12 +1,10 @@
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts.few_shot import FewShotChatMessagePromptTemplate
 from langchain.callbacks import StreamingStdOutCallbackHandler
-from langchain.prompts import ChatMessagePromptTemplate, ChatPromptTemplate
+from langchain.prompts import ChatPromptTemplate
 from langchain.schema import BaseOutputParser
-import openai,os
 from dotenv import load_dotenv
-import base64
-import requests
+import os
 
 load_dotenv()
 
@@ -71,7 +69,6 @@ category="결재승인,휴가,진행업무,회의,보고,스크랩,공지,감사
 
 example_prompt = ChatPromptTemplate.from_messages(
     [
-        # ("Here is an email. Please extract up to 5 important keyword terms. They don't necessarily have to be words from the content.{email}"),
         ("이메일은 다음과 같다. {email}"),
         ("ai", "{answer}"),
     ]
@@ -117,94 +114,15 @@ final_prompt = ChatPromptTemplate.from_messages(
         예시 프롬프트 형식으로 출력해주세요.
         
         """),
-        # ("system", """
-        # You are a diligent assistant tasked with processing email information and calculating the reply date. 
-        # Identify the department from the content, summarize it using up to 5 key tag keywords. 
-        # Find the reply date from the content or calculate it from the current date if not specified. 
-        # Assign a score based on the email's importance and identify the sender.
-
-        # Admit if you don't know the answer, never fabricate responses. 
-        # Always respond in {language}. 
-        # The output should be structured as follows: Department, Keywords, Reply Date, Score, Sender, Category. 
-        # When determining the category, consider only the category mentioned within {category}.
-        
-        # """),
-        # example_prompt,
-        # ("""
-        # Here is an email. {email}
-        
-        # Please output in the format of example_prompt.
-        
-        # """),
     ]
 )
 
 chain = final_prompt | chat | EmailOutputParser()
 
 
-# question = []
-# current_text = ""
-# recording = False
-
-# with open('question_text.txt', 'r', encoding='utf-8') as file:
-#     for line in file:
-#         if '"""' in line:
-#             if recording:
-#                 # 문자열 종료
-#                 question.append(current_text)
-#                 current_text = ""
-#             recording = not recording
-#         elif recording:
-#             current_text += line
 def process_file(text):
     text = text.split('From')[0]
     # a=chain.invoke({"email": text,"language":"Korean","category":category})
     gpt_result=chain.invoke({"email": text,"category":category})
     print(gpt_result)
     return gpt_result
-
-
-
-
-    # 이미지 인식하는 부분 쓸지 말지 모르겠음
-    # # Function to encode the image
-    # def encode_image(image_path):
-    #   with open(image_path, "rb") as image_file:
-    #     return base64.b64encode(image_file.read()).decode('utf-8')
-
-    # # Path to your image
-    # image_path = "path_to_your_image.jpg"
-
-    # # Getting the base64 string
-    # base64_image = encode_image(image_path)
-
-    # headers = {
-    #   "Content-Type": "application/json",
-    #   "Authorization": f"Bearer {api_key}"
-    # }
-
-    # payload = {
-    #   "model": "gpt-4-vision-preview",
-    #   "messages": [
-    #     {
-    #       "role": "user",
-    #       "content": [
-    #         {
-    #           "type": "text",
-    #           "text": "What’s in this image?"
-    #         },
-    #         {
-    #           "type": "image_url",
-    #           "image_url": {
-    #             "url": f"data:image/jpeg;base64,{base64_image}"
-    #           }
-    #         }
-    #       ]
-    #     }
-    #   ],
-    #   "max_tokens": 300
-    # }
-
-    # response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-
-    # print(response.json())

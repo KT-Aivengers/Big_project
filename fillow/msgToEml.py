@@ -1,16 +1,13 @@
 import re
 import logging
 import os
-import sys
 
 from functools import reduce
 
 import email.message, email.parser, email.policy
-from email.utils import parsedate_to_datetime, formatdate, formataddr
+from email.utils import formatdate, formataddr
 
 import compoundfiles
-
-from glob import glob
 
 logger = logging.getLogger(__name__)
 

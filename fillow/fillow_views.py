@@ -81,30 +81,6 @@ def get_most_category(id):
 
 # 일정 불러오기
 def get_schedule(request):
-#     user = request.user
-#     # DB에서 일정 불러오기
-#     emails = Email.objects.filter(
-#     Q(user_id=request.user.id) & 
-#     (Q(reply_req_yn=True) | ~Q(meeting_date="없음"))
-# )
-
-#     schedule_list = [
-#     {
-#         'pk': email.id,
-#         'title': email.category + " / " + email.from_name,
-#         'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
-#         'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-#         'category': email.category,
-#     } for email in emails if email.reply_req_yn==True
-# ] + [
-#     {
-#         'pk': email.id,
-#         'title': "회의 / " + email.from_name,
-#         'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-#         'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
-#         'category': '회의',
-#     } for email in emails if email.meeting_date != "없음"
-# ] 
     # DB에서 일정 불러오기
     json_raw = request.user.additionalinform.schedule
    
@@ -902,36 +878,6 @@ def page_error_503(request):
 
 
 
-
-# def upload_schedule(request,email):
-#     user = request.user
-#     # JSON 문자열을 Python 객체로 변환
-#     json_raw = request.user.additionalinform.schedule
-#     schedule_list = json.loads(json_raw)
-#     # DB에서 일정 불러오기
-#     temp=[]
-#     if email.reply_req_yn==True:
-#         dic={
-#             'pk': email.id,
-#             'title': email.category + " / " + email.from_name,
-#             'start': datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d'),
-#             'end': (datetime.strptime(email.reply_start_date, '%a, %d %b %Y %H:%M:%S %z') + timedelta(days=1)).strftime('%Y-%m-%d') if email.reply_end_date == "없음" else datetime.strptime(email.reply_end_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-#             'category': email.category,
-#         }
-#         temp.append(dic)
-#     if email.meeting_date != "없음":
-#         dic={
-#             'pk': email.id,
-#             'title': "회의 / " + email.from_name,
-#             'start': datetime.strptime(email.meeting_date, '%Y년 %m월 %d일').strftime('%Y-%m-%d'),
-#             'end': (datetime.strptime(email.meeting_date, '%Y년 %m월 %d일') + timedelta(days=1)).strftime('%Y-%m-%d'),
-#             'category': '회의',
-#         }
-#         temp.append(dic)
-#     schedule_list+=temp
-
-#     return schedule_list
-
 def extract_zip(zip_path, extract_path):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         for filename in zip_ref.namelist():
@@ -1284,8 +1230,7 @@ class EmailListView_Trash(ListView):
 class EmailDetailView(DetailView):
 
     model = Email
-    #template_name = 'fillow/test.html'
-    template_name = 'fillow/apps/email/email-read.html'  # 수정: template_name을 read.html로 변경
+    template_name = 'fillow/apps/email/email-read.html'
     
     def dispatch(self, request, *args, **kwargs):
         # Get the email object
@@ -1301,7 +1246,6 @@ class EmailDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['attachments'] = self.object.email_attachments  # 첨부파일 추가
         if not self.object.read:
             self.object.read = True
             self.object.save()
@@ -1345,7 +1289,6 @@ def category_change(request, pk, category_name):
     if not request.user.is_authenticated:
         return redirect("fillow:home")
     email = Email.objects.get(pk=pk)
-    #email = get_object_or_404(Email, pk=pk)
 
     if request.user == email.user:
         email.category = category_name

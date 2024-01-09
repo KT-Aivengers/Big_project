@@ -1,13 +1,10 @@
-from django.contrib.auth.forms import UsernameField
 from django import forms
-from .models import Document, Email, AdditionalInform, Qna, EmailCompose, EmailComposeTpl
 from django.core.validators import RegexValidator
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
-from django.utils.text import capfirst
-from django.contrib.auth import authenticate, get_user_model, password_validation
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
+
+from .models import *
 
 class AdditionalInformForm(forms.ModelForm):
     

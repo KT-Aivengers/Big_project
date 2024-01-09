@@ -1,5 +1,4 @@
 import os
-import sys
 import urllib.request
 from dotenv import load_dotenv
 import json
