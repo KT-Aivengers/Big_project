@@ -103,66 +103,7 @@
 										<a href="{% url 'fillow:email-list-trash' %}" class="list-group-item"><i
 												class="fa fa-trash font-18 align-middle me-2"></i>휴지통</a>
 									</div>
-									<div class="mail-list rounded overflow-hidden">
-										<div class="intro-title d-flex justify-content-between mt-0">
-											<h5>카테고리</h5>
-										</div>
-										<div class="row">
-											<div class="col-lg-6">
-												<a href="{% url 'fillow:email_list' %}?category=결재승인" id="cat1" class="list-group-item category"><span class="icon-warning"><i
-													class="fa fa-circle" aria-hidden="true"></i></span>
-												결재승인 </a>
-											</div>
-											<div class="col-lg-6">
-												<a href="{% url 'fillow:email_list' %}?category=휴가" id="cat2" class="list-group-item category"><span class="icon-primary"><i
-													class="fa fa-circle" aria-hidden="true"></i></span>
-												휴가 </a>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-6">
-												<a href="{% url 'fillow:email_list' %}?category=진행업무" id="cat3"  class="list-group-item category"><span class="icon-warning"><i
-													class="fa fa-circle" aria-hidden="true"></i></span>
-												진행업무 </a>
-											</div>
-											<div class="col-lg-6">
-												<a href="{% url 'fillow:email_list' %}?category=회의" id="cat4"  class="list-group-item category"><span class="icon-primary"><i
-													class="fa fa-circle" aria-hidden="true"></i></span>
-												회의 </a>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-6">
-												<a href="{% url 'fillow:email_list' %}?category=보고" id="cat5"  class="list-group-item category"><span class="icon-warning"><i
-													class="fa fa-circle" aria-hidden="true"></i></span>
-												보고 </a>
-											</div>
-											<div class="col-lg-6">
-												<a href="{% url 'fillow:email_list' %}?category=스크랩" id="cat6"  class="list-group-item category"><span class="icon-primary"><i
-													class="fa fa-circle" aria-hidden="true"></i></span>
-												스크랩 </a>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-6">
-												<a href="{% url 'fillow:email_list' %}?category=공지" id="cat7"  class="list-group-item category"><span class="icon-warning"><i
-													class="fa fa-circle" aria-hidden="true"></i></span>
-												공지 </a>
-											</div>
-											<div class="col-lg-6">
-												<a href="{% url 'fillow:email_list' %}?category=감사인사" id="cat8"  class="list-group-item category"><span class="icon-primary"><i
-													class="fa fa-circle" aria-hidden="true"></i></span>
-												감사인사 </a>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-12">
-												<a href="{% url 'fillow:email_list' %}?category=기타" id="cat9"  class="list-group-item category"><span class="icon-warning"><i
-													class="fa fa-circle" aria-hidden="true"></i></span>
-												기타 </a>
-											</div>
-										</div>
-									</div>
+									
 								</div>
 							</div>
 						</div>
@@ -170,38 +111,17 @@
 							<div>
 								<div role="toolbar" class="toolbar ms-1 ms-sm-0 ms-xl-1 d-flex align-items-center">
 
-									<div class="btn-group mb-1">
-										<button aria-expanded="false" data-bs-toggle="dropdown" class="btn btn-primary px-3 light dropdown-toggle mx-2" type="button">회사 <span
-												class="caret"></span>
-										</button>
-										<div class="dropdown-menu"> <a href="{% url 'fillow:email_list' %}?internal=1" class="dropdown-item">내부</a> <a href="{% url 'fillow:email_list' %}?internal=0" class="dropdown-item">외부</a>
-										</div>
-									</div>
-									<div class="btn-group mb-1">
-										<button aria-expanded="false" data-bs-toggle="dropdown" class="btn btn-primary px-3 light dropdown-toggle mx-2" type="button">부서 <span
-												class="caret"></span>
-										</button>
-										<div class="dropdown-menu"> <a href="{% url 'fillow:email_list' %}?internal_d=1" class="dropdown-item">내부</a> <a href="{% url 'fillow:email_list' %}?internal_d=0" class="dropdown-item">외부</a>
-										</div>
-									</div>
-									<div class="btn-group mb-1">
-										<button aria-expanded="false" data-bs-toggle="dropdown" class="btn btn-primary px-3 light dropdown-toggle mx-2" type="button">to/cc <span
-												class="caret"></span>
-										</button>
-										<div class="dropdown-menu"> <a href="{% url 'fillow:email_list' %}?recipient=to" class="dropdown-item">to</a> <a href="{% url 'fillow:email_list' %}?recipient=cc" class="dropdown-item">cc</a>
-										</div>
-									</div>
 									<div class="email-tools-box">
 										<i class="fa-solid fa-list-ul"></i>
 									</div>
-									<form class="d-none d-sm-block ms-auto" action="{% url 'fillow:email_list' %}">
+									<form class="d-none d-sm-block ms-auto" action="{% url 'fillow:email-list-spam' %}">
 										<div class="input-group ms-auto w-100 d-sm-inline-flex d-none">
 											<input type="text" class="form-control" placeholder="검색" name="search_query">
 											<span class="input-group-text"><button class="bg-transparent border-0"><i class="flaticon-381-search-2"></i></button></span>
 										</div>
 									</form>	
 									<div class="btn-group mb-1" style="margin-left: 10px;">
-										<a href="{% url 'fillow:email_list' %}" class="btn btn-primary light px-3">
+										<a href="{% url 'fillow:email-list-spam' %}" class="btn btn-primary light px-3">
 											<i class="ti-reload"></i>
 										</a>
 									</div>

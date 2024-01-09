@@ -943,6 +943,7 @@ def process_msg_file(eml_name, user):
         company_yn = company_yn,
         department_yn = department_yn,
         meeting_date=meeting_date,
+        read=True,
         spam=spam,
         )
         
@@ -1068,8 +1069,11 @@ def upload_file(request):
     # 유저가 로그인 되지 않은 상태일 때, redirect 홈
     if not request.user.is_authenticated:
         return redirect("fillow:home")
+    
+    is_uploaded = False
  
     if request.method == 'POST':
+        is_uploaded = True
         form = DocumentForm(request.POST, request.FILES)
  
         if form.is_valid():
@@ -1113,8 +1117,7 @@ def upload_file(request):
                 # 압축 해제된 폴더 삭제
                 if os.path.exists(extract_path) and os.path.isdir(extract_path):
                     shutil.rmtree(extract_path)
- 
-            return redirect('fillow:upload_file')
+            form = DocumentForm()
  
  
     else:
@@ -1124,7 +1127,8 @@ def upload_file(request):
         'form': form,
         "img": AdditionalInform.objects.get(user_id=request.user.id).image,
         "masking_name": request.user.first_name[1:],
-        "page_title": "이메일 업로드"
+        "page_title": "이메일 업로드",
+        "is_uploaded": is_uploaded,
     }
     return render(request, 'fillow/apps/email/upload.html', context)
 

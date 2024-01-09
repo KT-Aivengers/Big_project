@@ -28,12 +28,15 @@
             <button type="submit" class="btn btn-primary btn-margin-adjust" >이메일 업로드</button>
           </div>
         </form>
-
-        
       </div>
     </div>
 </div>
 <!--**********************************
     Content body end
 ***********************************-->
+{% endblock %}
+{% block additional_js %}
+<script>
+  const isUploaded = {{ is_uploaded | lower }};
+</script>
 {% endblock %}
