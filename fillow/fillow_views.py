@@ -975,51 +975,73 @@ def process_msg_file(eml_name, user):
     print(eml_name,headers)
     # print("asd",result)
     # print("asd",result['text_content'])
-    gpt_result = process_file(result['text_content'])
-   
-    reply_req_yn = gpt_result.get('회신요청여부','')
-    reply_req_yn = True if reply_req_yn == 'Y' else False
-   
-    user_additional_info = AdditionalInform.objects.filter(user=user).last()
- 
-    from_company = gpt_result.get('회사', '')
-    user_company = user_additional_info.company
-    company_yn = True if from_company == user_company else False
-   
-    from_dept = gpt_result.get('부서', '')
-    user_dept = user_additional_info.department
-    dept_yn = True if from_dept == user_dept else False
-    email_date_tuple = result.get('Date', '')
-    email_date_str = ''.join(map(str, email_date_tuple))
-   
-    # Remove all spaces from the date string
-    email_date_str = re.sub(r'\s+', '', email_date_str)
- 
-    # Parse the date
-    email_date = datetime.strptime(email_date_str, '%a,%d%b%Y%H:%M:%S%z')
-   
-    meeting_date=gpt_result.get('회의날짜', '')
-    current_year = datetime.now().year
-    current_month = datetime.now().month
-    month_match = re.search(r'(\d+)월', meeting_date)
-    if month_match and '년' not in meeting_date:
-        meeting_month = int(month_match.group(1))
-        # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
-        if meeting_month < current_month:
-            meeting_date = f"{current_year + 1}년 {meeting_date}"
-        else:
-            # 그렇지 않으면 현재 연도를 사용합니다.
-            meeting_date = f"{current_year}년 {meeting_date}"
-    reply_end_date = gpt_result.get('회신마감일자','')
-    month_match = re.search(r'(\d+)월', reply_end_date)
-    if month_match and '년' not in reply_end_date:
-        meeting_month = int(month_match.group(1))
-        # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
-        if meeting_month < current_month:
-            reply_end_date = f"{current_year + 1}년 {reply_end_date}"
-        else:
-            # 그렇지 않으면 현재 연도를 사용합니다.
-            reply_end_date = f"{current_year}년 {reply_end_date}"
+    if detect_spam(translate(result['text_content'])) == "spam":
+        # 휴지통으로 보내기
+        spam=True
+        email_date_tuple = result.get('Date', '')
+        email_date_str = ''.join(map(str, email_date_tuple))
+    
+        # Remove all spaces from the date string
+        email_date_str = re.sub(r'\s+', '', email_date_str)
+    
+        # Parse the date
+        email_date = datetime.strptime(email_date_str, '%a,%d%b%Y%H:%M:%S%z')
+        category = None
+        from_company = None
+        from_dept = None
+        from_name = None
+        reply_req_yn = False
+        reply_end_date = None
+        company_yn = False
+        department_yn = False
+        meeting_date=None
+    else:
+        gpt_result = process_file(result['text_content'])
+    
+        reply_req_yn = gpt_result.get('회신요청여부','')
+        reply_req_yn = True if reply_req_yn == 'Y' else False
+    
+        user_additional_info = AdditionalInform.objects.filter(user=user).last()
+    
+        from_company = gpt_result.get('회사', '')
+        user_company = user_additional_info.company
+        company_yn = True if from_company == user_company else False
+    
+        from_dept = gpt_result.get('부서', '')
+        user_dept = user_additional_info.department
+        dept_yn = True if from_dept == user_dept else False
+        email_date_tuple = result.get('Date', '')
+        email_date_str = ''.join(map(str, email_date_tuple))
+    
+        # Remove all spaces from the date string
+        email_date_str = re.sub(r'\s+', '', email_date_str)
+    
+        # Parse the date
+        email_date = datetime.strptime(email_date_str, '%a,%d%b%Y%H:%M:%S%z')
+    
+        meeting_date=gpt_result.get('회의날짜', '')
+        current_year = datetime.now().year
+        current_month = datetime.now().month
+        month_match = re.search(r'(\d+)월', meeting_date)
+        if month_match and '년' not in meeting_date:
+            meeting_month = int(month_match.group(1))
+            # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
+            if meeting_month < current_month:
+                meeting_date = f"{current_year + 1}년 {meeting_date}"
+            else:
+                # 그렇지 않으면 현재 연도를 사용합니다.
+                meeting_date = f"{current_year}년 {meeting_date}"
+        reply_end_date = gpt_result.get('회신마감일자','')
+        month_match = re.search(r'(\d+)월', reply_end_date)
+        if month_match and '년' not in reply_end_date:
+            meeting_month = int(month_match.group(1))
+            # 현재 월보다 작은 경우, 연도를 다음 해로 설정합니다.
+            if meeting_month < current_month:
+                reply_end_date = f"{current_year + 1}년 {reply_end_date}"
+            else:
+                # 그렇지 않으면 현재 연도를 사용합니다.
+                reply_end_date = f"{current_year}년 {reply_end_date}"
+        spam=False
  
     email_instance = Email(
     user=user,
@@ -1041,6 +1063,7 @@ def process_msg_file(eml_name, user):
     company_yn = company_yn,
     department_yn = dept_yn,
     meeting_date=meeting_date,
+    spam=spam,
     )
     
     email_instance.save()
