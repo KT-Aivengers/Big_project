@@ -62,6 +62,12 @@
 
 	var barChart1 = function(){
 		if( tasks_sum > 0 ){
+			var shadesOfRed = ['#FF0000', '#FF3333', '#FF6666', '#FF9999', '#FFCCCC', '#FFE6E6', '#FFFFFF']
+			
+			var taskColors = Object.keys(tasks).map(function(day) {
+				return shadesOfRed[day] || '#FFFFFF'; // Default to white if day is not in the range 0-7
+			});
+
 			var options = {
 				chart: {
 					type: 'bar',
@@ -98,7 +104,7 @@
 						}
 					}
 				},
-				colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#546E7A', '#26a69a', '#D10CE8']
+				colors: taskColors,
 			};
 
 			var chart = new ApexCharts(document.querySelector("#barChart_1"), options);
