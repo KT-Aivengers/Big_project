@@ -105,6 +105,7 @@
 			chart.render();
 		};
 	}
+	
  	var dlabChartlist = function(){
 	/* Function ============ */
 		return {
