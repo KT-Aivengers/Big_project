@@ -34,6 +34,7 @@ from fillow.msgToEml import load
 from .gpt import *
 from .translation import *
 from .spam_detection import *
+from collections import defaultdict
 
 # 분류된 이메일 현황 받기
 def get_most_category(id):
@@ -112,7 +113,7 @@ def get_7_deadline(request):
                 result.append(s)
         
     result.sort(key=lambda x: x['diff'])
-    return result[:]
+    return result[:5]
 
 # 할일현황 raw 데이터 불러오기
 def deadlinein7_tasks(schedule_list):
@@ -134,6 +135,49 @@ def deadlinein7_tasks(schedule_list):
     todo_in_7 = result.copy()
 
     return todo_in_7
+
+def get_category_counts_within_7_days(schedule):
+    # 현재 날짜
+    current_date = datetime.now()
+
+    # 카테고리별 카운트를 저장할 defaultdict
+    category_counts = defaultdict(int)
+    
+    color = [
+        "#fc2e53",
+		"#ffbf00",
+		"#09bd3c",
+		"#128a7e",
+		"#369fc2",
+		"#ffa7d7",
+		"#6238fc",
+		"#d653c1",
+		"#c8c8c8",
+        "#ff0b0b"
+    ]
+    
+    labels = ["결재승인", "휴가", "진행업무", "회의", "보고", "스크랩", "공지", "감사인사", "기타","확인필요"]
+    email_counts = []
+    
+
+
+    # 7일 이내인 항목 필터링 및 카테고리별 집계
+    for item in schedule:
+        end_date_str = item.get("end")
+        if end_date_str and end_date_str != "null":
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
+            if (end_date - current_date).days <= 7:
+                category_counts[item["category"]] += 1
+        else :
+            category_counts["확인필요"] += 1
+    
+    for label in labels:
+        email_counts.append(category_counts[label])
+            
+    zip_ = zip(labels, email_counts, color)
+
+    return list(zip_)
+
 
 def get_recent_email(id):
     unread_emails = Email.objects.filter(read=False, user_id=id)
@@ -177,6 +221,7 @@ def index(request):
     schedule_list = get_schedule(request)
     tasks = deadlinein7_tasks(schedule_list)
     tasks_sum = sum(tasks.values())
+    category_ctsin7 = get_category_counts_within_7_days(schedule_list)
 
     print(tasks_sum)
     context={
@@ -186,6 +231,7 @@ def index(request):
         "deadline":deadline,
         "tasks" : tasks,
         "tasks_sum": tasks_sum,
+        "category_ctsin7" : category_ctsin7,
     }
     
     context.update(most)

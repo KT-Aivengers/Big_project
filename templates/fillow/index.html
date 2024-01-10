@@ -154,15 +154,15 @@
 												{% else %}
 													{% for label, count, color in email_count.data.zip %}
 														{% if count != 0 %}
-														<div class="d-flex align-items-center justify-content-between mb-3">
-															<span class="fs-16 text-gray"> 
-																<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<rect width="20" height="20" rx="6" fill="{{ color }}"/>
-																</svg>
-																{{ label }}
-															</span>
-															<h5 class="mb-0 font-w600">{{ count }}</h5>
-														</div>
+															<div class="d-flex align-items-center justify-content-between mb-3">
+																<span class="fs-16 text-gray"> 
+																	<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<rect width="20" height="20" rx="6" fill="{{ color }}"/>
+																	</svg>
+																	{{ label }}
+																</span>
+																<h5 class="mb-0 font-w600">{{ count }}</h5>
+															</div>
 														{% endif %}
 													{% endfor %}
 												{% endif %}
@@ -190,17 +190,17 @@
 														<br>
 													</div>
 												{% else %}
-													{% for label, count, color in email_count.data.zip %}
+													{% for key, count, color in category_ctsin7 %}
 														{% if count != 0 %}
-															<div class="d-flex align-items-center justify-content-between mb-3">
-																<span class="fs-16 text-gray"> 
-																	<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																		<rect width="20" height="20" rx="6" fill="{{ color }}"/>
-																	</svg>
-																	{{ label }}
-																</span>
-																<h5 class="mb-0 font-w600">{{ count }}</h5>
-															</div>
+														<div class="d-flex align-items-center justify-content-between mb-3">
+															<span class="fs-16 text-gray"> 
+																<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																	<rect width="20" height="20" rx="6" fill = "{{color}}" />
+																</svg>
+																{{ key }}
+															</span>
+															<h5 class="mb-0 font-w600">{{ count }}</h5>
+														</div>
 														{% endif %}
 													{% endfor %}
 												{% endif %}
