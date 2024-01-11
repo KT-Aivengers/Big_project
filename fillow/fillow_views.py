@@ -99,7 +99,7 @@ def get_7_deadline(request):
     
     for s in schedule[:]:
         deadline = s.get('end')
-        if deadline:
+        if deadline and not deadline == 'null':
             deadline = datetime.strptime(deadline, '%Y-%m-%d')
             
             diff = (deadline - today).days + 1
