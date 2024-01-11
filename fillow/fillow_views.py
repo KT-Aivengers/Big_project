@@ -123,7 +123,7 @@ def deadlinein7_tasks(schedule_list):
 
     for schedule in schedule_list:
         deadline_str = schedule.get('end')
-        if deadline_str and not deadline == 'null':
+        if deadline_str and not deadline_str == 'null':
             deadline = datetime.strptime(deadline_str, '%Y-%m-%d')
             diff = (deadline - today).days + 1
 
