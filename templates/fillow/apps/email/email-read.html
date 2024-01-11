@@ -87,7 +87,7 @@
                                             {% endif %}
                                             <a href="{% url 'fillow:email-sent' %}" class="list-group-item"><i
                                                 class="fa fa-inbox font-18 align-middle me-2"></i>보낸 이메일</a>
-                                            <a href="{% url 'fillow:email-list-spam' %}" class="list-group-item active"><i
+                                            <a href="{% url 'fillow:email-list-spam' %}" class="list-group-item"><i
                                                 class="fa fa-inbox font-18 align-middle me-2"></i>스팸</a>
     
                                             <a href="{% url 'fillow:email-list-trash' %}" class="list-group-item"><i
@@ -435,7 +435,7 @@
                                                             {% endif %}
                                                             <div class="media-body me-2">
                                                                 <h5 class="text-primary mb-0 mt-1">{{ email.email_from }}</h5>
-                                                                <p class="mb-0">{{ email.email_date|date:"Y M d D H:i" }}</p>
+                                                                <p class="mb-0">{{ email.email_date|date:"Y년 M d일 D H:i" }}</p>
                                                                 <p class="mb-0">{{ email.category }}</p>
                                                             </div>
                                                         </div>
