@@ -142,7 +142,7 @@
 
 												<a href="{% url 'fillow:email_detail' email.id %}" class="col-mail col-mail-2">
 													<div class="subject">{{ email.email_subject }}</div>
-													<div class="date">{{ email.email_date|date:"Y M d D H:i" }}</div>
+													<div class="date"><span>{{email.from_name}}&nbsp;&nbsp;&nbsp;{{ email.email_date|date:"Y년 M d일 D H:i" }}</span></div>
 												</a>
 
 											</div>
