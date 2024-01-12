@@ -1,3 +1,20 @@
+## 이메일 분류 및 스케쥴링 웹사이트 프로젝트
+
+
+
+### 1. 필수 라이브러리 설치
+```
+pip install -r requirements.txt
+```
+### 2. Api 키 필요
+.env파일 생성 후
+OPENAI_API_KEY="openai api"
+ENCRYPTION_KEY="fernet key"
+auth_key = "deepl api"
+EMAIL_ADDRESS = "admin email address"
+EMAIL_PASSWORD = "admin email passwd"
+추가
+
 Truble shooting
 1. django-mysql 연동 시 비밀번호 기억 안남...
    - root 계정 삭제 후 새로 계정 만들어즘... 비밀번호를 잘 기억하자..
